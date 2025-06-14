@@ -12,8 +12,41 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  id           Int        @id @default(autoincrement())
+  uuid         String     @default(uuid()) @unique
+  email        String?    @unique
+  phone        String?    @unique 
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
+  identities   Identity[]
+
+  @@index([email])
+  @@index([phone])
+  @@index([uuid])
+  @@map("users")
+}
+
+model Identity {
+  id           Int        @id @default(autoincrement())
+  uuid         String     @default(uuid()) @unique
+  user_uuid    String
+  provider     Provider
+  provider_id  String
+  password     String?
+  verified     Boolean    @default(false)
+  user         User       @relation(fields: [user_uuid], references: [uuid])
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
+
+  @@unique([provider, provider_id])
+  @@index([provider_id])
+  @@index([user_uuid])
+  @@map("identities")
+}
+
+enum Provider {
+  email
+  phone
+  google
+  facebook
 }

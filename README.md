@@ -7,3 +7,6 @@ nest g resource users --no-spec
 /auth/verify/email
 
 /auth/oauth/google
+
+npx prisma migrate dev --name init
+npx prisma migrate reset
