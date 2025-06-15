@@ -15,10 +15,12 @@ export class AuthService {
 
     async registerWithEmail(dto: RegisterEmailDto) {
 
-        const identity = await this.prisma.identity.findFirst({
+        const identity = await this.prisma.identity.findUnique({
             where: {
-                provider: Providers.EMAIL,
-                provider_id: dto.email,
+                provider_provider_id: {
+                    provider: Providers.EMAIL,
+                    provider_id: dto.email,
+                },
             },
         });
 

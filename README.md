@@ -10,3 +10,5 @@ nest g resource users --no-spec
 
 npx prisma migrate dev --name init
 npx prisma migrate reset
+
+Get-ChildItem -Recurse -Directory -Name | Where-Object { $\_ -notmatch 'node_modules|dist' }
