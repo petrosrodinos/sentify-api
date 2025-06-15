@@ -4,6 +4,7 @@ import { LoginEmailDto } from '../dto/login-email.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { CreateJwtService } from '@/shared/utils/jwt/jwt.service';
+import { Providers } from '../enums/providers.enums';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,7 @@ export class AuthService {
 
         const identity = await this.prisma.identity.findFirst({
             where: {
-                provider: 'email',
+                provider: Providers.EMAIL,
                 provider_id: dto.email,
             },
         });
@@ -33,7 +34,7 @@ export class AuthService {
                 identities: {
                     create: {
                         password: hashedPassword,
-                        provider: 'email',
+                        provider: Providers.EMAIL,
                         provider_id: dto.email,
                         verified: false,
                     },
@@ -69,7 +70,7 @@ export class AuthService {
         const identity = await this.prisma.identity.findUnique({
             where: {
                 provider_provider_id: {
-                    provider: 'email',
+                    provider: Providers.EMAIL,
                     provider_id: dto.email,
                 },
             },
