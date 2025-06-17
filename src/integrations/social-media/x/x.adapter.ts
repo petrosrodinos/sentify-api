@@ -45,24 +45,30 @@ export class XAdapter {
         }
     }
 
-    async createAuthenticationUrl(callBackUrl: string): Promise<{ url: string, codeVerifier: string, state: string }> {
-        const { url, codeVerifier, state } = this.client.generateOAuth2AuthLink(callBackUrl, { scope: ['tweet.read', 'users.read', 'offline.access'] });
+    async createAuthenticationUrl(redirect_url: string): Promise<{ url: string, code_verifier: string, state: string }> {
+        const { url, codeVerifier, state } = this.client.generateOAuth2AuthLink(redirect_url, { scope: ['tweet.read', 'users.read', 'offline.access'] });
 
-        return { url, codeVerifier, state };
+        return { url, code_verifier: codeVerifier, state };
     }
 
 
-    async getAccessToken(code: string, state: string, codeVerifier: string, sessionState: string): Promise<{ loggedClient: TwitterApi, accessToken: string, refreshToken: string, expiresIn: number }> {
-        if (!codeVerifier || !state || !code) {
-            throw new Error('You denied the app or your session expired!');
-        }
-        if (state !== sessionState) {
-            throw new Error('Stored tokens didnt match!');
-        }
+    async getAccessToken(code: string, codeVerifier: string, redirect_url: string): Promise<{ user: UserV2, access_token: string, refresh_token: string, expires_in: number }> {
+        try {
 
-        const { client: loggedClient, accessToken, refreshToken, expiresIn } = await this.client.loginWithOAuth2({ code, codeVerifier, redirectUri: this.callbackUrl });
 
-        return { loggedClient, accessToken, refreshToken, expiresIn };
+            const { client: loggedClient, accessToken, refreshToken, expiresIn } = await this.client.loginWithOAuth2({ code, codeVerifier, redirectUri: redirect_url });
+
+            const { data: userObject } = await loggedClient.v2.me();
+
+            return {
+                user: userObject,
+                access_token: accessToken,
+                refresh_token: refreshToken,
+                expires_in: expiresIn,
+            };
+        } catch (error) {
+            throw new Error(error);
+        }
 
     }
 

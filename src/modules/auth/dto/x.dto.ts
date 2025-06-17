@@ -7,4 +7,7 @@ export class XAuthCallbackDto {
 
     @IsString()
     state: string;
+
+    @IsString()
+    redirect_url: string;
 }

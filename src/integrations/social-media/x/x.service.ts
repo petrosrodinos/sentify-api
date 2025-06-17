@@ -8,12 +8,12 @@ export class XService {
 
     constructor(private readonly xAdapter: XAdapter) { }
 
-    async createAuthenticationUrl(redirectUrl: string) {
-        return this.xAdapter.createAuthenticationUrl(redirectUrl);
+    async createAuthenticationUrl(redirect_url: string) {
+        return this.xAdapter.createAuthenticationUrl(redirect_url);
     }
 
-    async getAccessToken(code: string, state: string, codeVerifier: string, sessionState: string) {
-        return this.xAdapter.getAccessToken(code, state, codeVerifier, sessionState);
+    async getAccessToken(code: string, state: string, redirect_url: string) {
+        return this.xAdapter.getAccessToken(code, state, redirect_url);
     }
 
     async getTweet(tweetId: string): Promise<TweetV2 | null> {

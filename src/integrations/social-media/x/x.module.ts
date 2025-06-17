@@ -4,6 +4,6 @@ import { XAdapter } from './x.adapter';
 
 @Module({
     providers: [XService, XAdapter],
-    exports: [XService]
+    exports: [XService, XAdapter]
 })
 export class XModule { }

@@ -1,9 +1,8 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { XAuthService } from '../services/x.service';
-import { XAuthCallbackDto } from '../dto/x.dto';
 
-@Controller('auth/oauth/x')
-export class XController {
+@Controller('auth/x')
+export class XAuthController {
     constructor(private readonly xService: XAuthService) { }
 
     @Get('login/url')
@@ -11,9 +10,9 @@ export class XController {
         return this.xService.createAuthenticationUrl(redirectUrl);
     }
 
-    @Post('login/callback')
-    async loginCallback(@Body() dto: XAuthCallbackDto) {
-        return this.xService.getAccessToken(dto);
+    @Get('login/callback')
+    async loginCallback(@Query('state') state: string, @Query('code') code: string, @Query('redirect_url') redirect_url: string) {
+        return this.xService.getAccessToken(state, code, redirect_url);
     }
 
 
