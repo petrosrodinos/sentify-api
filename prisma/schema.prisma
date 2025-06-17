@@ -19,7 +19,7 @@ model User {
   created_at   DateTime   @default(now())
   updated_at   DateTime   @updatedAt
   identities   Identity[]
-
+  verification_tokens VerificationToken[]
   @@index([email])
   @@index([phone])
   @@index([uuid])
@@ -30,11 +30,12 @@ model Identity {
   id           Int        @id @default(autoincrement())
   uuid         String     @default(uuid()) @unique
   user_uuid    String
-  provider     Provider
+  provider     AuthProvider
   provider_id  String
   password     String?
   verified     Boolean    @default(false)
   user         User       @relation(fields: [user_uuid], references: [uuid])
+  verification_tokens VerificationToken[]
   created_at   DateTime   @default(now())
   updated_at   DateTime   @updatedAt
 
@@ -44,9 +45,31 @@ model Identity {
   @@map("identities")
 }
 
-enum Provider {
+model VerificationToken {
+  id           Int        @id @default(autoincrement())
+  uuid         String     @default(uuid()) @unique
+  user_uuid    String
+  token        String
+  state        String
+  type         AuthProvider
+  identity_uuid String?
+  expires_at   DateTime?
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
+  user         User       @relation(fields: [user_uuid], references: [uuid])
+  identity     Identity @relation(fields: [identity_uuid], references: [uuid])
+
+  @@index([token])
+  @@index([user_uuid])
+  @@index([identity_uuid])
+  @@map("verification_tokens")
+}
+
+enum AuthProvider {
   email
   phone
   google
   facebook
+  twitter
 }
+

@@ -4,7 +4,7 @@ import { LoginEmailDto } from '../dto/login-email.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { CreateJwtService } from '@/shared/utils/jwt/jwt.service';
-import { Providers } from '../enums/providers.enums';
+import { Providers } from '../enums/auth.enums';
 
 @Injectable()
 export class AuthService {
