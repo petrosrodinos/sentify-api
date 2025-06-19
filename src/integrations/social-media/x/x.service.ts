@@ -24,5 +24,13 @@ export class XService {
         return this.xAdapter.getUserByUsername(username);
     }
 
+    async getUserFollowers(user_id: string, max_results: number = 100): Promise<UserV2[] | null> {
+        try {
+            return this.xAdapter.getUserFollowers(user_id, max_results);
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
 
 }

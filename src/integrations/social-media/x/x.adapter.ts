@@ -7,22 +7,20 @@ import { TwitterApi, TweetV2, UserV2 } from 'twitter-api-v2';
 export class XAdapter {
     private readonly logger = new Logger(XAdapter.name);
     private client: TwitterApi;
-    private callbackUrl: string;
 
     constructor(
         private readonly configService: ConfigService,
     ) {
-        // this.client = new TwitterApi({
-        //     appKey: this.configService.get<string>('TWITTER_API_KEY'),
-        //     appSecret: this.configService.get<string>('TWITTER_API_SECRET'),
-        //     accessToken: this.configService.get<string>('TWITTER_ACCESS_TOKEN'),
-        //     accessSecret: this.configService.get<string>('TWITTER_ACCESS_SECRET'),
-        // });
-        this.callbackUrl = this.configService.get<string>('TWITTER_CALLBACK_URL');
         this.client = new TwitterApi({
-            clientId: this.configService.get<string>('TWITTER_CLIENT_ID'),
-            clientSecret: this.configService.get<string>('TWITTER_CLIENT_SECRET'),
+            appKey: this.configService.get<string>('TWITTER_API_KEY'),
+            appSecret: this.configService.get<string>('TWITTER_API_SECRET'),
+            accessToken: this.configService.get<string>('TWITTER_ACCESS_TOKEN'),
+            accessSecret: this.configService.get<string>('TWITTER_ACCESS_SECRET'),
         });
+        // this.client = new TwitterApi({
+        //     clientId: this.configService.get<string>('TWITTER_CLIENT_ID'),
+        //     clientSecret: this.configService.get<string>('TWITTER_CLIENT_SECRET'),
+        // });
     }
 
     async getTweetById(tweetId: string): Promise<TweetV2 | null> {
@@ -41,7 +39,18 @@ export class XAdapter {
             return user.data;
         } catch (error) {
             this.logger.error(`Failed to fetch user ${username}`, error);
-            return null;
+            throw new Error(error);
+
+        }
+    }
+
+    async getUserFollowers(user_id: string, max_results: number = 100): Promise<UserV2[] | null> {
+        try {
+            const followers = await this.client.v2.followers(user_id, { max_results });
+            return followers.data;
+        } catch (error) {
+            this.logger.error(`Failed to fetch followers for user ${user_id}`, error);
+            return error
         }
     }
 

@@ -14,15 +14,15 @@ export class XAuthService {
         private readonly jwtService: CreateJwtService,
     ) { }
 
-    async createAuthenticationUrl(redirectUrl: string) {
+    async createAuthenticationUrl(redirect_url: string) {
 
         try {
 
-            if (!redirectUrl) {
+            if (!redirect_url) {
                 throw new BadRequestException('Redirect URL is required');
             }
 
-            const { url, code_verifier, state } = await this.xService.createAuthenticationUrl(redirectUrl);
+            const { url, code_verifier, state } = await this.xService.createAuthenticationUrl(redirect_url);
 
 
             await this.prisma.verificationToken.create({
@@ -53,7 +53,7 @@ export class XAuthService {
             console.log('redirect_url', redirect_url);
 
             if (!code || !state || !redirect_url) {
-                return new BadRequestException('Code, state and redirect_url are required');
+                throw new BadRequestException('code, state and redirect_url are required');
             }
 
             const verificationToken = await this.prisma.verificationToken.findFirst({

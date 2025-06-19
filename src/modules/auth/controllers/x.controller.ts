@@ -6,11 +6,11 @@ export class XAuthController {
     constructor(private readonly xService: XAuthService) { }
 
     @Get('login/url')
-    async loginUrl(@Query('redirectUrl') redirectUrl: string) {
-        return this.xService.createAuthenticationUrl(redirectUrl);
+    async loginUrl(@Query('redirect_url') redirect_url: string) {
+        return this.xService.createAuthenticationUrl(redirect_url);
     }
 
-    @Get('login/callback')
+    @Get('login/access_token')
     async loginCallback(@Query('state') state: string, @Query('code') code: string, @Query('redirect_url') redirect_url: string) {
         return this.xService.getAccessToken(state, code, redirect_url);
     }
