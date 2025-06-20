@@ -6,13 +6,13 @@ import { CreateJwtServiceModule } from '@/shared/utils/jwt/jwt.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { XAuthService } from './services/x.service';
 import { XAuthController } from './controllers/x.controller';
-import { XModule } from '@/integrations/social-media/x/x.module';
+import { TwitterModule } from '@/integrations/social-media/twitter/twitter.module';
 
 @Module({
   imports: [
     PrismaModule,
     CreateJwtServiceModule,
-    XModule,
+    TwitterModule,
 
   ],
   providers: [EmailAuthService, XAuthService, JwtStrategy, Logger],

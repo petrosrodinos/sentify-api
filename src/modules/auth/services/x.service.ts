@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { Providers } from '../enums/auth.enums';
-import { XService } from '@/integrations/social-media/x/x.service';
+import { TwitterService } from '@/integrations/social-media/twitter/twitter.service';
 import { Logger } from '@nestjs/common';
 import { CreateJwtService } from '@/shared/utils/jwt/jwt.service';
 
@@ -9,7 +9,7 @@ import { CreateJwtService } from '@/shared/utils/jwt/jwt.service';
 export class XAuthService {
     constructor(
         private readonly prisma: PrismaService,
-        private readonly xService: XService,
+        private readonly twitterService: TwitterService,
         private readonly logger: Logger,
         private readonly jwtService: CreateJwtService,
     ) { }
@@ -22,7 +22,7 @@ export class XAuthService {
                 throw new BadRequestException('Redirect URL is required');
             }
 
-            const { url, code_verifier, state } = await this.xService.createAuthenticationUrl(redirect_url);
+            const { url, code_verifier, state } = await this.twitterService.createAuthenticationUrl(redirect_url);
 
 
             await this.prisma.verificationToken.create({
@@ -67,7 +67,7 @@ export class XAuthService {
             }
 
 
-            const { user: auth_user, access_token, refresh_token, expires_in } = await this.xService.getAccessToken(code, verificationToken.token, redirect_url);
+            const { user: auth_user, access_token, refresh_token, expires_in } = await this.twitterService.getAccessToken(code, verificationToken.token, redirect_url);
 
             const identity = await this.prisma.identity.findUnique({
                 where: {

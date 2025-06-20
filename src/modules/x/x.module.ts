@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { XService } from './x.service';
 import { XController } from './x.controller';
-import { XModule as XModuleIntegration } from '@/integrations/social-media/x/x.module';
+import { TwitterModule } from '@/integrations/social-media/twitter/twitter.module';
 
 
 @Module({
-  imports: [XModuleIntegration],
+  imports: [TwitterModule],
   controllers: [XController],
   providers: [XService],
 })

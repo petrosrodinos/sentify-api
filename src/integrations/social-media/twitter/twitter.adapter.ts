@@ -1,15 +1,20 @@
-
+import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AxiosResponse } from 'axios';
+import { catchError, firstValueFrom, map, Observable } from 'rxjs';
 import { TwitterApi, TweetV2, UserV2 } from 'twitter-api-v2';
+import { RAPID_API_TWITTER_BASE_URL, RAPID_API_TWITTER_ENDPOINTS, TwitterConstants } from './twitter.constants';
 
 @Injectable()
-export class XAdapter {
-    private readonly logger = new Logger(XAdapter.name);
+export class TwitterAdapter {
+    private readonly logger = new Logger(TwitterAdapter.name);
     private client: TwitterApi;
 
     constructor(
         private readonly configService: ConfigService,
+        private readonly httpService: HttpService,
+        private readonly twitterConstants: TwitterConstants
     ) {
         this.client = new TwitterApi({
             appKey: this.configService.get<string>('TWITTER_API_KEY'),
@@ -44,13 +49,24 @@ export class XAdapter {
         }
     }
 
-    async getUserFollowers(user_id: string, max_results: number = 100): Promise<UserV2[] | null> {
+    async getUserFollowings(user_id: string, max_results: number = 100): Promise<any> {
         try {
-            const followers = await this.client.v2.followers(user_id, { max_results });
-            return followers.data;
+            const response = await firstValueFrom(
+                this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_FOLLOWINGS}?user=${user_id}&count=${max_results}`, {
+                    headers: this.twitterConstants.getHeaders()
+                }).pipe(
+                    map(response => response.data),
+                    catchError(error => {
+                        console.error('Error fetching followers:', error.response?.data || error.message);
+                        throw error;
+                    })
+                )
+            );
+
+            return response;
         } catch (error) {
-            this.logger.error(`Failed to fetch followers for user ${user_id}`, error);
-            return error
+            console.error('Error fetching followers:', error.response?.data || error.message);
+            return null;
         }
     }
 

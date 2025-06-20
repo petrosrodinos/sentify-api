@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ConfigModule } from '@nestjs/config';
+import { TwitterModule } from './integrations/social-media/twitter/twitter.module';
 import { XModule } from './modules/x/x.module';
 
 
@@ -14,7 +15,8 @@ import { XModule } from './modules/x/x.module';
     }),
     AuthModule,
     UsersModule,
-    XModule
+    TwitterModule,
+    XModule,
   ],
   controllers: [AppController],
   providers: [AppService],

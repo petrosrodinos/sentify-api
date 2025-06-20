@@ -1,14 +1,14 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { XService as XServiceIntegration } from '@/integrations/social-media/x/x.service';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { TwitterService } from '@/integrations/social-media/twitter/twitter.service';
 
 @Injectable()
 export class XService {
-  constructor(private readonly xService: XServiceIntegration) { }
+  constructor(private readonly twitterService: TwitterService) { }
 
   findByUsername(username: string) {
 
     try {
-      return this.xService.getUser(username);
+      return this.twitterService.getUser(username);
     } catch (error) {
       throw new InternalServerErrorException('Failed to fetch user');
     }
@@ -18,7 +18,7 @@ export class XService {
   async findFollowers(user_id: string) {
 
     try {
-      const followers = await this.xService.getUserFollowers(user_id);
+      const followers = await this.twitterService.getUserFollowings(user_id);
 
       return followers;
 
