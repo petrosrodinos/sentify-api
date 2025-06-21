@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
-import { Providers } from '../enums/auth.enums';
 import { TwitterService } from '@/integrations/social-media/twitter/twitter.service';
 import { Logger } from '@nestjs/common';
 import { CreateJwtService } from '@/shared/utils/jwt/jwt.service';
+import { AuthProvider } from '@prisma/client';
 
 @Injectable()
 export class TwitterAuthService {
@@ -32,7 +32,7 @@ export class TwitterAuthService {
                     expires_at: null,
                     token: code_verifier,
                     state: state,
-                    type: Providers.TWITTER,
+                    type: AuthProvider.twitter,
 
                 },
             });
@@ -68,7 +68,7 @@ export class TwitterAuthService {
             const identity = await this.prisma.identity.findUnique({
                 where: {
                     provider_provider_id: {
-                        provider: Providers.TWITTER,
+                        provider: AuthProvider.twitter,
                         provider_id: auth_user.id,
                     },
                 },
@@ -97,7 +97,7 @@ export class TwitterAuthService {
                     data: {
                         identities: {
                             create: {
-                                provider: Providers.TWITTER,
+                                provider: AuthProvider.twitter,
                                 provider_id: auth_user.id,
                                 verified: true,
                                 access_token: access_token,

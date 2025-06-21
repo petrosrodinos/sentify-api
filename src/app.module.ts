@@ -8,6 +8,7 @@ import { TwitterModule as TwitterIntegrationModule } from './integrations/social
 import { MediaSubscriptionsModule } from './modules/media-subscriptions/media-subscriptions.module';
 import { TwitterModule } from './modules/twitter/twitter.module';
 import { SharedModule } from './shared/shared.module';
+import { NotificationChannelsModule } from './modules/notification-channels/notification-channels.module';
 
 
 @Module({
@@ -21,6 +22,7 @@ import { SharedModule } from './shared/shared.module';
     TwitterModule,
     MediaSubscriptionsModule,
     SharedModule,
+    NotificationChannelsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

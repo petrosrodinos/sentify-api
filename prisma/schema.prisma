@@ -20,6 +20,7 @@ model User {
   identities          Identity[]
   verification_tokens VerificationToken[]
   media_subscriptions MediaSubscription[]
+  notification_channels NotificationChannel[]
 
   @@index([email])
   @@index([phone])
@@ -39,9 +40,10 @@ model Identity {
   password            String?
   verified            Boolean             @default(false)
   user                User                @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
-  verification_tokens VerificationToken[]
   created_at          DateTime            @default(now())
   updated_at          DateTime            @updatedAt
+  verification_tokens VerificationToken[]
+  notification_channels NotificationChannel[]
 
   @@unique([provider, provider_id])
   @@index([provider_id])
@@ -86,6 +88,25 @@ model MediaSubscription {
   @@map("media_subscriptions")
 }
 
+
+
+model NotificationChannel {
+  id Int @id @default(autoincrement())
+  user_uuid String
+  channel NotificationChannelType
+  identity_id String?
+  client_identifier String?
+  web_push_config Json?
+  verification_status Boolean @default(false)
+  enabled Boolean @default(true)
+  created_at DateTime @default(now()) @map("created_at")
+  user User @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  identity Identity? @relation(fields: [identity_id], references: [uuid], onDelete: SetNull)
+
+  @@index([user_uuid])
+  @@map("notification_channels")
+}
+
 enum AuthProvider {
   email
   phone
@@ -98,4 +119,15 @@ enum PlatformType {
   twitter
   youtube
   reddit
+}
+
+enum NotificationChannelType {
+  email
+  phone
+  push
+  web
+  telegram
+  whatsapp
+  slack
+  discord
 }
