@@ -97,13 +97,14 @@ model NotificationChannel {
   identity_id String?
   client_identifier String?
   web_push_config Json?
-  verification_status Boolean @default(false)
+  verified Boolean @default(false)
   enabled Boolean @default(true)
   created_at DateTime @default(now()) @map("created_at")
   user User @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   identity Identity? @relation(fields: [identity_id], references: [uuid], onDelete: SetNull)
 
   @@index([user_uuid])
+  @@unique([user_uuid, channel], name: "unique_user_channel")
   @@map("notification_channels")
 }
 
