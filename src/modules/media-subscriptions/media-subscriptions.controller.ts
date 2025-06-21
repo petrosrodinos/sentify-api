@@ -1,10 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { MediaSubscriptionsService } from './media-subscriptions.service';
-import { CreateMediaSubscriptionBatchDto, CreateMediaSubscriptionDto } from './dto/create-media-subscription.dto';
+import { CreateMediaSubscriptionBatchDto } from './dto/create-media-subscription.dto';
 import { UpdateMediaSubscriptionDto } from './dto/update-media-subscription.dto';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
-import { MediaSubscriptionQuery } from './types/media-subscriptions.types';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { MediaSubscriptionQuerySchema, MediaSubscriptionQueryType } from './dto/media-subscriptions-query.schema';
 
@@ -14,8 +13,8 @@ export class MediaSubscriptionsController {
 
   @Post()
   @UseGuards(JwtGuard)
-  createMany(@CurrentUser('uuid') uuid: string, @Body() createMediaSubscriptionDto: CreateMediaSubscriptionBatchDto) {
-    return this.mediaSubscriptionsService.createMany(uuid, createMediaSubscriptionDto);
+  createMany(@CurrentUser('uuid') uuid: string, @Body() createMediaSubscriptionBatchDto: CreateMediaSubscriptionBatchDto) {
+    return this.mediaSubscriptionsService.createMany(uuid, createMediaSubscriptionBatchDto);
   }
 
 

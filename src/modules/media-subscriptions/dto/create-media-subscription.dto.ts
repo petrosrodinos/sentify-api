@@ -1,6 +1,6 @@
-import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
-import { MediaPlatformType } from "../enums/media-subscriptions.enums";
+import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsObject, IsOptional, IsString, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
+import { PlatformType } from "@prisma/client";
 
 export class CreateMediaSubscriptionBatchDto {
     @IsArray()
@@ -12,8 +12,8 @@ export class CreateMediaSubscriptionBatchDto {
 export class CreateMediaSubscriptionDto {
     @IsString()
     @IsNotEmpty()
-    @IsEnum(MediaPlatformType)
-    platform_type: MediaPlatformType;
+    @IsEnum(PlatformType)
+    platform_type: PlatformType;
 
     @IsString()
     @IsNotEmpty()
@@ -21,5 +21,9 @@ export class CreateMediaSubscriptionDto {
 
     @IsBoolean()
     @IsNotEmpty()
-    notifications_enabled: boolean;
+    enabled: boolean;
+
+    @IsOptional()
+    @IsObject()
+    meta: Record<string, any>;
 }

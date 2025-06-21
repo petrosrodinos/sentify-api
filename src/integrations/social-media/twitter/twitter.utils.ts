@@ -21,10 +21,6 @@ export class TwitterUtils {
                     screenName: user.core?.screen_name || '',
                     profileImageUrl: user.avatar?.image_url || '',
                     description: user.legacy?.description || '',
-                    isVerified: user.is_blue_verified || false,
-                    isProtected: user.privacy?.protected || false,
-                    location: user.location?.location || undefined,
-                    profileBannerUrl: user.legacy?.profile_banner_url || undefined,
                     url: user.legacy?.url || undefined,
                 };
             });

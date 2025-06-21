@@ -77,7 +77,8 @@ model MediaSubscription {
   user_uuid             String
   platform_type         PlatformType
   account_identifier    String
-  notifications_enabled Boolean      @default(true)
+  enabled Boolean      @default(true)
+  meta Json?
   created_at            DateTime     @default(now())
   updated_at            DateTime     @updatedAt
   user                  User         @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
@@ -87,7 +88,6 @@ model MediaSubscription {
   @@index([platform_type])
   @@map("media_subscriptions")
 }
-
 
 
 model NotificationChannel {
@@ -103,8 +103,8 @@ model NotificationChannel {
   user User @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   identity Identity? @relation(fields: [identity_id], references: [uuid], onDelete: SetNull)
 
-  @@index([user_uuid])
   @@unique([user_uuid, channel], name: "unique_user_channel")
+  @@index([user_uuid])
   @@map("notification_channels")
 }
 

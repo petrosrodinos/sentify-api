@@ -28,7 +28,8 @@ export class MediaSubscriptionsService {
           user_uuid: uuid,
           platform_type: account.platform_type,
           account_identifier: account.account_identifier,
-          notifications_enabled: account.notifications_enabled,
+          enabled: account.enabled,
+          meta: account.meta,
         })),
       });
 
@@ -49,7 +50,7 @@ export class MediaSubscriptionsService {
           user_uuid: query.user_uuid,
           platform_type: query.platform_type,
           account_identifier: query.account_identifier,
-          notifications_enabled: query.notifications_enabled,
+          enabled: query.enabled,
         },
       });
 
