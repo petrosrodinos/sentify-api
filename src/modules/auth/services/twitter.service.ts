@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { Providers } from '../enums/auth.enums';
 import { TwitterService } from '@/integrations/social-media/twitter/twitter.service';
@@ -6,7 +6,7 @@ import { Logger } from '@nestjs/common';
 import { CreateJwtService } from '@/shared/utils/jwt/jwt.service';
 
 @Injectable()
-export class XAuthService {
+export class TwitterAuthService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly twitterService: TwitterService,
@@ -47,10 +47,6 @@ export class XAuthService {
     async getAccessToken(code: string, state: string, redirect_url: string) {
 
         try {
-
-            console.log('code', code);
-            console.log('state', state);
-            console.log('redirect_url', redirect_url);
 
             if (!code || !state || !redirect_url) {
                 throw new BadRequestException('code, state and redirect_url are required');

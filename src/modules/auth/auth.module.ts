@@ -4,8 +4,8 @@ import { EmailAuthController } from './controllers/email.controller';
 import { PrismaModule } from '@/core/databases/prisma/prisma.module';
 import { CreateJwtServiceModule } from '@/shared/utils/jwt/jwt.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { XAuthService } from './services/x.service';
-import { XAuthController } from './controllers/x.controller';
+import { TwitterAuthService } from './services/twitter.service';
+import { TwitterAuthController } from './controllers/x.controller';
 import { TwitterModule } from '@/integrations/social-media/twitter/twitter.module';
 
 @Module({
@@ -13,9 +13,8 @@ import { TwitterModule } from '@/integrations/social-media/twitter/twitter.modul
     PrismaModule,
     CreateJwtServiceModule,
     TwitterModule,
-
   ],
-  providers: [EmailAuthService, XAuthService, JwtStrategy, Logger],
-  controllers: [EmailAuthController, XAuthController],
+  providers: [EmailAuthService, TwitterAuthService, JwtStrategy, Logger],
+  controllers: [EmailAuthController, TwitterAuthController],
 })
 export class AuthModule { }

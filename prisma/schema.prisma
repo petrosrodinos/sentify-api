@@ -1,7 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,14 +11,16 @@ datasource db {
 }
 
 model User {
-  id           Int        @id @default(autoincrement())
-  uuid         String     @default(uuid()) @unique
-  email        String?    @unique
-  phone        String?    @unique 
-  created_at   DateTime   @default(now())
-  updated_at   DateTime   @updatedAt
-  identities   Identity[]
+  id                  Int                 @id @default(autoincrement())
+  uuid                String              @unique @default(uuid())
+  email               String?             @unique
+  phone               String?             @unique
+  created_at          DateTime            @default(now())
+  updated_at          DateTime            @updatedAt
+  identities          Identity[]
   verification_tokens VerificationToken[]
+  media_subscriptions MediaSubscription[]
+
   @@index([email])
   @@index([phone])
   @@index([uuid])
@@ -27,20 +28,20 @@ model User {
 }
 
 model Identity {
-  id           Int        @id @default(autoincrement())
-  uuid         String     @default(uuid()) @unique
-  user_uuid    String
-  provider     AuthProvider
-  provider_id  String?
-  access_token String?
-  refresh_token String?
-  expires_at Int?
-  password     String?
-  verified     Boolean    @default(false)
-  user         User       @relation(fields: [user_uuid], references: [uuid])
+  id                  Int                 @id @default(autoincrement())
+  uuid                String              @unique @default(uuid())
+  user_uuid           String
+  provider            AuthProvider
+  provider_id         String?
+  access_token        String?
+  refresh_token       String?
+  expires_at          Int?
+  password            String?
+  verified            Boolean             @default(false)
+  user                User                @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   verification_tokens VerificationToken[]
-  created_at   DateTime   @default(now())
-  updated_at   DateTime   @updatedAt
+  created_at          DateTime            @default(now())
+  updated_at          DateTime            @updatedAt
 
   @@unique([provider, provider_id])
   @@index([provider_id])
@@ -49,23 +50,40 @@ model Identity {
 }
 
 model VerificationToken {
-  id           Int        @id @default(autoincrement())
-  uuid         String     @default(uuid()) @unique
-  user_uuid    String?
-  token        String
-  state        String
-  type         AuthProvider
+  id            Int          @id @default(autoincrement())
+  uuid          String       @unique @default(uuid())
+  user_uuid     String?
+  token         String
+  state         String
+  type          AuthProvider
   identity_uuid String?
-  expires_at   DateTime?
-  created_at   DateTime   @default(now())
-  updated_at   DateTime   @updatedAt
-  user         User?       @relation(fields: [user_uuid], references: [uuid])
-  identity     Identity? @relation(fields: [identity_uuid], references: [uuid])
+  expires_at    DateTime?
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @updatedAt
+  user          User?        @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  identity      Identity?    @relation(fields: [identity_uuid], references: [uuid])
 
   @@index([token])
   @@index([user_uuid])
   @@index([identity_uuid])
   @@map("verification_tokens")
+}
+
+model MediaSubscription {
+  id                    Int          @id @default(autoincrement())
+  uuid                  String       @unique @default(uuid())
+  user_uuid             String
+  platform_type         PlatformType
+  account_identifier    String
+  notifications_enabled Boolean      @default(true)
+  created_at            DateTime     @default(now())
+  updated_at            DateTime     @updatedAt
+  user                  User         @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+
+  @@unique([user_uuid, platform_type, account_identifier], name: "unique_user_subscription")
+  @@index([user_uuid])
+  @@index([platform_type])
+  @@map("media_subscriptions")
 }
 
 enum AuthProvider {
@@ -76,3 +94,8 @@ enum AuthProvider {
   twitter
 }
 
+enum PlatformType {
+  twitter
+  youtube
+  reddit
+}

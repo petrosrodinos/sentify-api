@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtGuard } from '../auth/guards/jwt.guard';
+import { JwtGuard } from '../../shared/guards/jwt.guard';
 
 @Controller('users')
 export class UsersController {
@@ -18,14 +18,14 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @UseGuards(JwtGuard)
   @Get(':id')
+  @UseGuards(JwtGuard)
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
-  @UseGuards(JwtGuard)
   @Patch(':id')
+  @UseGuards(JwtGuard)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }

@@ -4,8 +4,10 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ConfigModule } from '@nestjs/config';
-import { TwitterModule } from './integrations/social-media/twitter/twitter.module';
-import { XModule } from './modules/x/x.module';
+import { TwitterModule as TwitterIntegrationModule } from './integrations/social-media/twitter/twitter.module';
+import { MediaSubscriptionsModule } from './modules/media-subscriptions/media-subscriptions.module';
+import { TwitterModule } from './modules/twitter/twitter.module';
+import { SharedModule } from './shared/shared.module';
 
 
 @Module({
@@ -15,8 +17,10 @@ import { XModule } from './modules/x/x.module';
     }),
     AuthModule,
     UsersModule,
+    TwitterIntegrationModule,
     TwitterModule,
-    XModule,
+    MediaSubscriptionsModule,
+    SharedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
