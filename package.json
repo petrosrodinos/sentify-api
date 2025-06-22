@@ -9,7 +9,7 @@
     "start:docker:local": "cross-env NODE_ENV=local && docker-compose -f docker-compose.local.yml up -d",
     "start:docker:dev": "cross-env NODE_ENV=development && docker-compose -f docker-compose.dev.yml up -d",
     "start:docker:prod": "cross-env NODE_ENV=production && docker-compose -f docker-compose.prod.yml up -d",
-    "migrate:local": "npx dotenv -e .env.local -- npx prisma migrate dev",
+    "migrate:local": "npx dotenv -e .env.local -- npx prisma migrate dev new-migration",
     "migrate:dev": "cross-env NODE_ENV=development && npx prisma migrate deploy",
     "migrate:prod": "cross-env NODE_ENV=production && npx prisma migrate deploy",
     "build": "nest build",

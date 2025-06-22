@@ -56,7 +56,16 @@ export class UsersService {
     return `This action updates a #${id} user`;
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  remove(uuid: string) {
+
+    try {
+      return this.prisma.user.delete({
+        where: {
+          uuid: uuid,
+        },
+      });
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 }
