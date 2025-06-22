@@ -18,10 +18,10 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
+  @Get(':uuid')
   @UseGuards(JwtGuard)
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  findOne(@Param('uuid') uuid: string) {
+    return this.usersService.findOne(uuid);
   }
 
   @Patch(':id')

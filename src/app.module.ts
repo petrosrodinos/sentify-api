@@ -11,6 +11,7 @@ import { SharedModule } from './shared/shared.module';
 import { NotificationChannelsModule } from './modules/notification-channels/notification-channels.module';
 import { RedisModule } from './core/databases/redis/redis.module';
 import { RedisCacheModule } from './modules/redis-cache/redis-cache.module';
+import { GraphQLModule } from './core/databases/graphql/graphql.module';
 
 
 @Module({
@@ -29,6 +30,7 @@ import { RedisCacheModule } from './modules/redis-cache/redis-cache.module';
     NotificationChannelsModule,
     RedisModule,
     RedisCacheModule,
+    GraphQLModule,
   ],
   controllers: [AppController],
   providers: [AppService],

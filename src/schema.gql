@@ -1,0 +1,115 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+enum AuthProvider {
+  email
+  facebook
+  google
+  phone
+  twitter
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Identity {
+  access_token: String
+  created_at: DateTime!
+  expires_at: Int
+  id: Int!
+  notification_channels: [NotificationChannelType!]
+  password: String
+  provider: AuthProvider!
+  provider_id: String
+  refresh_token: String
+  updated_at: DateTime!
+  user: User
+  user_uuid: String!
+  uuid: ID!
+  verification_tokens: [VerificationToken!]
+  verified: Boolean!
+}
+
+type MediaSubscription {
+  account_identifier: String!
+  created_at: DateTime!
+  enabled: Boolean!
+  id: Int!
+  meta: String
+  platform_type: PlatformType!
+  updated_at: DateTime!
+  user: User
+  user_uuid: String!
+  uuid: ID!
+}
+
+type Mutation {
+  createUser(email: String, phone: String): User!
+}
+
+type NotificationChannel {
+  channel: NotificationChannelType!
+  client_identifier: String
+  created_at: DateTime!
+  enabled: Boolean!
+  id: Int!
+  identity: Identity
+  identity_id: String
+  updated_at: DateTime!
+  user: User
+  user_uuid: String!
+  verified: Boolean!
+  web_push_config: String
+}
+
+enum NotificationChannelType {
+  discord
+  email
+  phone
+  push
+  slack
+  telegram
+  web
+  whatsapp
+}
+
+enum PlatformType {
+  reddit
+  twitter
+  youtube
+}
+
+type Query {
+  user(uuid: String!): User
+}
+
+type User {
+  created_at: DateTime!
+  email: String
+  id: Int!
+  identities: [Identity!]
+  media_subscriptions: [MediaSubscription!]
+  notification_channels: [NotificationChannel!]
+  phone: String
+  updated_at: DateTime!
+  uuid: ID!
+  verification_tokens: [VerificationToken!]
+}
+
+type VerificationToken {
+  created_at: DateTime!
+  expires_at: DateTime
+  id: Int!
+  identity: Identity
+  identity_uuid: String
+  state: String!
+  token: String!
+  type: AuthProvider!
+  updated_at: DateTime!
+  user: User
+  user_uuid: String
+  uuid: ID!
+}

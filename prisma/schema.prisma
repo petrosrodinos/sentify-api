@@ -92,6 +92,7 @@ model MediaSubscription {
 
 model NotificationChannel {
   id Int @id @default(autoincrement())
+  uuid String @unique @default(uuid())
   user_uuid String
   channel NotificationChannelType
   identity_id String?

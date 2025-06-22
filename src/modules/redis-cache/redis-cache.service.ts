@@ -30,8 +30,6 @@ export class RedisCacheService {
 
   async findOne(key: string) {
 
-    console.log(key);
-
     try {
       return await this.cacheManager.get(key);
 
