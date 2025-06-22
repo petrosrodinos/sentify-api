@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  redis:
+    image: redis:7
+    ports:
+      - '6379:6379'
+    command: redis-server --requirepass redis123
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', '-a', 'redis123', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  redis_data:

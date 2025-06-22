@@ -9,12 +9,16 @@ import { MediaSubscriptionsModule } from './modules/media-subscriptions/media-su
 import { TwitterModule } from './modules/twitter/twitter.module';
 import { SharedModule } from './shared/shared.module';
 import { NotificationChannelsModule } from './modules/notification-channels/notification-channels.module';
+import { RedisModule } from './core/databases/redis/redis.module';
+import { RedisCacheModule } from './modules/redis-cache/redis-cache.module';
 
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: [`.env.${process.env.NODE_ENV || 'local'}`],
+      ignoreEnvFile: process.env.NODE_ENV === 'production',
     }),
     AuthModule,
     UsersModule,
@@ -23,6 +27,8 @@ import { NotificationChannelsModule } from './modules/notification-channels/noti
     MediaSubscriptionsModule,
     SharedModule,
     NotificationChannelsModule,
+    RedisModule,
+    RedisCacheModule,
   ],
   controllers: [AppController],
   providers: [AppService],
