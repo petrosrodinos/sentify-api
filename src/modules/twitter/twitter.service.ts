@@ -21,6 +21,22 @@ export class TwitterService {
 
   }
 
+  async searchUser(username: string) {
+
+    try {
+
+      if (!username) {
+        throw new BadRequestException('Username is required');
+      }
+
+
+      return this.twitterIntegrationService.searchUser(username);
+
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   async findFollowings(user_id: string) {
 
     try {
@@ -38,5 +54,22 @@ export class TwitterService {
     }
   }
 
+  async getUserTweets(user_id: string) {
+
+    try {
+
+      if (!user_id) {
+        throw new BadRequestException('User ID is required');
+      }
+
+
+      const tweets = await this.twitterIntegrationService.getUserTweets(user_id);
+
+      return tweets;
+
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
 
 }

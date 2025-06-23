@@ -28,48 +28,6 @@ export class TwitterAdapter {
         // });
     }
 
-    async getTweetById(tweetId: string): Promise<TweetV2 | null> {
-        try {
-            const tweet = await this.client.v2.singleTweet(tweetId);
-            return tweet.data;
-        } catch (error) {
-            this.logger.error(`Failed to fetch tweet with ID ${tweetId}`, error);
-            return null;
-        }
-    }
-
-    async getUserByUsername(username: string): Promise<UserV2 | null> {
-        try {
-            const user = await this.client.v2.userByUsername(username);
-            return user.data;
-        } catch (error) {
-            this.logger.error(`Failed to fetch user ${username}`, error);
-            throw new Error(error);
-
-        }
-    }
-
-    async getUserFollowings(user_id: string, max_results: number = 100): Promise<any> {
-        try {
-            const response = await firstValueFrom(
-                this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_FOLLOWINGS}?user=${user_id}&count=${max_results}`, {
-                    headers: this.twitterConstants.getHeaders()
-                }).pipe(
-                    map(response => response.data),
-                    catchError(error => {
-                        console.error('Error fetching followers:', error.response?.data || error.message);
-                        throw error;
-                    })
-                )
-            );
-
-            return response;
-        } catch (error) {
-            console.error('Error fetching followers:', error.response?.data || error.message);
-            return null;
-        }
-    }
-
     async createAuthenticationUrl(redirect_url: string): Promise<{ url: string, code_verifier: string, state: string }> {
         const { url, codeVerifier, state } = this.client.generateOAuth2AuthLink(redirect_url, { scope: ['tweet.read', 'users.read', 'offline.access'] });
 
@@ -95,6 +53,92 @@ export class TwitterAdapter {
             throw new Error(error);
         }
 
+    }
+
+
+    async getUserByUsername(username: string): Promise<UserV2 | null> {
+        try {
+            const user = await this.client.v2.userByUsername(username);
+            return user.data;
+        } catch (error) {
+            this.logger.error(`Failed to fetch user ${username}`, error);
+            throw new Error(error);
+
+        }
+    }
+
+    async searchUser(username: string): Promise<any> {
+        try {
+            const response = await firstValueFrom(
+                this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_SEARCH}`, {
+                    headers: this.twitterConstants.getHeaders(),
+                    params: {
+                        value: username
+                    }
+                }).pipe(
+                    map(response => response.data),
+                    catchError(error => {
+                        console.error('Error searching user:', error.response?.data || error.message);
+                        throw error;
+                    })
+                )
+            );
+
+            return response;
+        } catch (error) {
+            this.logger.error(`Failed to search user ${username}`, error);
+            throw new Error(error);
+        }
+    }
+
+    async getUserFollowings(user_id: string, max_results: number = 100): Promise<any> {
+        try {
+            const response = await firstValueFrom(
+                this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_FOLLOWINGS}`, {
+                    headers: this.twitterConstants.getHeaders(),
+                    params: {
+                        user: user_id,
+                        count: max_results
+                    }
+                }).pipe(
+                    map(response => response.data),
+                    catchError(error => {
+                        console.error('Error fetching followers:', error.response?.data || error.message);
+                        throw error;
+                    })
+                )
+            );
+
+            return response;
+        } catch (error) {
+            this.logger.error(`Failed to fetch user followings`, error);
+            throw new Error(error);
+        }
+    }
+
+    async getUserTweets(user_id: string, max_results: number = 100): Promise<any> {
+        try {
+            const response = await firstValueFrom(
+                this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_TWEETS}`, {
+                    headers: this.twitterConstants.getHeaders(),
+                    params: {
+                        user: user_id,
+                        count: max_results
+                    }
+                }).pipe(
+                    map(response => response.data),
+                    catchError(error => {
+                        console.error('Error fetching tweets:', error.response?.data || error.message);
+                        throw error;
+                    })
+                )
+            );
+
+            return response;
+        } catch (error) {
+            this.logger.error(`Failed to fetch user tweets`, error);
+            throw new Error(error);
+        }
     }
 
 
