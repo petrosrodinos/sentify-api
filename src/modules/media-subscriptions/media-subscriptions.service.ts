@@ -13,18 +13,18 @@ export class MediaSubscriptionsService {
     private readonly logger: Logger,
   ) { }
 
-  async createMany(uuid: string, batchDto: CreateMediaSubscriptionBatchDto) {
+  async createMany(uuid: string, batch_dto: CreateMediaSubscriptionBatchDto) {
 
-    const { accounts } = batchDto;
+    const { items } = batch_dto;
 
-    if (!accounts?.length) {
+    if (!items?.length) {
       throw new BadRequestException('Accounts are required');
     }
 
     try {
 
       const mediaSubscriptions = await this.prisma.mediaSubscription.createMany({
-        data: accounts.map(account => ({
+        data: items.map(account => ({
           user_uuid: uuid,
           platform_type: account.platform_type,
           account_identifier: account.account_identifier,

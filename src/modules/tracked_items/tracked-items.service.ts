@@ -1,0 +1,100 @@
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { CreateTrackedItemBatchDto } from './dto/create-tracked-item.dto';
+import { UpdateTrackedItemDto } from './dto/update-tracked-item.dto';
+import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { TrackedItemQueryType } from './dto/tracked-items-query.schema';
+
+@Injectable()
+export class TrackedItemsService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly logger: Logger,
+  ) { }
+
+  async createMany(uuid: string, batch_dto: CreateTrackedItemBatchDto) {
+    const { items } = batch_dto;
+
+    if (!items?.length) {
+      throw new BadRequestException('Items are required');
+    }
+
+    try {
+      const tracked_items = await this.prisma.trackedItem.createMany({
+        data: items.map(item => ({
+          user_uuid: uuid,
+          item_type: item.item_type,
+          item_identifier: item.item_identifier,
+          enabled: item.enabled,
+          meta: item.meta,
+        })),
+      });
+
+      return tracked_items;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async findAll(query: TrackedItemQueryType) {
+    try {
+      const tracked_items = await this.prisma.trackedItem.findMany({
+        where: {
+          user_uuid: query.user_uuid,
+          item_type: query.item_type,
+          item_identifier: query.item_identifier,
+          enabled: query.enabled,
+        },
+      });
+
+      if (!tracked_items?.length) {
+        throw new NotFoundException('Tracked items not found');
+      }
+
+      return tracked_items;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async findOne(id: number) {
+    try {
+      const tracked_item = await this.prisma.trackedItem.findUnique({
+        where: { id },
+      });
+
+      if (!tracked_item) {
+        throw new NotFoundException('Tracked item not found');
+      }
+
+      return tracked_item;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  update(uuid: string, id: number, update_tracked_item_dto: UpdateTrackedItemDto) {
+    try {
+      return this.prisma.trackedItem.update({
+        where: { id, user_uuid: uuid },
+        data: update_tracked_item_dto,
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  remove(uuid: string, id: number) {
+    try {
+      return this.prisma.trackedItem.delete({
+        where: { id, user_uuid: uuid },
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+}

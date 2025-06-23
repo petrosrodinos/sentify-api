@@ -1,23 +1,23 @@
 import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsObject, IsOptional, IsString, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
-import { PlatformType } from "@prisma/client";
+import { TrackedItemType } from "@prisma/client";
 
-export class CreateMediaSubscriptionBatchDto {
+export class CreateTrackedItemBatchDto {
     @IsArray()
     @ValidateNested({ each: true })
-    @Type(() => CreateMediaSubscriptionDto)
-    items: CreateMediaSubscriptionDto[];
+    @Type(() => CreateTrackedItemDto)
+    items: CreateTrackedItemDto[];
 }
 
-export class CreateMediaSubscriptionDto {
+export class CreateTrackedItemDto {
     @IsString()
     @IsNotEmpty()
-    @IsEnum(PlatformType)
-    platform_type: PlatformType;
+    @IsEnum(TrackedItemType)
+    item_type: TrackedItemType;
 
     @IsString()
     @IsNotEmpty()
-    account_identifier: string;
+    item_identifier: string;
 
     @IsBoolean()
     @IsNotEmpty()

@@ -12,6 +12,7 @@ import { NotificationChannelsModule } from './modules/notification-channels/noti
 import { RedisModule } from './core/databases/redis/redis.module';
 import { RedisCacheModule } from './modules/redis-cache/redis-cache.module';
 import { GraphQLModule } from './core/databases/graphql/graphql.module';
+import { TrackedItemsModule } from './modules/tracked_items/tracked-items.module';
 
 
 @Module({
@@ -31,6 +32,7 @@ import { GraphQLModule } from './core/databases/graphql/graphql.module';
     RedisModule,
     RedisCacheModule,
     GraphQLModule,
+    TrackedItemsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
