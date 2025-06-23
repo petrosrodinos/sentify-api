@@ -38,6 +38,7 @@ export class UsersService {
           verification_tokens: true,
           media_subscriptions: true,
           notification_channels: true,
+          tracked_items: true,
         },
       });
 

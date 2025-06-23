@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtGuard } from '../../shared/guards/jwt.guard';
+import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -16,6 +17,12 @@ export class UsersController {
   @Get()
   findAll() {
     return this.usersService.findAll();
+  }
+
+  @Get('me')
+  @UseGuards(JwtGuard)
+  findUser(@CurrentUser('uuid') uuid: string) {
+    return this.usersService.findOne(uuid);
   }
 
   @Get(':uuid')
