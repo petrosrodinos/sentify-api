@@ -1,8 +1,9 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { CreateNotificationChannelDto } from './dto/create-notification-channel.dto';
 import { UpdateNotificationChannelDto } from './dto/update-notification-channel.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { NotificationChannelQueryType } from './dto/notification-channels-query.schema';
+import { NotificationChannelType } from '@prisma/client';
 
 @Injectable()
 export class NotificationChannelsService {
@@ -16,9 +17,46 @@ export class NotificationChannelsService {
 
     try {
 
+      const { channel } = createNotificationChannelDto;
+
+      switch (channel) {
+        case NotificationChannelType.push:
+        case NotificationChannelType.telegram:
+        case NotificationChannelType.slack:
+        case NotificationChannelType.discord:
+          if (!createNotificationChannelDto.client_identifier) {
+            throw new BadRequestException(
+              `'client_identifier' is required for channel type '${channel}'`,
+            );
+          }
+          break;
+
+        case NotificationChannelType.email:
+        case NotificationChannelType.phone:
+        case NotificationChannelType.whatsapp:
+          if (!createNotificationChannelDto.identity_id) {
+            throw new BadRequestException(
+              `'identity_id' is required for channel type '${channel}'`,
+            );
+          }
+          break;
+
+        case NotificationChannelType.web:
+          if (!createNotificationChannelDto.web_push_config) {
+            throw new BadRequestException(
+              `'web_push_config' is required for channel type 'web'`,
+            );
+          }
+          break;
+      }
+
       const notificationChannel = await this.prisma.notificationChannel.create({
         data: {
-          ...createNotificationChannelDto,
+          channel: createNotificationChannelDto.channel,
+          client_identifier: createNotificationChannelDto.client_identifier,
+          identity_id: createNotificationChannelDto.identity_id,
+          web_push_config: createNotificationChannelDto.web_push_config,
+          enabled: createNotificationChannelDto.enabled,
           user_uuid: uuid,
         },
       });
@@ -31,7 +69,7 @@ export class NotificationChannelsService {
 
     } catch (error) {
       this.logger.error(error);
-      throw new InternalServerErrorException('Failed to create notification channel');
+      throw new InternalServerErrorException('Failed to create notification channel', error.message);
     }
   }
 
@@ -57,7 +95,7 @@ export class NotificationChannelsService {
 
     } catch (error) {
       this.logger.error(error);
-      throw new InternalServerErrorException('Failed to find notification channels');
+      throw new InternalServerErrorException('Failed to find notification channels', error.message);
     }
   }
 
