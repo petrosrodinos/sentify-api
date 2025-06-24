@@ -1,8 +1,10 @@
 import { FormattedTweet, TwitterUser } from './twitter.interfaces';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class TwitterUtils {
 
-    static formatUserFollowings(payload: any): TwitterUser[] {
+    formatUserFollowings(payload: any): TwitterUser[] {
         const rawEntries = payload.result?.timeline?.instructions
             ?.find((instr: any) => instr.type === 'TimelineAddEntries')
             ?.entries || [];
@@ -22,7 +24,7 @@ export class TwitterUtils {
             });
     }
 
-    static formatTweetsResponse(data: any): FormattedTweet[] {
+    formatTweetsResponse(data: any): FormattedTweet[] {
         const formattedTweets: FormattedTweet[] = [];
 
         if (
@@ -128,7 +130,7 @@ export class TwitterUtils {
         return formattedTweets;
     }
 
-    static formatFollowingsResponse(rawResponse: any): TwitterUser[] {
+    formatFollowingsResponse(rawResponse: any): TwitterUser[] {
         const formattedFollowings: TwitterUser[] = [];
 
         let usersArray: any[] = [];
@@ -157,6 +159,7 @@ export class TwitterUtils {
             };
             formattedFollowings.push(formattedUser);
         }
+
 
         return formattedFollowings;
     }

@@ -4,6 +4,9 @@ import { ConfigService } from '@nestjs/config';
 import { catchError, firstValueFrom, map } from 'rxjs';
 import { TwitterApi, UserV2 } from 'twitter-api-v2';
 import { RAPID_API_TWITTER_ENDPOINTS, TwitterConstants } from './twitter.constants';
+import { TwitterUtils } from './twitter.utils';
+import { FormattedTweet, TwitterUser } from './twitter.interfaces';
+
 
 @Injectable()
 export class TwitterAdapter {
@@ -13,7 +16,8 @@ export class TwitterAdapter {
     constructor(
         private readonly configService: ConfigService,
         private readonly httpService: HttpService,
-        private readonly twitterConstants: TwitterConstants
+        private readonly twitterConstants: TwitterConstants,
+        private readonly twitterUtils: TwitterUtils
     ) {
         this.client = new TwitterApi({
             appKey: this.configService.get<string>('TWITTER_API_KEY'),
@@ -83,14 +87,16 @@ export class TwitterAdapter {
                 )
             );
 
-            return response;
+            return this.twitterUtils.formatUserFollowings(response);
+
+
         } catch (error) {
             this.logger.error(`Failed to search user ${username}`, error);
             throw new Error(error);
         }
     }
 
-    async getUserFollowings(user_id: string, max_results: number = 100): Promise<any> {
+    async getUserFollowings(user_id: string, max_results: number = 100): Promise<TwitterUser[]> {
         try {
             const response = await firstValueFrom(
                 this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_FOLLOWINGS}`, {
@@ -108,14 +114,16 @@ export class TwitterAdapter {
                 )
             );
 
-            return response;
+            return this.twitterUtils.formatUserFollowings(response);
+
+
         } catch (error) {
             this.logger.error(`Failed to fetch user followings`, error);
             throw new Error(error);
         }
     }
 
-    async getUserTweets(user_id: string, max_results: number = 100): Promise<any> {
+    async getUserTweets(user_id: string, max_results: number = 100): Promise<FormattedTweet[]> {
         try {
             const response = await firstValueFrom(
                 this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_TWEETS}`, {
@@ -133,7 +141,9 @@ export class TwitterAdapter {
                 )
             );
 
-            return response;
+            return this.twitterUtils.formatTweetsResponse(response);
+
+
         } catch (error) {
             this.logger.error(`Failed to fetch user tweets`, error);
             throw new Error(error);

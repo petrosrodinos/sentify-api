@@ -13,6 +13,7 @@ import { RedisModule } from './core/databases/redis/redis.module';
 import { RedisCacheModule } from './modules/redis-cache/redis-cache.module';
 import { GraphQLModule } from './core/databases/graphql/graphql.module';
 import { TrackedItemsModule } from './modules/tracked_items/tracked-items.module';
+import { MarketDataModule } from './modules/market-data/market-data.module';
 
 
 @Module({
@@ -33,6 +34,7 @@ import { TrackedItemsModule } from './modules/tracked_items/tracked-items.module
     RedisCacheModule,
     GraphQLModule,
     TrackedItemsModule,
+    MarketDataModule,
   ],
   controllers: [AppController],
   providers: [AppService],
