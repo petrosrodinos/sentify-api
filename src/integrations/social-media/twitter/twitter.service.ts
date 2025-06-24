@@ -23,6 +23,7 @@ export class TwitterService {
             const response = await this.twitterAdapter.getUserByUsername(username);
 
             return response;
+
         } catch (error) {
             throw new Error(error);
         }
@@ -33,6 +34,7 @@ export class TwitterService {
             const response = await this.twitterAdapter.searchUser(username);
 
             return TwitterUtils.formatFollowingsResponse(response);
+
         } catch (error) {
             throw new Error(error);
         }
@@ -43,6 +45,7 @@ export class TwitterService {
             const response = await this.twitterAdapter.getUserFollowings(user_id, max_results);
 
             return TwitterUtils.formatUserFollowings(response);
+
         } catch (error) {
             throw new Error(error);
         }
@@ -53,6 +56,7 @@ export class TwitterService {
             const response = await this.twitterAdapter.getUserTweets(user_id, max_results);
 
             return TwitterUtils.formatTweetsResponse(response);
+
         } catch (error) {
             throw new Error(error);
         }

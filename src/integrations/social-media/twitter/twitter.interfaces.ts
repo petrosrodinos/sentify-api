@@ -1,7 +1,7 @@
 export interface TwitterUser {
     id: string;
     name: string;
-    screenName: string;
+    screen_name: string;
     profile_image_url: string;
     description: string;
     url?: string;
@@ -9,21 +9,21 @@ export interface TwitterUser {
 
 export interface FormattedTweet {
     id: string;
-    fullText: string;
-    createdAt: string;
-    retweetCount: number;
-    replyCount: number;
-    likeCount: number;
-    bookmarkCount: number;
-    viewCount: string;
+    full_text: string;
+    created_at: string;
+    retweet_count: number;
+    reply_count: number;
+    like_count: number;
+    bookmark_count: number;
+    view_count: string;
     user: {
-        screenName: string;
+        screen_name: string;
         name: string;
-        profileImageUrl: string;
+        profile_image_url: string;
     };
     hashtags: string[];
     urls: string[];
-    userMentions: string[];
+    user_mentions: string[];
     card?: {
         title?: string;
         description?: string;

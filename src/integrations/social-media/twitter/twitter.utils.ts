@@ -14,7 +14,7 @@ export class TwitterUtils {
                 return {
                     id: user.rest_id || '',
                     name: user.core?.name || 'Unknown',
-                    screenName: user.core?.screen_name || '',
+                    screen_name: user.core?.screen_name || '',
                     profile_image_url: user.avatar?.image_url || '',
                     description: user.legacy?.description || '',
                     url: user.legacy?.url || undefined,
@@ -76,17 +76,17 @@ export class TwitterUtils {
 
                         const formattedTweet: FormattedTweet = {
                             id: tweetData.rest_id,
-                            fullText: tweetLegacy?.full_text || '',
-                            createdAt: tweetLegacy?.created_at || '',
-                            retweetCount: tweetLegacy?.retweet_count || 0,
-                            replyCount: tweetLegacy?.reply_count || 0,
-                            likeCount: tweetLegacy?.favorite_count || 0,
-                            bookmarkCount: tweetLegacy?.bookmark_count || 0,
-                            viewCount: views?.count || '0',
+                            full_text: tweetLegacy?.full_text || '',
+                            created_at: tweetLegacy?.created_at || '',
+                            retweet_count: tweetLegacy?.retweet_count || 0,
+                            reply_count: tweetLegacy?.reply_count || 0,
+                            like_count: tweetLegacy?.favorite_count || 0,
+                            bookmark_count: tweetLegacy?.bookmark_count || 0,
+                            view_count: views?.count || '0',
                             user: {
-                                screenName: user?.screen_name || 'N/A',
+                                screen_name: user?.screen_name || 'N/A',
                                 name: user?.name || 'N/A',
-                                profileImageUrl: user?.profile_image_url_https || '',
+                                profile_image_url: user?.profile_image_url_https || '',
                             },
                             hashtags:
                                 tweetLegacy?.entities?.hashtags?.map((tag: any) => tag.text) ||
@@ -94,7 +94,7 @@ export class TwitterUtils {
                             urls:
                                 tweetLegacy?.entities?.urls?.map((url: any) => url.expanded_url) ||
                                 [],
-                            userMentions:
+                            user_mentions:
                                 tweetLegacy?.entities?.user_mentions?.map(
                                     (mention: any) => mention.screen_name,
                                 ) || [],
@@ -150,7 +150,7 @@ export class TwitterUtils {
             const formattedUser: TwitterUser = {
                 id: user.id_str || user.id?.toString() || '', // Use id_str, fallback to id converted to string
                 name: userLegacy.name || 'N/A',
-                screenName: userLegacy.screen_name || 'N/A',
+                screen_name: userLegacy.screen_name || 'N/A',
                 profile_image_url: userLegacy.profile_image_url_https || userLegacy.profile_image_url || '',
                 description: userLegacy.description || '',
                 url: userLegacy.url || undefined, // url is optional, set to undefined if not present

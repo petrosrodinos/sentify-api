@@ -1,10 +1,9 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AxiosResponse } from 'axios';
-import { catchError, firstValueFrom, map, Observable } from 'rxjs';
-import { TwitterApi, TweetV2, UserV2 } from 'twitter-api-v2';
-import { RAPID_API_TWITTER_BASE_URL, RAPID_API_TWITTER_ENDPOINTS, TwitterConstants } from './twitter.constants';
+import { catchError, firstValueFrom, map } from 'rxjs';
+import { TwitterApi, UserV2 } from 'twitter-api-v2';
+import { RAPID_API_TWITTER_ENDPOINTS, TwitterConstants } from './twitter.constants';
 
 @Injectable()
 export class TwitterAdapter {
