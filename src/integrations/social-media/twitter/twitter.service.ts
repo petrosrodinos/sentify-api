@@ -18,7 +18,7 @@ export class TwitterService {
     }
 
 
-    async getUser(username: string): Promise<UserV2 | null> {
+    async getUserByUsername(username: string): Promise<TwitterUser | null> {
         try {
             const response = await this.twitterAdapter.getUserByUsername(username);
 

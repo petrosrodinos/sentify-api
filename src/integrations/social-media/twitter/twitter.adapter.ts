@@ -59,10 +59,21 @@ export class TwitterAdapter {
     }
 
 
-    async getUserByUsername(username: string): Promise<UserV2 | null> {
+    async getUserByUsername(username: string): Promise<TwitterUser | null> {
         try {
-            const user = await this.client.v2.userByUsername(username);
-            return user.data;
+            const response = await firstValueFrom(
+                this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_BY_USERNAME}`, {
+                    headers: this.twitterConstants.getHeaders(),
+                    params: { username }
+                }).pipe(
+                    map(response => response.data)
+                )
+            );
+
+            console.log(JSON.stringify(response.result.data.user.result, null, 2));
+
+            return this.twitterUtils.formatUserByUsername(response);
+
         } catch (error) {
             this.logger.error(`Failed to fetch user ${username}`, error);
             throw new Error(error);
@@ -141,7 +152,7 @@ export class TwitterAdapter {
                 )
             );
 
-            return this.twitterUtils.formatTweetsResponse(response);
+            return this.twitterUtils.formatUserTweets(response);
 
 
         } catch (error) {

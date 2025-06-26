@@ -24,7 +24,7 @@ export class TwitterUtils {
             });
     }
 
-    formatTweetsResponse(data: any): FormattedTweet[] {
+    formatUserTweets(data: any): FormattedTweet[] {
         const formattedTweets: FormattedTweet[] = [];
 
         if (
@@ -130,7 +130,7 @@ export class TwitterUtils {
         return formattedTweets;
     }
 
-    formatFollowingsResponse(rawResponse: any): TwitterUser[] {
+    formatFollowings(rawResponse: any): TwitterUser[] {
         const formattedFollowings: TwitterUser[] = [];
 
         let usersArray: any[] = [];
@@ -162,6 +162,28 @@ export class TwitterUtils {
 
 
         return formattedFollowings;
+    }
+
+    formatUserByUsername(rawResponse: any): TwitterUser | null {
+        if (!rawResponse?.result.data.user.result) {
+            return null;
+        }
+
+        const user = rawResponse.result.data.user.result;
+        const legacy = user.legacy;
+
+        if (!legacy) {
+            return null;
+        }
+
+        return {
+            id: user.rest_id || '',
+            name: user?.core?.name || '',
+            screen_name: user?.core?.screen_name || '',
+            profile_image_url: user?.avatar?.image_url || null,
+            description: user?.legacy?.description || '',
+            url: legacy.url || undefined,
+        };
     }
 
 }

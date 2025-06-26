@@ -5,7 +5,7 @@ import { TwitterService as TwitterIntegrationService } from '@/integrations/soci
 export class TwitterService {
   constructor(private readonly twitterIntegrationService: TwitterIntegrationService) { }
 
-  findByUsername(username: string) {
+  getUserByUsername(username: string) {
 
     try {
 
@@ -13,7 +13,7 @@ export class TwitterService {
         throw new BadRequestException('Username is required');
       }
 
-      return this.twitterIntegrationService.getUser(username);
+      return this.twitterIntegrationService.getUserByUsername(username);
 
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -37,7 +37,7 @@ export class TwitterService {
     }
   }
 
-  async findFollowings(user_id: string) {
+  async getUserFollowings(user_id: string) {
 
     try {
 
@@ -61,7 +61,6 @@ export class TwitterService {
       if (!user_id) {
         throw new BadRequestException('User ID is required');
       }
-
 
       const tweets = await this.twitterIntegrationService.getUserTweets(user_id);
 
