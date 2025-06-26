@@ -98,6 +98,7 @@ export class TwitterAdapter {
                 )
             );
 
+
             return this.twitterUtils.formatUserFollowings(response);
 
 
@@ -107,7 +108,7 @@ export class TwitterAdapter {
         }
     }
 
-    async getUserFollowings(user_id: string, max_results: number = 100): Promise<TwitterUser[]> {
+    async getUserFollowings(user_id: string, max_results: number = 1): Promise<TwitterUser[]> {
         try {
             const response = await firstValueFrom(
                 this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_FOLLOWINGS}`, {
@@ -124,6 +125,11 @@ export class TwitterAdapter {
                     })
                 )
             );
+
+            console.log(JSON.stringify(response, null, 2));
+
+            // return response;
+
 
             return this.twitterUtils.formatUserFollowings(response);
 

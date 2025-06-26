@@ -5,23 +5,62 @@ import { Injectable } from '@nestjs/common';
 export class TwitterUtils {
 
     formatUserFollowings(payload: any): TwitterUser[] {
-        const rawEntries = payload.result?.timeline?.instructions
-            ?.find((instr: any) => instr.type === 'TimelineAddEntries')
-            ?.entries || [];
+        const users: TwitterUser[] = [];
 
-        return rawEntries
-            .filter((entry) => entry.content?.entryType === 'TimelineTimelineItem')
-            .map((entry): TwitterUser => {
-                const user = entry.content?.itemContent?.user_results?.result || {};
-                return {
-                    id: user.rest_id || '',
-                    name: user.core?.name || 'Unknown',
-                    screen_name: user.core?.screen_name || '',
-                    profile_image_url: user.avatar?.image_url || '',
-                    description: user.legacy?.description || '',
-                    url: user.legacy?.url || undefined,
-                };
-            });
+        // Check if the payload has the expected structure
+        if (!payload?.result?.timeline?.instructions) {
+            console.warn("Payload does not contain expected timeline instructions.");
+            return [];
+        }
+
+        // Find the instruction that contains the 'entries' (TimelineAddEntries type)
+        const addEntriesInstruction = payload.result.timeline.instructions.find(
+            (instruction: any) => instruction.type === 'TimelineAddEntries'
+        );
+
+        if (!addEntriesInstruction || !Array.isArray(addEntriesInstruction.entries)) {
+            console.warn("Could not find TimelineAddEntries instruction or its entries.");
+            return [];
+        }
+
+        // Iterate through each entry in the 'entries' array
+        for (const entry of addEntriesInstruction.entries) {
+            const userResult = entry?.content?.itemContent?.user_results?.result;
+
+            if (userResult) {
+                const legacy = userResult.legacy;
+                const core = userResult.core; // Access the new 'core' object
+                const avatar = userResult.avatar; // Access the new 'avatar' object
+
+                let userURL: string | undefined = undefined;
+                // Check if URL entities exist in legacy and have at least one URL
+                if (legacy?.entities?.url?.urls && legacy.entities.url.urls.length > 0) {
+                    userURL = legacy.entities.url.urls[0].expanded_url;
+                }
+
+                // Extract profile image URL from 'avatar' or fallback to legacy
+                const profileImageUrl = avatar?.image_url || legacy?.profile_image_url_https || legacy?.profile_image_url || '';
+
+                // Extract screen name from 'core' or fallback to legacy
+                const screenName = core?.screen_name || legacy?.screen_name || '';
+
+                // Extract name from 'core' or fallback to legacy
+                const name = core?.name || legacy?.name || 'Unknown';
+
+                users.push({
+                    id: userResult.rest_id || userResult.id || '', // Use rest_id primarily, fallback to id
+                    name: name,
+                    screen_name: screenName,
+                    profile_image_url: profileImageUrl,
+                    description: legacy?.description || '', // Description still seems to be in legacy
+                    url: userURL,
+                });
+            } else {
+                console.warn("Skipping entry due to missing userResult data:", entry);
+            }
+        }
+
+        return users;
     }
 
     formatUserTweets(data: any): FormattedTweet[] {
