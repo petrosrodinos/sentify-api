@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ConfigModule } from '@nestjs/config';
-import { TwitterModule as TwitterIntegrationModule } from './integrations/social-media/twitter/twitter.module';
+import { TwitterIntegrationModule } from './integrations/social-media/twitter/twitter.module';
 import { MediaSubscriptionsModule } from './modules/media-subscriptions/media-subscriptions.module';
 import { TwitterModule } from './modules/twitter/twitter.module';
 import { SharedModule } from './shared/shared.module';
@@ -13,7 +13,7 @@ import { RedisModule } from './core/databases/redis/redis.module';
 import { RedisCacheModule } from './modules/redis-cache/redis-cache.module';
 import { GraphQLModule } from './core/databases/graphql/graphql.module';
 import { TrackedItemsModule } from './modules/tracked_items/tracked-items.module';
-import { MarketDataModule } from './modules/market-data/market-data.module';
+import { TickersModule } from './modules/tickers/tickers.module';
 
 
 @Module({
@@ -34,7 +34,7 @@ import { MarketDataModule } from './modules/market-data/market-data.module';
     RedisCacheModule,
     GraphQLModule,
     TrackedItemsModule,
-    MarketDataModule,
+    TickersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

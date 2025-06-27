@@ -2,12 +2,10 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { catchError, firstValueFrom, map } from 'rxjs';
 import { POLYGON_ENDPOINTS, PolygonConstants } from './polygon.constants';
-import {
-    PolygonAggregatesResponse,
-    PolygonTickerDetailsResponse,
-    PolygonTickersResponse,
-} from './polygon.interfaces';
-import { GetStockAggregatesType, GetStockTickerDetailsType, GetStockTickersType } from '@/modules/market-data/dto/polygon-stock.schema';
+
+import { GetStockAggregatesType, GetStockTickerDetailsType, GetStockTickersType } from '@/modules/tickers/dto/ticker.schema';
+import { PolygonUtils } from './polygon.utils';
+import { PolygonAggregatesResponse, PolygonTickersResponse, TickerDetails } from '../tickers.interface';
 
 
 
@@ -59,7 +57,7 @@ export class PolygonAdapter {
     }
 
 
-    async getTickerDetails(params: GetStockTickerDetailsType): Promise<PolygonTickerDetailsResponse> {
+    async getTickerDetails(params: GetStockTickerDetailsType): Promise<TickerDetails> {
         const { ticker } = params;
 
         try {
@@ -78,12 +76,16 @@ export class PolygonAdapter {
                 )
             );
 
-            return response;
+            const formattedResponse = PolygonUtils.formatTickerDetails(response);
+
+            return formattedResponse;
+
         } catch (error) {
             this.logger.error(`Failed to fetch stock ticker details for ${ticker}`, error);
             throw new Error(error);
         }
     }
+
 
     async getTickers(params: GetStockTickersType = {}): Promise<PolygonTickersResponse> {
         const {
@@ -138,24 +140,7 @@ export class PolygonAdapter {
     }
 
 
-    async getTickerIcon(ticker: string): Promise<string | null> {
-        try {
-            const ticker_details = await this.getTickerDetails({ ticker });
 
-            if (ticker_details.branding?.icon_url) {
-                return ticker_details.branding.icon_url;
-            }
-
-            if (ticker_details.branding?.logo_url) {
-                return ticker_details.branding.logo_url;
-            }
-
-            return null;
-        } catch (error) {
-            this.logger.error(`Failed to fetch stock icon for ${ticker}`, error);
-            return null;
-        }
-    }
 
 
 }

@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { TwitterAdapter } from './twitter.adapter';
-import { TweetV2, UserV2 } from 'twitter-api-v2';
-import { TwitterUtils } from './twitter.utils';
+import { UserV2 } from 'twitter-api-v2';
 import { FormattedTweet, TwitterUser } from './twitter.interfaces';
 
 @Injectable()
-export class TwitterService {
+export class TwitterIntegrationService {
 
     constructor(private readonly twitterAdapter: TwitterAdapter) { }
 

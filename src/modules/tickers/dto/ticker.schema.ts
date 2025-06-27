@@ -47,13 +47,10 @@ export const GetStockTickersSchema = z.object({
     sort_by: z.enum(['market_cap', 'ticker', 'name', 'type', 'market']).optional().default('ticker')
 });
 
-export const GetTickerInfoSchema = z.object({
-    ticker: z.string()
-});
+
 
 
 
 export type GetStockAggregatesType = z.infer<typeof GetStockAggregatesSchema>;
 export type GetStockTickerDetailsType = z.infer<typeof GetStockTickerDetailsSchema>;
 export type GetStockTickersType = z.infer<typeof GetStockTickersSchema>;
-export type GetTickerInfoType = z.infer<typeof GetTickerInfoSchema>;
