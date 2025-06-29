@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { MediaSubscriptionsService } from './media-subscriptions.service';
-import { CreateMediaSubscriptionBatchDto } from './dto/create-media-subscription.dto';
+import { CreateMediaSubscriptionBatchDto, CreateMediaSubscriptionDto } from './dto/create-media-subscription.dto';
 import { UpdateMediaSubscriptionDto } from './dto/update-media-subscription.dto';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
@@ -15,6 +15,17 @@ import { PlatformType } from '@prisma/client';
 @Controller('media-subscriptions')
 export class MediaSubscriptionsController {
   constructor(private readonly mediaSubscriptionsService: MediaSubscriptionsService) { }
+
+  @Post('create')
+  @UseGuards(JwtGuard)
+  @ApiOperation({ summary: 'Create a media subscription' })
+  @ApiResponse({
+    status: 201,
+    description: 'Media subscription created successfully',
+  })
+  create(@CurrentUser('uuid') uuid: string, @Body() createMediaSubscriptionDto: CreateMediaSubscriptionDto) {
+    return this.mediaSubscriptionsService.create(uuid, createMediaSubscriptionDto);
+  }
 
   @Post()
   @UseGuards(JwtGuard)
@@ -85,5 +96,16 @@ export class MediaSubscriptionsController {
   })
   remove(@CurrentUser('uuid') uuid: string, @Param('id') id: string) {
     return this.mediaSubscriptionsService.remove(uuid, +id);
+  }
+
+  @Delete()
+  @UseGuards(JwtGuard)
+  @ApiOperation({ summary: 'Delete all media subscriptions' })
+  @ApiResponse({
+    status: 200,
+    description: 'All media subscriptions deleted successfully',
+  })
+  removeAll(@CurrentUser('uuid') uuid: string) {
+    return this.mediaSubscriptionsService.removeAll(uuid);
   }
 }

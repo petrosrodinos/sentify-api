@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
-import { CreateTrackedItemBatchDto } from './dto/create-tracked-item.dto';
+import { CreateTrackedItemBatchDto, CreateTrackedItemDto } from './dto/create-tracked-item.dto';
 import { UpdateTrackedItemDto } from './dto/update-tracked-item.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { TrackedItemQueryType } from './dto/tracked-items-query.schema';
@@ -10,6 +10,27 @@ export class TrackedItemsService {
     private readonly prisma: PrismaService,
     private readonly logger: Logger,
   ) { }
+
+  async create(uuid: string, create_tracked_item_dto: CreateTrackedItemDto) {
+    try {
+      const { item_type, item_identifier, enabled, meta } = create_tracked_item_dto;
+
+      const tracked_item = await this.prisma.trackedItem.create({
+        data: {
+          user_uuid: uuid,
+          item_type,
+          item_identifier,
+          enabled,
+          meta,
+        },
+      });
+
+      return tracked_item;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
+  }
 
   async createMany(uuid: string, batch_dto: CreateTrackedItemBatchDto) {
     const { items } = batch_dto;
@@ -91,6 +112,17 @@ export class TrackedItemsService {
     try {
       return this.prisma.trackedItem.delete({
         where: { id, user_uuid: uuid },
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  removeAll(uuid: string) {
+    try {
+      return this.prisma.trackedItem.deleteMany({
+        where: { user_uuid: uuid },
       });
     } catch (error) {
       this.logger.error(error);

@@ -2,10 +2,9 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { catchError, firstValueFrom, map } from 'rxjs';
 import { POLYGON_ENDPOINTS, PolygonConstants } from './polygon.constants';
-
-import { GetStockAggregatesType, GetStockTickerDetailsType, GetStockTickersType } from '@/modules/tickers/dto/ticker.schema';
+import { GetStockTickerDetailsType, GetStockTickersType } from '@/modules/tickers/dto/ticker.schema';
 import { PolygonUtils } from './polygon.utils';
-import { PolygonAggregatesResponse, PolygonTickersResponse, TickerDetails } from '../tickers.interface';
+import { PolygonTickersResponse, TickerDetails } from '../tickers.interface';
 
 
 
@@ -17,44 +16,6 @@ export class PolygonAdapter {
         private readonly httpService: HttpService,
         private readonly polygonConstants: PolygonConstants
     ) { }
-
-    async getTickersAggregates(params: GetStockAggregatesType): Promise<PolygonAggregatesResponse> {
-        const {
-            ticker,
-            multiplier = 1,
-            timespan = 'day',
-            from,
-            to,
-            adjusted = true,
-            sort = 'asc',
-            limit = 120
-        } = params;
-
-        try {
-            const response = await firstValueFrom(
-                this.httpService.get(`${POLYGON_ENDPOINTS.STOCK_AGGREGATES}/${ticker}/range/${multiplier}/${timespan}/${from}/${to}`, {
-                    headers: this.polygonConstants.getHeaders(),
-                    params: {
-                        adjusted,
-                        sort,
-                        limit,
-                        apiKey: this.polygonConstants.getApiKey(),
-                    }
-                }).pipe(
-                    map(response => response.data),
-                    catchError(error => {
-                        this.logger.error(`Error fetching stock aggregates for ${ticker}:`, error.response?.data || error.message);
-                        throw error;
-                    })
-                )
-            );
-
-            return response;
-        } catch (error) {
-            this.logger.error(`Failed to fetch stock aggregates for ${ticker}`, error);
-            throw new Error(error);
-        }
-    }
 
 
     async getTickerDetails(params: GetStockTickerDetailsType): Promise<TickerDetails> {
@@ -137,6 +98,38 @@ export class PolygonAdapter {
             this.logger.error('Failed to fetch stock tickers', error);
             throw new Error(error);
         }
+    }
+
+    async getTickersWithMeta(params: GetStockTickersType = {}): Promise<TickerDetails[]> {
+
+        try {
+            console.log('params', params);
+
+            const tickers = await this.getTickers(params);
+
+            // return tickers.results
+
+            if (!tickers.results) {
+                throw new Error('No tickers found');
+            }
+
+            const tickersWithMeta = await Promise.all(tickers.results.map(async ticker => {
+                const tickerDetails = await this.getTickerDetails({ ticker: ticker.ticker });
+                return {
+                    // ...ticker,
+                    ...tickerDetails
+                }
+            }));
+
+            return tickersWithMeta;
+        } catch (error) {
+            // this.logger.error('Failed to fetch tickers with meta', error.message);
+            // return []
+            throw new Error(error.message);
+        }
+
+
+
     }
 
 

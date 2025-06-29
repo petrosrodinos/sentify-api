@@ -4,7 +4,7 @@ import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { TrackedItemQuerySchema, TrackedItemQueryType } from './dto/tracked-items-query.schema';
-import { CreateTrackedItemBatchDto } from './dto/create-tracked-item.dto';
+import { CreateTrackedItemBatchDto, CreateTrackedItemDto } from './dto/create-tracked-item.dto';
 import { UpdateTrackedItemDto } from './dto/update-tracked-item.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { TrackedItem } from './entities/tracked_item.entity';
@@ -13,8 +13,20 @@ import { TrackedItemType } from '@prisma/client';
 @ApiTags('Tracked Items')
 @ApiBearerAuth()
 @Controller('tracked-items')
+@UseGuards(JwtGuard)
 export class TrackedItemsController {
   constructor(private readonly tracked_items_service: TrackedItemsService) { }
+
+  @Post('create')
+  @UseGuards(JwtGuard)
+  @ApiOperation({ summary: 'Create a tracked item' })
+  @ApiResponse({
+    status: 201,
+    description: 'Tracked item created successfully',
+  })
+  create(@CurrentUser('uuid') uuid: string, @Body() create_tracked_item_dto: CreateTrackedItemDto) {
+    return this.tracked_items_service.create(uuid, create_tracked_item_dto);
+  }
 
   @Post()
   @UseGuards(JwtGuard)
@@ -34,7 +46,6 @@ export class TrackedItemsController {
   }
 
   @Get()
-  @UseGuards(JwtGuard)
   @ApiOperation({ summary: 'Get all tracked items with optional filters' })
   @ApiQuery({ name: 'user_uuid', required: false, description: 'Filter by user UUID' })
   @ApiQuery({ name: 'item_type', required: false, description: 'Filter by item type', enum: TrackedItemType })
@@ -62,7 +73,6 @@ export class TrackedItemsController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtGuard)
   @ApiOperation({ summary: 'Update a tracked item' })
   @ApiParam({ name: 'id', description: 'Tracked item ID', type: 'number' })
   @ApiResponse({
@@ -75,7 +85,6 @@ export class TrackedItemsController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtGuard)
   @ApiOperation({ summary: 'Delete a tracked item' })
   @ApiParam({ name: 'id', description: 'Tracked item ID', type: 'number' })
   @ApiResponse({
@@ -85,5 +94,15 @@ export class TrackedItemsController {
   })
   remove(@CurrentUser('uuid') uuid: string, @Param('id') id: string) {
     return this.tracked_items_service.remove(uuid, +id);
+  }
+
+  @Delete()
+  @ApiOperation({ summary: 'Delete all tracked items' })
+  @ApiResponse({
+    status: 200,
+    description: 'All tracked items deleted successfully',
+  })
+  removeAll(@CurrentUser('uuid') uuid: string) {
+    return this.tracked_items_service.removeAll(uuid);
   }
 }

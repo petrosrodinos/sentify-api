@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
-import { CreateMediaSubscriptionBatchDto } from './dto/create-media-subscription.dto';
+import { CreateMediaSubscriptionBatchDto, CreateMediaSubscriptionDto } from './dto/create-media-subscription.dto';
 import { UpdateMediaSubscriptionDto } from './dto/update-media-subscription.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { MediaSubscriptionQueryType } from './dto/media-subscriptions-query.schema';
@@ -12,6 +12,28 @@ export class MediaSubscriptionsService {
     private readonly prisma: PrismaService,
     private readonly logger: Logger,
   ) { }
+
+  async create(uuid: string, createMediaSubscriptionDto: CreateMediaSubscriptionDto) {
+
+    try {
+
+      const mediaSubscription = await this.prisma.mediaSubscription.create({
+        data: {
+          user_uuid: uuid,
+          platform_type: createMediaSubscriptionDto.platform_type,
+          account_identifier: createMediaSubscriptionDto.account_identifier,
+          enabled: createMediaSubscriptionDto.enabled,
+          meta: createMediaSubscriptionDto.meta,
+        },
+      });
+
+      return mediaSubscription;
+
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
+  }
 
   async createMany(uuid: string, batch_dto: CreateMediaSubscriptionBatchDto) {
 
@@ -108,6 +130,19 @@ export class MediaSubscriptionsService {
       return this.prisma.mediaSubscription.delete({
         where: { id, user_uuid: uuid },
       });
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async removeAll(uuid: string) {
+    try {
+      const mediaSubscriptions = await this.prisma.mediaSubscription.deleteMany({
+        where: { user_uuid: uuid },
+      });
+
+      return mediaSubscriptions;
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException(error.message);

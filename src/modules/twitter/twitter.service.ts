@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TwitterIntegrationService } from '@/integrations/social-media/twitter/twitter.service';
+import { TestTwitterUser, TestTwitterUsers } from './twitter.contants';
 
 @Injectable()
 export class TwitterService {
@@ -12,6 +13,8 @@ export class TwitterService {
       if (!username) {
         throw new BadRequestException('Username is required');
       }
+
+      return TestTwitterUser;
 
       return this.twitterIntegrationService.getUserByUsername(username);
 
@@ -44,6 +47,8 @@ export class TwitterService {
       if (!user_id) {
         throw new BadRequestException('User ID is required');
       }
+
+      return TestTwitterUsers;
 
       const followers = await this.twitterIntegrationService.getUserFollowings(user_id);
 

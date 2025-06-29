@@ -1,11 +1,14 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { TwitterService } from './twitter.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { TwitterUser } from './entities/twitter-user.entity';
 import { TwitterTweet } from './entities/twitter-tweet.entity';
+import { JwtGuard } from '@/shared/guards/jwt.guard';
+
 
 @ApiTags('Twitter')
 @Controller('twitter')
+@UseGuards(JwtGuard)
 export class TwitterController {
   constructor(private readonly twitterService: TwitterService) { }
 
