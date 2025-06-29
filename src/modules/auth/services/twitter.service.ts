@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
-import { TwitterService } from '@/integrations/social-media/twitter/twitter.service';
+import { TwitterIntegrationService } from '@/integrations/social-media/twitter/twitter.service';
 import { Logger } from '@nestjs/common';
 import { CreateJwtService } from '@/shared/utils/jwt/jwt.service';
 import { AuthProvider } from '@prisma/client';
@@ -9,7 +9,7 @@ import { AuthProvider } from '@prisma/client';
 export class TwitterAuthService {
     constructor(
         private readonly prisma: PrismaService,
-        private readonly twitterService: TwitterService,
+        private readonly twitterService: TwitterIntegrationService,
         private readonly logger: Logger,
         private readonly jwtService: CreateJwtService,
     ) { }

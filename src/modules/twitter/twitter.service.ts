@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { TwitterService as TwitterIntegrationService } from '@/integrations/social-media/twitter/twitter.service';
+import { TwitterIntegrationService } from '@/integrations/social-media/twitter/twitter.service';
 
 @Injectable()
 export class TwitterService {
