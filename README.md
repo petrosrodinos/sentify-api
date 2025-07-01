@@ -16,4 +16,4 @@ npx prisma migrate reset
 Get-ChildItem -Recurse -Directory -Name | Where-Object { $\_ -notmatch 'node_modules|dist' }
 
 docker-compose -f docker-compose.local.yml down
-docker-compose -f docker-compose.local.yml up -d
+docker-compose -f docker-compose.local.yml up -d.
