@@ -14,6 +14,7 @@ import { RedisCacheModule } from './modules/redis-cache/redis-cache.module';
 import { GraphQLModule } from './core/databases/graphql/graphql.module';
 import { TrackedItemsModule } from './modules/tracked_items/tracked-items.module';
 import { TickersModule } from './modules/tickers/tickers.module';
+import { VerificationTokensModule } from './modules/verification-tokens/verification-tokens.module';
 
 
 @Module({
@@ -35,6 +36,7 @@ import { TickersModule } from './modules/tickers/tickers.module';
     GraphQLModule,
     TrackedItemsModule,
     TickersModule,
+    VerificationTokensModule,
   ],
   controllers: [AppController],
   providers: [AppService],

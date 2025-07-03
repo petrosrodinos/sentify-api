@@ -57,7 +57,7 @@ model VerificationToken {
   uuid          String       @unique @default(uuid())
   user_uuid     String?
   token         String
-  state         String
+  state         String?
   type          AuthProvider
   identity_uuid String?
   expires_at    DateTime?
@@ -138,6 +138,7 @@ enum AuthProvider {
   google
   facebook
   twitter
+  telegram
 }
 
 enum PlatformType {

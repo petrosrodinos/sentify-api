@@ -7,6 +7,7 @@ enum AuthProvider {
   facebook
   google
   phone
+  telegram
   twitter
 }
 
