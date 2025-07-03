@@ -71,7 +71,7 @@ export class VerificationTokensController {
     return this.verificationTokensService.findAll(query);
   }
 
-  @Get(':token')
+  @Get('verify/:token')
   @ApiOperation({
     summary: 'Get verification token by token string',
     description: 'Retrieves a specific verification token using the token string. This endpoint is typically used for token validation during verification processes.'
@@ -81,19 +81,10 @@ export class VerificationTokensController {
     description: 'The verification token string',
     example: 'ABC123DEF456GHI789'
   })
-  findOne(@Param('token') token: string) {
-    return this.verificationTokensService.findOne(token);
+  verifyToken(@Param('token') token: string) {
+    return this.verificationTokensService.verifyToken(token);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVerificationTokenDto: UpdateVerificationTokenDto) {
-    return this.verificationTokensService.update(+id, updateVerificationTokenDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.verificationTokensService.remove(+id);
-  }
 
   @Delete()
   @UseGuards(JwtGuard)

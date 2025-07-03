@@ -4,6 +4,7 @@ import { UpdateVerificationTokenDto } from './dto/update-verification-token.dto'
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { OtpService } from '@/shared/utils/otp/otp.service';
 import { VerificationTokenQueryType } from './dto/verification-tokens-query.schema';
+import { NotificationChannelType } from '@prisma/client';
 
 @Injectable()
 export class VerificationTokensService {
@@ -66,17 +67,42 @@ export class VerificationTokensService {
     }
   }
 
-  findOne(token: string) {
-    return `This action returns a #${token} verificationToken`;
+  async verifyToken(token: string, meta?: any) {
+    try {
+      const verificationToken = await this.prisma.verificationToken.findFirst({
+        where: {
+          token,
+        },
+      });
+
+      if (!verificationToken) {
+        throw new NotFoundException('Verification token not found');
+      }
+
+      await this.prisma.notificationChannel.create({
+        data: {
+          user_uuid: verificationToken?.user_uuid,
+          client_identifier: meta?.chat_id,
+          channel: verificationToken.type as NotificationChannelType,
+          verified: true,
+          enabled: true,
+          meta: meta
+        }
+      });
+
+      await this.prisma.verificationToken.delete({
+        where: {
+          id: verificationToken.id
+        }
+      });
+
+
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
-  update(id: number, updateVerificationTokenDto: UpdateVerificationTokenDto) {
-    return `This action updates a #${id} verificationToken`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} verificationToken`;
-  }
 
   removeAll(uuid: string) {
     return this.prisma.verificationToken.deleteMany({

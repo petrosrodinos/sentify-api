@@ -8,5 +8,6 @@ import { OtpService } from '@/shared/utils/otp/otp.service';
   imports: [PrismaModule],
   controllers: [VerificationTokensController],
   providers: [VerificationTokensService, Logger, OtpService],
+  exports: [VerificationTokensService]
 })
 export class VerificationTokensModule { }

@@ -37,8 +37,8 @@ model Identity {
   provider_id         String?
   access_token        String?
   refresh_token       String?
-  expires_at          Int?
   password            String?
+  expires_at          Int?
   verified            Boolean             @default(false)
   user                User                @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   created_at          DateTime            @default(now())
@@ -102,6 +102,7 @@ model NotificationChannel {
   web_push_config Json?
   verified Boolean @default(false)
   enabled Boolean @default(true)
+  meta Json?
   created_at DateTime @default(now()) @map("created_at")
   user User @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   identity Identity? @relation(fields: [identity_id], references: [uuid], onDelete: SetNull)
