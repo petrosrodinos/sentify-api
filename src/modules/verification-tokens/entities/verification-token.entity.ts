@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AuthProvider } from '@prisma/client';
+import { AuthProviderType } from '@prisma/client';
 
 export class VerificationToken {
     @ApiProperty({
@@ -33,10 +33,10 @@ export class VerificationToken {
 
     @ApiProperty({
         description: 'Authentication provider type',
-        enum: AuthProvider,
-        example: AuthProvider.email
+        enum: AuthProviderType,
+        example: AuthProviderType.email
     })
-    type: AuthProvider;
+    type: AuthProviderType;
 
     @ApiProperty({
         description: 'Optional identity UUID for the verification token',

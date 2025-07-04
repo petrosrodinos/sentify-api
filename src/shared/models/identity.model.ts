@@ -1,10 +1,10 @@
 import { ObjectType, Field, Int, ID, registerEnumType } from '@nestjs/graphql';
-import { AuthProvider, NotificationChannelType } from '@prisma/client';
+import { AuthProviderType, NotificationChannelType } from '@prisma/client';
 import { User } from './user.model';
 import { VerificationToken } from './verification-token.model';
 
-registerEnumType(AuthProvider, {
-    name: 'AuthProvider',
+registerEnumType(AuthProviderType, {
+    name: 'AuthProviderType',
 });
 
 registerEnumType(NotificationChannelType, {
@@ -22,8 +22,8 @@ export class Identity {
     @Field()
     user_uuid: string;
 
-    @Field(() => AuthProvider)
-    provider: AuthProvider;
+    @Field(() => AuthProviderType)
+    provider: AuthProviderType;
 
     @Field(() => String, { nullable: true })
     provider_id?: string;

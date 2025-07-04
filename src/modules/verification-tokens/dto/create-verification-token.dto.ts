@@ -1,4 +1,4 @@
-import { AuthProvider } from "@prisma/client";
+import { AuthProviderType } from "@prisma/client";
 import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -26,12 +26,12 @@ export class CreateVerificationTokenDto {
 
     @ApiProperty({
         description: 'Authentication provider type',
-        enum: AuthProvider,
-        example: AuthProvider.email
+        enum: AuthProviderType,
+        example: AuthProviderType.email
     })
     @IsNotEmpty()
-    @IsEnum(AuthProvider)
-    type: AuthProvider;
+    @IsEnum(AuthProviderType)
+    type: AuthProviderType;
 
     @ApiProperty({
         description: 'Optional identity UUID for the verification token',

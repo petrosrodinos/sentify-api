@@ -2,7 +2,7 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-enum AuthProvider {
+enum AuthProviderType {
   email
   facebook
   google
@@ -23,7 +23,7 @@ type Identity {
   id: Int!
   notification_channels: [NotificationChannelType!]
   password: String
-  provider: AuthProvider!
+  provider: AuthProviderType!
   provider_id: String
   refresh_token: String
   updated_at: DateTime!
@@ -108,7 +108,7 @@ type VerificationToken {
   identity_uuid: String
   state: String!
   token: String!
-  type: AuthProvider!
+  type: AuthProviderType!
   updated_at: DateTime!
   user: User
   user_uuid: String

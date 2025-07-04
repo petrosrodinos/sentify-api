@@ -3,7 +3,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { TwitterIntegrationService } from '@/integrations/social-media/twitter/twitter.service';
 import { Logger } from '@nestjs/common';
 import { CreateJwtService } from '@/shared/utils/jwt/jwt.service';
-import { AuthProvider } from '@prisma/client';
+import { AuthProviderType } from '@prisma/client';
 
 @Injectable()
 export class TwitterAuthService {
@@ -32,7 +32,7 @@ export class TwitterAuthService {
                     expires_at: null,
                     token: code_verifier,
                     state: state,
-                    type: AuthProvider.twitter,
+                    type: AuthProviderType.twitter,
 
                 },
             });
@@ -68,7 +68,7 @@ export class TwitterAuthService {
             const identity = await this.prisma.identity.findUnique({
                 where: {
                     provider_provider_id: {
-                        provider: AuthProvider.twitter,
+                        provider: AuthProviderType.twitter,
                         provider_id: auth_user.id,
                     },
                 },
@@ -97,7 +97,7 @@ export class TwitterAuthService {
                     data: {
                         identities: {
                             create: {
-                                provider: AuthProvider.twitter,
+                                provider: AuthProviderType.twitter,
                                 provider_id: auth_user.id,
                                 verified: true,
                                 access_token: access_token,

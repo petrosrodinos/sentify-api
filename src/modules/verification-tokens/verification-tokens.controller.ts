@@ -8,7 +8,7 @@ import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { VerificationTokenQuerySchema } from './dto/verification-tokens-query.schema';
 import { VerificationTokenQueryType } from './dto/verification-tokens-query.schema';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
-import { AuthProvider } from '@prisma/client';
+import { AuthProviderType } from '@prisma/client';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 
 @ApiTags('Verification Tokens')
@@ -53,8 +53,8 @@ export class VerificationTokensController {
     name: 'type',
     required: false,
     description: 'Filter by authentication provider type',
-    enum: AuthProvider,
-    example: AuthProvider.email
+    enum: AuthProviderType,
+    example: AuthProviderType.email
   })
   @ApiQuery({
     name: 'identity_uuid',
@@ -71,7 +71,7 @@ export class VerificationTokensController {
     return this.verificationTokensService.findAll(query);
   }
 
-  @Get('verify/:token')
+  @Post('verify/:token')
   @ApiOperation({
     summary: 'Get verification token by token string',
     description: 'Retrieves a specific verification token using the token string. This endpoint is typically used for token validation during verification processes.'

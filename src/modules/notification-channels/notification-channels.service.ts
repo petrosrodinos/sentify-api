@@ -88,7 +88,7 @@ export class NotificationChannelsService {
       });
 
       if (!notificationChannels?.length) {
-        return new NotFoundException('Notification channels not found');
+        throw new NotFoundException('Notification channels not found');
       }
 
       return notificationChannels;
@@ -137,6 +137,19 @@ export class NotificationChannelsService {
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException('Failed to remove notification channel');
+    }
+  }
+
+  async removeAll(uuid: string) {
+    try {
+      return this.prisma.notificationChannel.deleteMany({
+        where: {
+          user_uuid: uuid,
+        },
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('Failed to remove notification channels');
     }
   }
 }

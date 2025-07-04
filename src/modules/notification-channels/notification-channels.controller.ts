@@ -83,4 +83,15 @@ export class NotificationChannelsController {
   remove(@CurrentUser('uuid') uuid: string, @Param('id') id: string) {
     return this.notificationChannelsService.remove(uuid, +id);
   }
+
+  @Delete()
+  @UseGuards(JwtGuard)
+  @ApiOperation({ summary: 'Delete all notification channels' })
+  @ApiResponse({
+    status: 200,
+    description: 'All notification channels deleted successfully',
+  })
+  removeAll(@CurrentUser('uuid') uuid: string) {
+    return this.notificationChannelsService.removeAll(uuid);
+  }
 }
