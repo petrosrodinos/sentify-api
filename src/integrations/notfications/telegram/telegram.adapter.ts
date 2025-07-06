@@ -14,6 +14,10 @@ export class TelegramAdapter {
         private configService: ConfigService,
         private verificationTokensService: VerificationTokensService
     ) {
+        this.initTelegram();
+    }
+
+    private async initTelegram() {
         const token = this.configService.get('TELEGRAM_BOT_TOKEN');
         if (!token) {
             this.logger.error('TELEGRAM_BOT_TOKEN is not configured');

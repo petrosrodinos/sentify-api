@@ -3,29 +3,26 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
-import { ConfigModule } from '@nestjs/config';
 import { TwitterIntegrationModule } from './integrations/social-media/twitter/twitter.module';
 import { MediaSubscriptionsModule } from './modules/media-subscriptions/media-subscriptions.module';
 import { TwitterModule } from './modules/twitter/twitter.module';
 import { SharedModule } from './shared/shared.module';
 import { NotificationChannelsModule } from './modules/notification-channels/notification-channels.module';
 import { RedisModule } from './core/databases/redis/redis.module';
-import { RedisCacheModule } from './modules/redis-cache/redis-cache.module';
+import { RedisCacheModule } from './modules/internal/redis-cache/redis-cache.module';
 import { GraphQLModule } from './core/databases/graphql/graphql.module';
 import { TrackedItemsModule } from './modules/tracked_items/tracked-items.module';
 import { TickersModule } from './modules/tickers/tickers.module';
 import { VerificationTokensModule } from './modules/verification-tokens/verification-tokens.module';
 import { TelegramModule } from './modules/internal/telegram/telegram.module';
 import { TelegramIntegrationModule } from './integrations/notfications/telegram/telegram.module';
+import { ConfigModule } from './core/config/config.module';
+import { MailModule } from './modules/internal/mail/mail.module';
 
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: [`.env.${process.env.NODE_ENV || 'local'}`],
-      ignoreEnvFile: process.env.NODE_ENV === 'production',
-    }),
+    ConfigModule,
     AuthModule,
     UsersModule,
     TwitterIntegrationModule,
@@ -40,7 +37,8 @@ import { TelegramIntegrationModule } from './integrations/notfications/telegram/
     TickersModule,
     VerificationTokensModule,
     TelegramModule,
-    TelegramIntegrationModule
+    TelegramIntegrationModule,
+    MailModule
   ],
   controllers: [AppController],
   providers: [AppService],
