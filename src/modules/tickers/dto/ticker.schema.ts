@@ -10,7 +10,7 @@ export const GetStockTickersSchema = z.object({
     timespan: z.enum(['minute', 'hour', 'day', 'week', 'month', 'quarter', 'year']).optional().default('day'),
     from: z.string().optional(),
     to: z.string().optional(),
-    market: z.enum(['stocks', 'crypto', 'fx', 'otc', 'indices']).optional().default('stocks'),
+    market: z.enum(['stock', 'crypto', 'fx', 'otc', 'indices']).optional().default('stock'),
     type: z.enum(['CS', 'ADRC', 'ADRP', 'ADRS', 'ADRT', 'ADRU', 'ADRZ', 'BDR', 'ETF', 'FUT', 'FUT_C', 'FUT_P', 'FUT_U', 'FUT_X', 'FUT_Z', 'IND', 'MUT', 'MUT_C', 'MUT_P', 'MUT_U', 'MUT_X', 'MUT_Z', 'OPT', 'OPT_C', 'OPT_P', 'OPT_U', 'OPT_X', 'OPT_Z', 'STK', 'STK_C', 'STK_P', 'STK_U', 'STK_X', 'STK_Z', 'WAR', 'WAR_C', 'WAR_P', 'WAR_U', 'WAR_X', 'WAR_Z']).optional(),
     adjusted: z.coerce.boolean().optional(),
     order: z.enum(['asc', 'desc']).optional().default('asc'),

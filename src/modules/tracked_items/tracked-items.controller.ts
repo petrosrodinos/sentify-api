@@ -45,6 +45,17 @@ export class TrackedItemsController {
     return this.tracked_items_service.createMany(uuid, create_tracked_item_batch_dto);
   }
 
+  @Post('upsert')
+  @UseGuards(JwtGuard)
+  @ApiOperation({ summary: 'Upsert a tracked item' })
+  @ApiResponse({
+    status: 201,
+    description: 'Tracked item upserted successfully',
+  })
+  upsert(@CurrentUser('uuid') uuid: string, @Body() create_tracked_item_dto: CreateTrackedItemDto) {
+    return this.tracked_items_service.upsert(uuid, create_tracked_item_dto);
+  }
+
   @Get()
   @ApiOperation({ summary: 'Get all tracked items with optional filters' })
   @ApiQuery({ name: 'user_uuid', required: false, description: 'Filter by user UUID' })

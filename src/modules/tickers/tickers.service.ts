@@ -21,7 +21,7 @@ export class TickersService {
   async getTickers(params: GetStockTickersType = {}): Promise<PolygonTickersResponse> {
     try {
 
-      if (params.market === 'stocks') {
+      if (params.market === 'stock') {
         return {
           results: TestStockTickers,
           status: 'success',

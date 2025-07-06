@@ -32,6 +32,37 @@ export class TrackedItemsService {
     }
   }
 
+  async upsert(uuid: string, create_tracked_item_dto: CreateTrackedItemDto) {
+    try {
+      const { item_type, item_identifier, enabled, meta } = create_tracked_item_dto;
+
+      const tracked_item = await this.prisma.trackedItem.upsert({
+        where: {
+          unique_user_tracked_item: {
+            user_uuid: uuid,
+            item_type,
+            item_identifier,
+          },
+        },
+        update: {
+          enabled,
+        },
+        create: {
+          user_uuid: uuid,
+          item_type,
+          item_identifier,
+          enabled,
+          meta,
+        },
+      });
+
+      return tracked_item;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   async createMany(uuid: string, batch_dto: CreateTrackedItemBatchDto) {
     const { items } = batch_dto;
 
