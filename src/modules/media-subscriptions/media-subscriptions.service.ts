@@ -63,6 +63,36 @@ export class MediaSubscriptionsService {
     }
   }
 
+  async upsert(uuid: string, upsertMediaSubscriptionDto: CreateMediaSubscriptionDto) {
+
+    try {
+
+      const mediaSubscription = await this.prisma.mediaSubscription.upsert({
+        where: {
+          unique_user_subscription: {
+            user_uuid: uuid,
+            platform_type: upsertMediaSubscriptionDto.platform_type,
+            account_identifier: upsertMediaSubscriptionDto.account_identifier,
+          },
+        },
+        update: {
+          enabled: upsertMediaSubscriptionDto.enabled,
+        },
+        create: {
+          user_uuid: uuid,
+          platform_type: upsertMediaSubscriptionDto.platform_type,
+          account_identifier: upsertMediaSubscriptionDto.account_identifier,
+          enabled: upsertMediaSubscriptionDto.enabled,
+          meta: upsertMediaSubscriptionDto.meta,
+        },
+      });
+
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   async findAll(query: MediaSubscriptionQueryType) {
 
     try {

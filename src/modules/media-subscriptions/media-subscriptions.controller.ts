@@ -44,6 +44,17 @@ export class MediaSubscriptionsController {
     return this.mediaSubscriptionsService.createMany(uuid, createMediaSubscriptionBatchDto);
   }
 
+  @Post('upsert')
+  @UseGuards(JwtGuard)
+  @ApiOperation({ summary: 'Upsert a media subscription' })
+  @ApiResponse({
+    status: 200,
+    description: 'Media subscription upserted successfully',
+  })
+  upsert(@CurrentUser('uuid') uuid: string, @Body() upsertMediaSubscriptionDto: CreateMediaSubscriptionDto) {
+    return this.mediaSubscriptionsService.upsert(uuid, upsertMediaSubscriptionDto);
+  }
+
   @Get()
   @UseGuards(JwtGuard)
   @ApiOperation({ summary: 'Get all media subscriptions with optional filters' })

@@ -123,11 +123,5 @@ export const TestCryptoTickers: TickerDetails[] = [
         market_cap: 1000000000000,
         market: 'crypto',
     },
-    {
-        ticker: 'XLM',
-        name: 'Stellar',
-        icon_url: 'https://logo.clearbit.com/stellar.com',
-        market_cap: 1000000000000,
-        market: 'crypto',
-    },
+
 ]           
