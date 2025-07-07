@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { TwitterApi } from 'twitter-api-v2';
 
 export const RAPID_API_TWITTER_BASE_URL = 'https://twitter241.p.rapidapi.com';
 
@@ -12,8 +13,28 @@ export const RAPID_API_TWITTER_ENDPOINTS = {
 
 @Injectable()
 export class TwitterConfig {
-    constructor(private readonly configService: ConfigService) { }
+    private twitterClient: TwitterApi;
 
+    constructor(private configService: ConfigService) {
+        this.initTwitter();
+    }
+
+    private initTwitter() {
+        this.twitterClient = new TwitterApi({
+            appKey: this.configService.get<string>('TWITTER_API_KEY'),
+            appSecret: this.configService.get<string>('TWITTER_API_SECRET'),
+            accessToken: this.configService.get<string>('TWITTER_ACCESS_TOKEN'),
+            accessSecret: this.configService.get<string>('TWITTER_ACCESS_SECRET'),
+        });
+        // this.twitterClient = new TwitterApi({
+        //     clientId: this.configService.get<string>('TWITTER_CLIENT_ID'),
+        //     clientSecret: this.configService.get<string>('TWITTER_CLIENT_SECRET'),
+        // });
+    }
+
+    getTwitterClient(): TwitterApi {
+        return this.twitterClient;
+    }
 
     getHeaders(): Record<string, string> {
         return {

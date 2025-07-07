@@ -1,6 +1,5 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { catchError, firstValueFrom, map } from 'rxjs';
 import { TwitterApi, UserV2 } from 'twitter-api-v2';
 import { RAPID_API_TWITTER_ENDPOINTS, TwitterConfig } from './twitter.config';
@@ -11,28 +10,18 @@ import { FormattedTweet, TwitterUser } from './twitter.interfaces';
 @Injectable()
 export class TwitterAdapter {
     private readonly logger = new Logger(TwitterAdapter.name);
-    private client: TwitterApi;
+    private twitterClient: TwitterApi;
 
     constructor(
-        private readonly configService: ConfigService,
-        private readonly httpService: HttpService,
-        private readonly twitterConfig: TwitterConfig,
-        private readonly twitterUtils: TwitterUtils
+        private httpService: HttpService,
+        private twitterConfig: TwitterConfig,
+        private twitterUtils: TwitterUtils
     ) {
-        this.client = new TwitterApi({
-            appKey: this.configService.get<string>('TWITTER_API_KEY'),
-            appSecret: this.configService.get<string>('TWITTER_API_SECRET'),
-            accessToken: this.configService.get<string>('TWITTER_ACCESS_TOKEN'),
-            accessSecret: this.configService.get<string>('TWITTER_ACCESS_SECRET'),
-        });
-        // this.client = new TwitterApi({
-        //     clientId: this.configService.get<string>('TWITTER_CLIENT_ID'),
-        //     clientSecret: this.configService.get<string>('TWITTER_CLIENT_SECRET'),
-        // });
+        this.twitterClient = this.twitterConfig.getTwitterClient();
     }
 
     async createAuthenticationUrl(redirect_url: string): Promise<{ url: string, code_verifier: string, state: string }> {
-        const { url, codeVerifier, state } = this.client.generateOAuth2AuthLink(redirect_url, { scope: ['tweet.read', 'users.read', 'offline.access'] });
+        const { url, codeVerifier, state } = this.twitterClient.generateOAuth2AuthLink(redirect_url, { scope: ['tweet.read', 'users.read', 'offline.access'] });
 
         return { url, code_verifier: codeVerifier, state };
     }
@@ -42,7 +31,7 @@ export class TwitterAdapter {
         try {
 
 
-            const { client: loggedClient, accessToken, refreshToken, expiresIn } = await this.client.loginWithOAuth2({ code, codeVerifier, redirectUri: redirect_url });
+            const { client: loggedClient, accessToken, refreshToken, expiresIn } = await this.twitterClient.loginWithOAuth2({ code, codeVerifier, redirectUri: redirect_url });
 
             const { data: userObject } = await loggedClient.v2.me();
 
@@ -70,7 +59,7 @@ export class TwitterAdapter {
                 )
             );
 
-            console.log(JSON.stringify(response.result.data.user.result, null, 2));
+            // console.log(JSON.stringify(response.result.data.user.result, null, 2));
 
             return this.twitterUtils.formatUserByUsername(response);
 
