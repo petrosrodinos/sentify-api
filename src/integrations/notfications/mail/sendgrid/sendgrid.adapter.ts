@@ -1,30 +1,18 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { CreateEmail } from "../mail.interfaces";
-const sgMail = require('@sendgrid/mail')
+import { SendgridConfig } from "./sendgrid.config";
 
 @Injectable()
 export class SendGridAdapter {
+    private sendgridClient: any;
     private readonly logger = new Logger(SendGridAdapter.name);
 
     constructor(
-        private configService: ConfigService,
+        private sendgridConfig: SendgridConfig,
     ) {
-        this.initSendGrid();
+        this.sendgridClient = this.sendgridConfig.getSendgridClient();
     }
 
-    private async initSendGrid() {
-        const apiKey = this.configService.get('SENDGRID_API_KEY');
-        if (!apiKey) {
-            this.logger.error('SENDGRID_API_KEY is not configured');
-            return;
-        }
-
-        await sgMail.setApiKey(apiKey);
-        // await sgMail.setDataResidency('eu');
-        this.logger.log('SendGrid initialized');
-
-    }
 
     public async sendEmail(create_email: CreateEmail) {
         try {
@@ -39,7 +27,7 @@ export class SendGridAdapter {
                 replyTo: create_email.replyTo,
                 headers: create_email.headers,
             }
-            return await sgMail.send(msg);
+            return await this.sendgridClient.send(msg);
         } catch (error) {
             this.logger.error(error);
             throw new Error(error);
