@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { CreateEmail } from "../mail.interface";
+import { CreateEmail } from "../mail.interfaces";
 const sgMail = require('@sendgrid/mail')
 
 @Injectable()

@@ -11,7 +11,7 @@ export const RAPID_API_TWITTER_ENDPOINTS = {
 };
 
 @Injectable()
-export class TwitterConstants {
+export class TwitterConfig {
     constructor(private readonly configService: ConfigService) { }
 
 

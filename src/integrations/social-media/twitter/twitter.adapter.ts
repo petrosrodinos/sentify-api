@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { catchError, firstValueFrom, map } from 'rxjs';
 import { TwitterApi, UserV2 } from 'twitter-api-v2';
-import { RAPID_API_TWITTER_ENDPOINTS, TwitterConstants } from './twitter.constants';
+import { RAPID_API_TWITTER_ENDPOINTS, TwitterConfig } from './twitter.config';
 import { TwitterUtils } from './twitter.utils';
 import { FormattedTweet, TwitterUser } from './twitter.interfaces';
 
@@ -16,7 +16,7 @@ export class TwitterAdapter {
     constructor(
         private readonly configService: ConfigService,
         private readonly httpService: HttpService,
-        private readonly twitterConstants: TwitterConstants,
+        private readonly twitterConfig: TwitterConfig,
         private readonly twitterUtils: TwitterUtils
     ) {
         this.client = new TwitterApi({
@@ -63,7 +63,7 @@ export class TwitterAdapter {
         try {
             const response = await firstValueFrom(
                 this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_BY_USERNAME}`, {
-                    headers: this.twitterConstants.getHeaders(),
+                    headers: this.twitterConfig.getHeaders(),
                     params: { username }
                 }).pipe(
                     map(response => response.data)
@@ -85,7 +85,7 @@ export class TwitterAdapter {
         try {
             const response = await firstValueFrom(
                 this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_SEARCH}`, {
-                    headers: this.twitterConstants.getHeaders(),
+                    headers: this.twitterConfig.getHeaders(),
                     params: {
                         value: username
                     }
@@ -112,7 +112,7 @@ export class TwitterAdapter {
         try {
             const response = await firstValueFrom(
                 this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_FOLLOWINGS}`, {
-                    headers: this.twitterConstants.getHeaders(),
+                    headers: this.twitterConfig.getHeaders(),
                     params: {
                         user: user_id,
                         count: max_results
@@ -144,7 +144,7 @@ export class TwitterAdapter {
         try {
             const response = await firstValueFrom(
                 this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_TWEETS}`, {
-                    headers: this.twitterConstants.getHeaders(),
+                    headers: this.twitterConfig.getHeaders(),
                     params: {
                         user: user_id,
                         count: max_results
