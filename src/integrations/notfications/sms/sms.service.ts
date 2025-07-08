@@ -3,7 +3,7 @@ import { TwillioAdapter } from "./twillio/twilio.adapter";
 import { CreateSms } from "./sms.interfaces";
 
 @Injectable()
-export class SmsService {
+export class SmsIntegrationService {
 
     constructor(
         private twillioAdapter: TwillioAdapter

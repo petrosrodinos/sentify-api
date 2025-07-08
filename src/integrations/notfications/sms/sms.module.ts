@@ -1,17 +1,17 @@
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { SmsService } from './sms.service';
+import { SmsIntegrationService } from './sms.service';
 import { TwillioAdapter } from './twillio/twilio.adapter';
 import { TwillioConfig } from './twillio/twilio.config';
 
 @Module({
     imports: [ConfigModule],
     providers: [
-        SmsService,
+        SmsIntegrationService,
         TwillioAdapter,
         TwillioConfig,
         Logger
     ],
-    exports: [SmsService],
+    exports: [SmsIntegrationService],
 })
 export class SmsIntegrationModule { }

@@ -1,16 +1,18 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { CreateEmail } from "../mail.interfaces";
+import { CreateEmail, EmailFromAddress } from "../mail.interfaces";
 import { SendgridConfig } from "./sendgrid.config";
 
 @Injectable()
 export class SendGridAdapter {
     private sendgridClient: any;
+    private emailFromAddresses: EmailFromAddress;
     private readonly logger = new Logger(SendGridAdapter.name);
 
     constructor(
         private sendgridConfig: SendgridConfig,
     ) {
         this.sendgridClient = this.sendgridConfig.getSendgridClient();
+        this.emailFromAddresses = this.sendgridConfig.getEmailFromAddresses();
     }
 
 
@@ -18,7 +20,7 @@ export class SendGridAdapter {
         try {
             const msg = {
                 to: create_email.to,
-                from: create_email.from,
+                from: this.emailFromAddresses[create_email.from_address] || this.emailFromAddresses.verification,
                 subject: create_email.subject,
                 text: create_email.text,
                 html: create_email.html,

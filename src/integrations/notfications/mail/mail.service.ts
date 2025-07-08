@@ -3,9 +3,9 @@ import { SendGridAdapter } from "./sendgrid/sendgrid.adapter";
 import { CreateEmail } from "./mail.interfaces";
 
 @Injectable()
-export class MailService {
+export class MailIntegrationService {
 
-    private readonly logger = new Logger(MailService.name);
+    private readonly logger = new Logger(MailIntegrationService.name);
 
     constructor(
         private sendgridAdapter: SendGridAdapter

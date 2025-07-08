@@ -1,4 +1,4 @@
-import { MailService as MailIntegrationService } from './../../../integrations/notfications/mail/mail.service';
+import { MailIntegrationService } from '@/integrations/notfications/mail/mail.service';
 import { Injectable } from '@nestjs/common';
 import { CreateMailDto } from './dto/create-mail.dto';
 import { UpdateMailDto } from './dto/update-mail.dto';

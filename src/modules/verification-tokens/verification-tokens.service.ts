@@ -1,10 +1,12 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { CreateVerificationTokenDto } from './dto/create-verification-token.dto';
-import { UpdateVerificationTokenDto } from './dto/update-verification-token.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { OtpService } from '@/shared/utils/otp/otp.service';
 import { VerificationTokenQueryType } from './dto/verification-tokens-query.schema';
 import { NotificationChannelType } from '@prisma/client';
+import { MailIntegrationService } from '@/integrations/notfications/mail/mail.service';
+import { EmailFromAddressTypes } from '@/integrations/notfications/mail/mail.interfaces';
+import { SmsIntegrationService } from '@/integrations/notfications/sms/sms.service';
 
 @Injectable()
 export class VerificationTokensService {
@@ -13,6 +15,8 @@ export class VerificationTokensService {
     private readonly prisma: PrismaService,
     private readonly logger: Logger,
     private readonly otpService: OtpService,
+    private readonly smsService: SmsIntegrationService,
+    private readonly mailService: MailIntegrationService,
   ) { }
 
   async create(uuid: string, createVerificationTokenDto: CreateVerificationTokenDto) {
@@ -33,6 +37,23 @@ export class VerificationTokensService {
           client_identifier,
         }
       });
+
+      if (type === NotificationChannelType.sms) {
+
+        await this.smsService.sendSms({
+          to: client_identifier,
+          body: `Your verification code is ${otp}`,
+        });
+
+      } else if (type === NotificationChannelType.email) {
+
+        await this.mailService.sendEmail({
+          to: client_identifier,
+          subject: 'Verification Code',
+          text: `Your verification code is ${otp}`,
+          from_address: EmailFromAddressTypes.verification,
+        });
+      }
 
       return verification_token;
 

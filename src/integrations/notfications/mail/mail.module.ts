@@ -1,17 +1,17 @@
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SendGridAdapter } from './sendgrid/sendgrid.adapter';
-import { MailService } from './mail.service';
+import { MailIntegrationService } from './mail.service';
 import { SendgridConfig } from './sendgrid/sendgrid.config';
 
 @Module({
     imports: [ConfigModule],
     providers: [
-        MailService,
+        MailIntegrationService,
         SendGridAdapter,
         SendgridConfig,
         Logger
     ],
-    exports: [MailService],
+    exports: [MailIntegrationService],
 })
 export class MailIntegrationModule { }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSmDto } from './dto/create-sm.dto';
 import { UpdateSmDto } from './dto/update-sm.dto';
-import { SmsService as SmsIntegrationService } from './../../../integrations/notfications/sms/sms.service';
+import { SmsIntegrationService } from './../../../integrations/notfications/sms/sms.service';
 
 @Injectable()
 export class SmsService {
