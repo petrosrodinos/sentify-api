@@ -34,6 +34,16 @@ export class CreateVerificationTokenDto {
     type: AuthProviderType;
 
     @ApiProperty({
+        description: 'Optional client identifier for the verification token',
+        example: 'example@example.com or +1234567890',
+        required: false,
+        type: 'string'
+    })
+    @IsString()
+    @IsOptional()
+    client_identifier: string;
+
+    @ApiProperty({
         description: 'Optional identity UUID for the verification token',
         example: '123e4567-e89b-12d3-a456-426614174000',
         required: false,

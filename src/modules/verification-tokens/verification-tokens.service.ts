@@ -17,7 +17,7 @@ export class VerificationTokensService {
 
   async create(createVerificationTokenDto: CreateVerificationTokenDto) {
     try {
-      const { user_uuid, state, type, identity_uuid } = createVerificationTokenDto;
+      const { user_uuid, state, type, identity_uuid, client_identifier } = createVerificationTokenDto;
 
       const otp = this.otpService.generateOtp({
         length: 6,
@@ -30,6 +30,7 @@ export class VerificationTokensService {
           state,
           type,
           identity_uuid,
+          client_identifier,
         }
       });
 
@@ -78,23 +79,41 @@ export class VerificationTokensService {
       if (!verificationToken) {
         throw new NotFoundException('Verification token not found');
       }
+      // TODO add create notification channel boolean,refactor for telegram to have client_identifier
+      if (verificationToken.type === NotificationChannelType.sms) {
+        await this.prisma.notificationChannel.create({
+          data: {
+            user_uuid: verificationToken?.user_uuid,
+            client_identifier: verificationToken.client_identifier,
+            channel: verificationToken.type as NotificationChannelType,
+            verified: true,
+            enabled: true,
+            meta: meta
+          }
+        });
 
-      await this.prisma.notificationChannel.create({
-        data: {
-          user_uuid: verificationToken?.user_uuid,
-          client_identifier: meta?.chat_id,
-          channel: verificationToken.type as NotificationChannelType,
-          verified: true,
-          enabled: true,
-          meta: meta
-        }
-      });
+      } else if (verificationToken.type === NotificationChannelType.telegram) {
+        await this.prisma.notificationChannel.create({
+          data: {
+            user_uuid: verificationToken?.user_uuid,
+            client_identifier: meta?.chat_id,
+            channel: verificationToken.type as NotificationChannelType,
+            verified: true,
+            enabled: true,
+            meta: meta
+          }
+        });
+      }
+
+
 
       await this.prisma.verificationToken.delete({
         where: {
           id: verificationToken.id
         }
       });
+
+      return { success: true, message: 'Verification token verified successfully' };
 
 
     } catch (error) {

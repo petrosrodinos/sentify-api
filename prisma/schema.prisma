@@ -59,6 +59,7 @@ model VerificationToken {
   token         String
   state         String?
   type          AuthProviderType
+  client_identifier String?
   identity_uuid String?
   expires_at    DateTime?
   created_at    DateTime     @default(now())
@@ -136,6 +137,7 @@ model TrackedItem {
 enum AuthProviderType {
   email
   phone
+  sms
   google
   facebook
   twitter
@@ -151,6 +153,7 @@ enum PlatformType {
 enum NotificationChannelType {
   email
   phone
+  sms
   push
   web
   telegram

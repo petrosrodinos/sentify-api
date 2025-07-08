@@ -79,7 +79,7 @@ export class VerificationTokensController {
   @ApiParam({
     name: 'token',
     description: 'The verification token string',
-    example: 'ABC123DEF456GHI789'
+    example: 'ABC123D'
   })
   verifyToken(@Param('token') token: string) {
     return this.verificationTokensService.verifyToken(token);

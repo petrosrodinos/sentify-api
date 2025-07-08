@@ -7,6 +7,7 @@ enum AuthProviderType {
   facebook
   google
   phone
+  sms
   telegram
   twitter
 }
@@ -72,6 +73,7 @@ enum NotificationChannelType {
   phone
   push
   slack
+  sms
   telegram
   web
   whatsapp
