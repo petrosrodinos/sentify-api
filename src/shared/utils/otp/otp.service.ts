@@ -10,7 +10,7 @@ export class OtpService {
         length = 6,
         digits = true,
         lowerCaseAlphabets = true,
-        upperCaseAlphabets = true,
+        upperCaseAlphabets = false,
         specialChars = false,
     }: {
         length?: number;

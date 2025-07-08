@@ -37,7 +37,7 @@ export class TelegramAdapter {
             try {
 
                 await this.verificationTokensService.verifyToken(token, {
-                    chat_id: chatId.toString(),
+                    client_identifier: chatId.toString(),
                     username: msg.from?.username,
                     first_name: msg.from?.first_name,
                     last_name: msg.from?.last_name

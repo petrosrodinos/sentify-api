@@ -32,8 +32,8 @@ export class VerificationTokensController {
     description: 'Verification token created successfully',
     type: VerificationToken
   })
-  create(@Body() createVerificationTokenDto: CreateVerificationTokenDto) {
-    return this.verificationTokensService.create(createVerificationTokenDto);
+  create(@CurrentUser('uuid') uuid: string, @Body() createVerificationTokenDto: CreateVerificationTokenDto) {
+    return this.verificationTokensService.create(uuid, createVerificationTokenDto);
   }
 
   @Get()
