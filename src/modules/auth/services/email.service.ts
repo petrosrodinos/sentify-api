@@ -5,6 +5,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { CreateJwtService } from '@/shared/utils/jwt/jwt.service';
 import { AuthProviderType } from '@prisma/client';
+import { AuthRoles } from '../interfaces/auth.interface';
 
 @Injectable()
 export class EmailAuthService {
@@ -18,7 +19,7 @@ export class EmailAuthService {
         try {
             const identity = await this.prisma.identity.findUnique({
                 where: {
-                    provider_provider_id: {
+                    unique_identity: {
                         provider: AuthProviderType.email,
                         provider_id: dto.email,
                     },
@@ -34,6 +35,7 @@ export class EmailAuthService {
             const user = await this.prisma.user.create({
                 data: {
                     email: dto.email,
+                    role: AuthRoles.user,
                     identities: {
                         create: {
                             password: hashedPassword,
@@ -47,6 +49,7 @@ export class EmailAuthService {
 
             const token = await this.jwtService.signToken({
                 uuid: user.uuid,
+                role: user.role,
             });
 
             const new_user = await this.prisma.user.findUnique({
@@ -72,24 +75,21 @@ export class EmailAuthService {
 
     async loginWithEmail(dto: LoginEmailDto) {
 
-
         try {
             const identity = await this.prisma.identity.findUnique({
                 where: {
-                    provider_provider_id: {
+                    unique_identity: {
                         provider: AuthProviderType.email,
                         provider_id: dto.email,
                     },
                 },
             });
 
-            if (!identity || !(await bcrypt.compare(dto.password, identity.password))) {
+            const password_match = await bcrypt.compare(dto.password, identity.password);
+
+            if (!identity || !password_match) {
                 throw new UnauthorizedException('Invalid credentials');
             }
-
-            const token = await this.jwtService.signToken({
-                uuid: identity.user_uuid,
-            });
 
             const user = await this.prisma.user.findUnique({
                 where: { uuid: identity.user_uuid },
@@ -104,6 +104,15 @@ export class EmailAuthService {
                         },
                     }
                 },
+            });
+
+            if (!user) {
+                throw new UnauthorizedException('Invalid credentials');
+            }
+
+            const token = await this.jwtService.signToken({
+                uuid: identity.user_uuid,
+                role: user.role,
             });
 
 

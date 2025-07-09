@@ -8,7 +8,7 @@ export interface ShortCode {
 }
 
 export const ShortCodeTypes = {
-    sentify: 'Sentify',
+    sentify: 'SENTIFY',
 } as const;
 
 export type ShortCodeType = (typeof ShortCodeTypes)[keyof typeof ShortCodeTypes];

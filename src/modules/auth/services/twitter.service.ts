@@ -67,7 +67,7 @@ export class TwitterAuthService {
 
             const identity = await this.prisma.identity.findUnique({
                 where: {
-                    provider_provider_id: {
+                    unique_identity: {
                         provider: AuthProviderType.twitter,
                         provider_id: auth_user.id,
                     },

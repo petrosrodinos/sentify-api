@@ -17,6 +17,7 @@ model User {
   phone               String?             @unique
   created_at          DateTime            @default(now())
   updated_at          DateTime            @updatedAt
+  role                AuthRole            @default(user)
   identities          Identity[]
   verification_tokens VerificationToken[]
   media_subscriptions MediaSubscription[]
@@ -44,7 +45,7 @@ model Identity {
   created_at          DateTime            @default(now())
   updated_at          DateTime            @updatedAt
 
-  @@unique([provider, provider_id])
+  @@unique([provider, provider_id], name: "unique_identity")
   @@index([provider_id])
   @@index([user_uuid])
   @@map("identities")
@@ -133,6 +134,13 @@ enum AuthProviderType {
   facebook
   twitter
   telegram
+}
+
+enum AuthRole {
+  admin
+  user
+  support
+  super_admin
 }
 
 enum PlatformType {

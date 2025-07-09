@@ -54,7 +54,6 @@ export class NotificationChannelsService {
         data: {
           channel: createNotificationChannelDto.channel,
           client_identifier: createNotificationChannelDto.client_identifier,
-          identity_id: createNotificationChannelDto.identity_id,
           web_push_config: createNotificationChannelDto.web_push_config,
           enabled: createNotificationChannelDto.enabled,
           user_uuid: uuid,
@@ -81,7 +80,6 @@ export class NotificationChannelsService {
         where: {
           user_uuid: query.user_uuid,
           channel: query.channel,
-          identity_id: query.identity_id,
           client_identifier: query.client_identifier,
           verified: query.verified,
         },
@@ -112,7 +110,6 @@ export class NotificationChannelsService {
         data: {
           enabled: updateNotificationChannelDto.enabled,
           web_push_config: updateNotificationChannelDto.web_push_config,
-          identity_id: updateNotificationChannelDto.identity_id,
           client_identifier: updateNotificationChannelDto.client_identifier,
         },
       });
