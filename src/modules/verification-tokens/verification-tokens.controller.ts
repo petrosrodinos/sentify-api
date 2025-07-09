@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, Query, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { VerificationTokensService } from './verification-tokens.service';
 import { CreateVerificationTokenDto } from './dto/create-verification-token.dto';
-import { UpdateVerificationTokenDto } from './dto/update-verification-token.dto';
 import { VerificationToken } from './entities/verification-token.entity';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { VerificationTokenQuerySchema } from './dto/verification-tokens-query.schema';
@@ -17,8 +16,6 @@ export class VerificationTokensController {
   constructor(private readonly verificationTokensService: VerificationTokensService) { }
 
   @Post()
-  @UseGuards(JwtGuard)
-  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Create a new verification token',
     description: 'Creates a new verification token for user authentication. The token is generated using OTP service and can be used for email verification, password reset, or OAuth flows.'
@@ -32,8 +29,8 @@ export class VerificationTokensController {
     description: 'Verification token created successfully',
     type: VerificationToken
   })
-  create(@CurrentUser('uuid') uuid: string, @Body() createVerificationTokenDto: CreateVerificationTokenDto) {
-    return this.verificationTokensService.create(uuid, createVerificationTokenDto);
+  create(@Body() createVerificationTokenDto: CreateVerificationTokenDto) {
+    return this.verificationTokensService.create(createVerificationTokenDto);
   }
 
   @Get()

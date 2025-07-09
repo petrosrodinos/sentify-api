@@ -19,7 +19,7 @@ export class VerificationTokensService {
     private readonly mailService: MailIntegrationService,
   ) { }
 
-  async create(uuid: string, createVerificationTokenDto: CreateVerificationTokenDto) {
+  async create(createVerificationTokenDto: CreateVerificationTokenDto) {
     try {
       const { state, type, identity_uuid, client_identifier } = createVerificationTokenDto;
 
@@ -29,7 +29,7 @@ export class VerificationTokensService {
 
       const verification_token = await this.prisma.verificationToken.create({
         data: {
-          user_uuid: uuid,
+          user_uuid: createVerificationTokenDto.user_uuid,
           token: otp,
           state,
           type,

@@ -21,12 +21,16 @@ export class OtpService {
     }) {
 
         try {
-            return OtpGenerator.generate(length, {
+
+            const otp = OtpGenerator.generate(length, {
                 digits,
                 lowerCaseAlphabets,
                 upperCaseAlphabets,
                 specialChars,
-            });
+            })
+
+            return otp.toUpperCase();
+
         } catch (error) {
             throw new InternalServerErrorException(error.message);
         }
