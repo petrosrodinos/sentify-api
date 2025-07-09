@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ShortCode, ShortCodeTypes } from '../sms.interfaces';
 
 
 @Injectable()
@@ -37,5 +38,11 @@ export class TwillioConfig {
 
     getTwilioNumber(country: string): string {
         return this.getTwilioNumbers()[country];
+    }
+
+    getTwilioShortCodes(): ShortCode {
+        return {
+            sentify: ShortCodeTypes.sentify,
+        }
     }
 }

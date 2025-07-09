@@ -1,17 +1,19 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { CreateSms } from "../sms.interfaces";
+import { CreateSms, ShortCode } from "../sms.interfaces";
 import { TwillioConfig } from "./twilio.config";
 
 @Injectable()
 export class TwillioAdapter {
     private twillioClient: any;
+    private shortCodes: ShortCode;
     private readonly logger = new Logger(TwillioAdapter.name);
 
     constructor(
         private twillioConfig: TwillioConfig
     ) {
         this.twillioClient = this.twillioConfig.getTwillioClient();
+        this.shortCodes = this.twillioConfig.getTwilioShortCodes();
     }
 
 
@@ -19,7 +21,7 @@ export class TwillioAdapter {
         try {
             const msg = {
                 to: create_sms.to,
-                from: this.twillioConfig.getTwilioNumber('US'),
+                from: this.shortCodes.sentify,
                 body: create_sms.body,
             }
             return await this.twillioClient.messages.create(msg);
