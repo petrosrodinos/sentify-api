@@ -1,9 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { RedisCacheService } from './redis-cache.service';
 import { CreateRedisCacheDto } from './dto/create-redis-cache.dto';
 import { UpdateRedisCacheDto } from './dto/update-redis-cache.dto';
+import { Roles } from '@/shared/decorators/roles.decorator';
+import { JwtGuard } from '@/shared/guards/jwt.guard';
+import { RolesGuard } from '@/shared/guards/roles.guard';
 
 @Controller('redis-cache')
+@UseGuards(JwtGuard, RolesGuard)
+@Roles('admin')
 export class RedisCacheController {
   constructor(private readonly redisCacheService: RedisCacheService) { }
 

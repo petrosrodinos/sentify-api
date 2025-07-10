@@ -1,11 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { SmsService } from './sms.service';
 import { CreateSmDto } from './dto/create-sm.dto';
 import { UpdateSmDto } from './dto/update-sm.dto';
+import { Roles } from '@/shared/decorators/roles.decorator';
+import { JwtGuard } from '@/shared/guards/jwt.guard';
+import { RolesGuard } from '@/shared/guards/roles.guard';
 
 @Controller('sms')
+@UseGuards(JwtGuard, RolesGuard)
+@Roles('admin')
 export class SmsController {
-  constructor(private readonly smsService: SmsService) {}
+  constructor(private readonly smsService: SmsService) { }
 
   @Post()
   create(@Body() createSmDto: CreateSmDto) {
