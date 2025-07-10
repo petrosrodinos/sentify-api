@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { UseGuards } from '@nestjs/common';
-import { User } from '@/shared/models/user.model';
+import { User } from '@/shared/models/graphql/user.model';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 
 @Resolver(() => User)
