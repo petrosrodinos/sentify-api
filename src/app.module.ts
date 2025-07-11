@@ -20,6 +20,7 @@ import { ConfigModule } from './core/config/config.module';
 import { MailModule } from './modules/internal/mail/mail.module';
 import { SmsModule } from './modules/internal/sms/sms.module';
 import { AiModule } from './modules/internal/ai/ai.module';
+import { AlertWorkflowModule } from './modules/internal/alert-workflow/alert-workflow.module';
 
 
 @Module({
@@ -42,7 +43,8 @@ import { AiModule } from './modules/internal/ai/ai.module';
     TelegramIntegrationModule,
     MailModule,
     SmsModule,
-    AiModule
+    AiModule,
+    AlertWorkflowModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,5 +1,4 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { CreateSms, ShortCode } from "../sms.interfaces";
 import { TwillioConfig } from "./twilio.config";
 

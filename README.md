@@ -1,19 +1,20 @@
-nest g resource users --no-spec
+# Prisma
 
-/auth/email/register
-/auth/email/login
+npm run migrate:local
+npm run migrate:dev
+npm run migrate:prod
 
-/auth/email/request
-/auth/email/verify
+npm run studio:local
+npm run studio:dev
+npm run studio:prod
 
-/auth/x/login/url
-/auth/x/login/callback
+# Docker
 
-npx prisma migrate dev --name init
-npx prisma generate
-npx prisma migrate reset
+npm run start:docker:local
+npm run start:docker:dev
+npm run start:docker:prod
 
-Get-ChildItem -Recurse -Directory -Name | Where-Object { $\_ -notmatch 'node_modules|dist' }
+# NestJS
 
-docker-compose -f docker-compose.local.yml down
-docker-compose -f docker-compose.local.yml up -d.
+npm run start:dev
+npm run start:prod

@@ -136,7 +136,8 @@ export class TwitterAdapter {
                     headers: this.twitterConfig.getHeaders(),
                     params: {
                         user: user_id,
-                        count: max_results
+                        count: max_results,
+                        exclude: 'replies,retweets',
                     }
                 }).pipe(
                     map(response => response.data),

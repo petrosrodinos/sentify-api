@@ -85,6 +85,7 @@ model MediaSubscription {
   @@unique([user_uuid, platform_type, account_identifier], name: "unique_user_subscription")
   @@index([user_uuid])
   @@index([platform_type])
+  @@index([account_identifier])
   @@map("media_subscriptions")
 }
 
@@ -123,6 +124,7 @@ model TrackedItem {
   @@unique([user_uuid, item_type, item_identifier], name: "unique_user_tracked_item")
   @@index([user_uuid])
   @@index([item_type])
+  @@index([item_identifier])
   @@map("tracked_items")
 }
 
