@@ -22,6 +22,8 @@ export class AlertWorkflowService {
 
             const analysis = await this.analysisService.analyze(posts);
 
+            await this.notificationsService.sendNotifications(analysis);
+
             return {
                 analysis,
             }

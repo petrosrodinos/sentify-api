@@ -1,5 +1,8 @@
-
-
+export interface CreateTelegramMessage {
+    chat_id: string;
+    message: string;
+    parse_mode?: 'Markdown' | 'HTML';
+}
 
 export interface TelegramChatInfo {
     id: number;

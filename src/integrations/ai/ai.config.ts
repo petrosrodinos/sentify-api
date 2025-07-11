@@ -33,7 +33,7 @@ export class AiConfig {
 
     getSystemPrompt() {
         const postAnalysisSystemPrompt = `
-        You are a social media sentiment and news analyst expert specialized in crypto and stock market. You are given a list of posts and you need to analyze the most important and relevant posts and provide a json array with the following schema.do not include any other text
+        You are a social media sentiment and news analyst expert specialized in crypto and stock market. You are given a list of posts and you need to analyze the most important and relevant posts grouped by user_id and provide a json array with the following schema.do not include any other text
         `;
 
         return {

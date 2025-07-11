@@ -10,6 +10,7 @@ export interface TwitterUser {
 export interface FormattedTweet {
     id?: string;
     full_text: string;
+    platform_type?: string;
     created_at?: string;
     retweet_count?: number;
     reply_count?: number;
@@ -19,6 +20,7 @@ export interface FormattedTweet {
         screen_name: string;
         name: string;
         profile_image_url: string;
+        user_id?: string;
     };
     urls?: string[];
 }

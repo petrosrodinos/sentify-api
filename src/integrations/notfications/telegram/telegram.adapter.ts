@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { TelegramMessageInfo } from './telegram.interface';
+import { CreateTelegramMessage, TelegramMessageInfo } from './telegram.interface';
 import { VerificationTokensService } from '@/modules/verification-tokens/verification-tokens.service';
 import { TelegramConfig } from './telegram.config';
 
@@ -19,9 +19,9 @@ export class TelegramAdapter {
     }
 
 
-    async sendMessage(chat_id: string, message: string, options?: { parse_mode?: 'Markdown' | 'HTML' }) {
+    async sendMessage(create_telegram_message: CreateTelegramMessage) {
         try {
-            await this.telegramClient.sendMessage(chat_id, message, options);
+            await this.telegramClient.sendMessage(create_telegram_message.chat_id, create_telegram_message.message, { parse_mode: create_telegram_message?.parse_mode || 'Markdown' });
         } catch (error) {
             this.logger.error(error);
             throw error;

@@ -20,7 +20,7 @@ export class SendGridAdapter {
         try {
             const msg = {
                 to: create_email.to,
-                from: this.emailFromAddresses[create_email.from_address] || this.emailFromAddresses.verification,
+                from: this.emailFromAddresses[create_email.from] || this.emailFromAddresses.alert,
                 subject: create_email.subject,
                 text: create_email.text,
                 html: create_email.html,

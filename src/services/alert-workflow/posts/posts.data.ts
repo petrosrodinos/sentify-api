@@ -2,6 +2,7 @@ export const TestPosts = [
 
     {
         "id": "1234567890",
+        "platform_type": "twitter",
         "full_text": "TRUMP ON POWELL: TERRIBLE JOB",
         "reply_count": 100,
         "like_count": 100,
@@ -9,6 +10,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "DeItaone",
             "name": "*Walter Bloomberg",
+            "user_id": "2704294333",
         }
     },
     {
@@ -20,6 +22,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "DeItaone",
             "name": "*Walter Bloomberg",
+            "user_id": "2704294333",
         },
     },
     {
@@ -31,6 +34,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "DeItaone",
             "name": "*Walter Bloomberg",
+            "user_id": "2704294333",
         },
     },
     {
@@ -42,6 +46,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "DeItaone",
             "name": "*Walter Bloomberg",
+            "user_id": "2704294333",
         },
     },
     {
@@ -50,7 +55,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "DeItaone",
             "name": "*Walter Bloomberg",
-            "profile_image_url": "https://pbstwimg.com/profile_images/1282648991348527104/A8HCjqZk_normal.jpg"
+            "user_id": "2704294333",
         },
         "reply_count": 100,
         "like_count": 100,
@@ -62,6 +67,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "DeItaone",
             "name": "*Walter Bloomberg",
+            "user_id": "2704294333",
         },
         "reply_count": 100,
         "like_count": 100,
@@ -73,6 +79,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "DeItaone",
             "name": "*Walter Bloomberg",
+            "user_id": "2704294333",
         },
         "reply_count": 100,
         "like_count": 100,
@@ -84,6 +91,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "DeItaone",
             "name": "*Walter Bloomberg",
+            "user_id": "2704294333",
         },
 
     },
@@ -93,6 +101,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "DeItaone",
             "name": "*Walter Bloomberg",
+            "user_id": "2704294333",
         },
         "reply_count": 100,
         "like_count": 100,
@@ -104,6 +113,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "DeItaone",
             "name": "*Walter Bloomberg",
+            "user_id": "2704294333",
         },
 
     },
@@ -113,6 +123,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "DeItaone",
             "name": "*Walter Bloomberg",
+            "user_id": "2704294333",
         },
         "reply_count": 100,
         "like_count": 100,
@@ -124,6 +135,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "DeItaone",
             "name": "*Walter Bloomberg",
+            "user_id": "2704294333",
         },
         "reply_count": 100,
         "like_count": 100,
@@ -135,6 +147,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "DeItaone",
             "name": "*Walter Bloomberg",
+            "user_id": "2704294333",
         },
         "reply_count": 100,
         "like_count": 100,
@@ -146,6 +159,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "1MarkMoss",
             "name": "Mark Moss",
+            "user_id": "961026235122958336",
         },
 
     },
@@ -155,6 +169,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "1MarkMoss",
             "name": "Mark Moss",
+            "user_id": "961026235122958336",
         },
 
     },
@@ -164,8 +179,11 @@ export const TestPosts = [
         "user": {
             "screen_name": "1MarkMoss",
             "name": "Mark Moss",
+            "user_id": "961026235122958336",
         },
-
+        "reply_count": 100,
+        "like_count": 100,
+        "view_count": 100,
     },
     {
         "id": "1234567890",
@@ -173,8 +191,11 @@ export const TestPosts = [
         "user": {
             "screen_name": "1MarkMoss",
             "name": "Mark Moss",
+            "user_id": "961026235122958336",
         },
-
+        "reply_count": 100,
+        "like_count": 100,
+        "view_count": 100,
     },
     {
         "id": "1234567890",
@@ -182,6 +203,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "1MarkMoss",
             "name": "Mark Moss",
+            "user_id": "961026235122958336",
         },
         "reply_count": 100,
         "like_count": 100,
@@ -193,6 +215,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "1MarkMoss",
             "name": "Mark Moss",
+            "user_id": "961026235122958336",
         },
         "reply_count": 100,
         "like_count": 100,
@@ -204,6 +227,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "1MarkMoss",
             "name": "Mark Moss",
+            "user_id": "961026235122958336",
         },
         "reply_count": 100,
         "like_count": 100,
@@ -215,6 +239,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "1MarkMoss",
             "name": "Mark Moss",
+            "user_id": "961026235122958336",
         },
         "reply_count": 100,
         "like_count": 100,
@@ -226,6 +251,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "1MarkMoss",
             "name": "Mark Moss",
+            "user_id": "961026235122958336",
         },
         "reply_count": 100,
         "like_count": 100,
@@ -237,6 +263,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "1MarkMoss",
             "name": "Mark Moss",
+            "user_id": "961026235122958336",
         },
         "reply_count": 100,
         "like_count": 100,
@@ -248,6 +275,7 @@ export const TestPosts = [
         "user": {
             "screen_name": "1MarkMoss",
             "name": "Mark Moss",
+            "user_id": "961026235122958336",
         },
         "reply_count": 100,
         "like_count": 100,
@@ -259,22 +287,11 @@ export const TestPosts = [
         "user": {
             "screen_name": "1MarkMoss",
             "name": "Mark Moss",
+            "user_id": "961026235122958336",
         },
         "reply_count": 100,
         "like_count": 100,
         "view_count": 100,
 
     },
-]
-
-const temp = [
-    {
-        title: "A short title ideal for a notification",
-        description: "A longer body text to provide more details about the post context",
-        tickers: ["stock/crypto tickers that are relevant to the post"],
-        sentiment: "positive/negative/neutral",
-        severity: "low/medium/high",
-        source: "twitter/reddit/etc",
-        post_ids: ["the post ids from the input"],
-    }
 ]

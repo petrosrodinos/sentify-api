@@ -12,6 +12,6 @@ import { TwillioConfig } from './twillio/twilio.config';
         TwillioConfig,
         Logger
     ],
-    exports: [SmsIntegrationService],
+    exports: [SmsIntegrationService, TwillioAdapter],
 })
 export class SmsIntegrationModule { }

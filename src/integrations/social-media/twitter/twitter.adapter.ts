@@ -140,7 +140,12 @@ export class TwitterAdapter {
                         exclude: 'replies,retweets',
                     }
                 }).pipe(
-                    map(response => response.data),
+                    map(response => {
+                        return {
+                            ...response.data,
+                            user_id: user_id,
+                        }
+                    }),
                     catchError(error => {
                         console.error('Error fetching tweets:', error.response?.data || error.message);
                         throw error;

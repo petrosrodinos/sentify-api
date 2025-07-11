@@ -51,7 +51,7 @@ export class VerificationTokensService {
           to: client_identifier,
           subject: 'Verification Code',
           text: `Your verification code is ${otp}`,
-          from_address: EmailFromAddressTypes.verification,
+          from: EmailFromAddressTypes.verification,
         });
       }
 

@@ -14,6 +14,7 @@ export class SendgridConfig {
     }
 
     private async initSendgrid() {
+
         const apiKey = this.configService.get('SENDGRID_API_KEY');
         if (!apiKey) {
             this.logger.error('SENDGRID_API_KEY is not configured');
@@ -33,6 +34,7 @@ export class SendgridConfig {
     getEmailFromAddresses(): EmailFromAddress {
         return {
             verification: this.configService.get('EMAIL_FROM_VERIFICATION'),
+            alert: this.configService.get('EMAIL_FROM_VERIFICATION'),
         }
     }
 

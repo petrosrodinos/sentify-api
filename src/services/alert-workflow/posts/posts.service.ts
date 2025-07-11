@@ -45,6 +45,7 @@ export class PostsService {
                     id: post.id,
                     full_text: post.full_text,
                     user: post.user,
+                    platform_type: post.platform_type,
                     reply_count: post.reply_count,
                     like_count: post.like_count,
                     view_count: post.view_count,

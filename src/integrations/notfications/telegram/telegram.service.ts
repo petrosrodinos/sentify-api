@@ -1,9 +1,10 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { TelegramAdapter } from './telegram.adapter';
+import { CreateTelegramMessage } from './telegram.interface';
 
 
 @Injectable()
-export class TelegramService implements OnModuleDestroy {
+export class TelegramIntegrationService implements OnModuleDestroy {
 
     constructor(
         private telegramAdapter: TelegramAdapter
@@ -11,8 +12,8 @@ export class TelegramService implements OnModuleDestroy {
 
     }
 
-    async sendMessage(chat_id: string, message: string, options?: { parse_mode?: 'Markdown' | 'HTML' }) {
-        return this.telegramAdapter.sendMessage(chat_id, message, options);
+    async sendMessage(create_telegram_message: CreateTelegramMessage) {
+        return this.telegramAdapter.sendMessage(create_telegram_message);
     }
 
     async onModuleDestroy() {

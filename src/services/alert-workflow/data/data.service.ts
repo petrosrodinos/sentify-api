@@ -1,7 +1,5 @@
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
-import { MediaSubscription } from '@prisma/client';
-import { TrackedItem } from '@prisma/client';
-import { NotificationChannel } from '@prisma/client';
+import { MediaSubscription, NotificationChannel, TrackedItem, User } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { groupBy } from 'lodash';
 
@@ -26,27 +24,34 @@ export class DataService {
         }
     }
 
-    async getTrackedItems(user_uuid: string): Promise<TrackedItem[]> {
+    async getUserData(): Promise<(User & {
+        tracked_items: TrackedItem[];
+        notification_channels: NotificationChannel[];
+        media_subscriptions: MediaSubscription[];
+    })[]> {
         try {
-            return this.prisma.trackedItem.findMany({
-                where: {
-                    user_uuid,
-                    enabled: true,
+            const users = await this.prisma.user.findMany({
+                include: {
+                    tracked_items: {
+                        where: {
+                            enabled: true,
+                        },
+                    },
+                    notification_channels: {
+                        where: {
+                            enabled: true,
+                        },
+                    },
+                    media_subscriptions: {
+                        where: {
+                            enabled: true,
+                        },
+                    },
                 },
             });
-        } catch (error) {
-            return [];
-        }
-    }
 
-    async getNotificationChannels(user_uuid: string): Promise<NotificationChannel[]> {
-        try {
-            return this.prisma.notificationChannel.findMany({
-                where: {
-                    user_uuid,
-                    enabled: true,
-                },
-            });
+            return users;
+
         } catch (error) {
             return [];
         }

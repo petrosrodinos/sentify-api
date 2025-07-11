@@ -1,4 +1,5 @@
-import { IsOptional, IsString } from "class-validator";
+import { IsEnum, IsOptional, IsString } from "class-validator";
+import { EmailFromAddressType, EmailFromAddressTypes } from "@/integrations/notfications/mail/mail.interfaces";
 
 export class CreateMailDto {
 
@@ -12,7 +13,8 @@ export class CreateMailDto {
     text: string;
 
     @IsOptional()
-    from: string;
+    @IsEnum(EmailFromAddressTypes)
+    from: EmailFromAddressType;
 
     @IsOptional()
     html?: any;

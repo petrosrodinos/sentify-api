@@ -12,6 +12,6 @@ import { SendgridConfig } from './sendgrid/sendgrid.config';
         SendgridConfig,
         Logger
     ],
-    exports: [MailIntegrationService],
+    exports: [MailIntegrationService, SendGridAdapter],
 })
 export class MailIntegrationModule { }

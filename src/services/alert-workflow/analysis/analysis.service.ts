@@ -27,7 +27,7 @@ export class AnalysisService {
         } catch (error) {
             return {
                 twitter: {
-                    response: '',
+                    response: null,
                 },
             };
         }

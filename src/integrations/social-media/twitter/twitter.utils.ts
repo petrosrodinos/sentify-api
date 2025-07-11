@@ -1,3 +1,5 @@
+
+import { PlatformType } from '@prisma/client';
 import { FormattedTweet, TwitterUser } from './twitter.interfaces';
 import { Injectable } from '@nestjs/common';
 
@@ -123,15 +125,13 @@ export class TwitterUtils {
                             reply_count: tweetLegacy?.reply_count || 0,
                             like_count: tweetLegacy?.favorite_count || 0,
                             view_count: views?.count || '0',
+                            platform_type: PlatformType.twitter,
                             user: {
                                 screen_name: user?.screen_name || 'N/A',
                                 name: user?.name || 'N/A',
                                 profile_image_url: user?.profile_image_url_https || '',
-                            },
-                            urls:
-                                tweetLegacy?.entities?.urls?.map((url: any) => url.expanded_url) ||
-                                [],
-
+                                user_id: data.user_id,
+                            }
                         };
 
                         // Process card data if available

@@ -2,8 +2,7 @@ export interface CreateEmail {
     to: string;
     subject: string;
     text: string;
-    from?: string;
-    from_address?: EmailFromAddressType;
+    from?: EmailFromAddressType;
     html?: any;
     attachments?: any[];
     cc?: string[];
@@ -14,10 +13,12 @@ export interface CreateEmail {
 
 export interface EmailFromAddress {
     verification: string;
+    alert: string;
 }
 
 export const EmailFromAddressTypes = {
     verification: 'verification',
+    alert: 'alert',
 } as const;
 
 export type EmailFromAddressType = (typeof EmailFromAddressTypes)[keyof typeof EmailFromAddressTypes];

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PostAnalysis } from './ai.schemas';
 
 export interface AIGenerateOptions {
     provider: AiProvider;
@@ -24,7 +25,7 @@ export interface AIGenerateTextResponse {
 }
 
 export interface AIGenerateObjectResponse {
-    response: z.infer<z.ZodSchema>;
+    response: PostAnalysis[] | null;
     usage?: {
         promptTokens: number;
         completionTokens: number;
