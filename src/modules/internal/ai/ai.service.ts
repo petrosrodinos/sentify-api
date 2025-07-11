@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAiDto } from './dto/create-ai.dto';
-import { AIIntegrationService } from '@/integrations/ai/ai.service';
+import { AiIntegrationService } from '@/integrations/ai/ai.service';
 
 @Injectable()
 export class AiService {
 
-  constructor(private readonly aiService: AIIntegrationService) { }
+  constructor(private readonly aiService: AiIntegrationService) { }
 
   create(createAiDto: CreateAiDto) {
     try {

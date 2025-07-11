@@ -8,11 +8,11 @@ import {
 import { AiConfig } from './ai.config';
 
 @Injectable()
-export class AIIntegrationService {
+export class AiIntegrationService {
 
     constructor(private readonly aiConfig: AiConfig) { }
 
-    private readonly logger = new Logger(AIIntegrationService.name);
+    private readonly logger = new Logger(AiIntegrationService.name);
 
     async generateText(options: AIGenerateTextOptions): Promise<AIGenerateTextResponse> {
         try {
@@ -31,7 +31,6 @@ export class AIIntegrationService {
                 frequencyPenalty: options.frequencyPenalty,
                 presencePenalty: options.presencePenalty,
             });
-
 
             return {
                 text,
@@ -84,7 +83,20 @@ export class AIIntegrationService {
         }
     }
 
-
+    async analyze(posts: string) {
+        try {
+            const analysis = await this.generateText({
+                provider: 'openai',
+                model: 'gpt-4o-mini',
+                system: 'You are a social media sentiment and news analyst expert specialized in crypto and stock market. You are given a list of posts and you need to analyze them and provide a summary',
+                prompt: posts,
+            });
+            return analysis;
+        } catch (error) {
+            this.logger.error(`Error analyzing posts: ${error.message}`, error.stack);
+            throw new Error(`Failed to analyze posts: ${error.message}`);
+        }
+    }
 
 
 }

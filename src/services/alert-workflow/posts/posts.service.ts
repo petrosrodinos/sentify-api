@@ -1,0 +1,56 @@
+import { Injectable } from '@nestjs/common';
+import { TwitterIntegrationService } from '@/integrations/social-media/twitter/twitter.service';
+import { MediaSubscription, PlatformType } from '@prisma/client';
+import { FormattedTweet } from '@/integrations/social-media/twitter/twitter.interfaces';
+import { TestPosts } from './posts.data';
+
+@Injectable()
+export class PostsService {
+    constructor(private readonly twitterIntegrationService: TwitterIntegrationService) { }
+
+    async getPosts(media_subscriptions: Record<string, MediaSubscription[]>): Promise<{
+        twitter: FormattedTweet[];
+    }> {
+        try {
+            const twitterPosts = await this.getTwitterPosts(media_subscriptions.twitter);
+
+            return {
+                twitter: twitterPosts,
+            };
+
+        } catch (error) {
+            return {
+                twitter: [],
+            }
+        }
+    }
+
+    async getTwitterPosts(media_subscriptions: MediaSubscription[]) {
+
+        try {
+
+            return TestPosts as FormattedTweet[];
+
+            const twitterPostsPromises: Promise<FormattedTweet[]>[] = [];
+
+            for (const media_subscription of media_subscriptions) {
+                const twitterUserPosts = this.twitterIntegrationService.getUserTweets(media_subscription.account_identifier, 1);
+                twitterPostsPromises.push(twitterUserPosts);
+            }
+
+            let posts: FormattedTweet[] = await Promise.all(twitterPostsPromises).then(posts => posts.flat());
+
+            const formattedPosts = posts.map((post) => {
+                return {
+                    full_text: post.full_text,
+                    user: post.user
+                }
+
+            })
+
+            return formattedPosts;
+        } catch (error) {
+            return [];
+        }
+    }
+}

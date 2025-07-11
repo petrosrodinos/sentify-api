@@ -2,13 +2,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AnalysisService } from './analysis/analysis.service';
 import { DataService } from './data/data.service';
 import { NotificationsService } from './notifications/notifications.service';
-import { TwitterIntegrationService } from '@/integrations/social-media/twitter/twitter.service';
+import { PostsService } from './posts/posts.service';
 
 @Injectable()
 export class AlertWorkflowService {
     constructor(
         private readonly dataService: DataService,
-        private readonly twitterIntegrationService: TwitterIntegrationService,
+        private readonly postsService: PostsService,
         private readonly analysisService: AnalysisService,
         private readonly notificationsService: NotificationsService,
         private readonly logger: Logger,
@@ -16,12 +16,14 @@ export class AlertWorkflowService {
 
     async run() {
         try {
-            const { mediaSubscriptions, trackedItems, notificationChannels } = await this.dataService.getUsersData();
+            const mediaSubscriptions = await this.dataService.getMediaSubscriptions();
+
+            const posts = await this.postsService.getPosts(mediaSubscriptions);
+
+            const analysis = await this.analysisService.analyze(posts);
 
             return {
-                mediaSubscriptions,
-                trackedItems,
-                notificationChannels,
+                analysis,
             }
 
         } catch (error) {

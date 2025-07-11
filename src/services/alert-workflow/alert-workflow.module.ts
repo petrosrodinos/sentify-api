@@ -2,11 +2,11 @@ import { Logger, Module } from '@nestjs/common';
 import { DataModule } from './data/data.module';
 import { AnalysisModule } from './analysis/analysis.module';
 import { NotificationsModule } from './notifications/notifications.module';
-import { TwitterIntegrationModule } from '@/integrations/social-media/twitter/twitter.module';
 import { AlertWorkflowService } from './alert-workflow.service';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
-    imports: [DataModule, AnalysisModule, NotificationsModule, TwitterIntegrationModule],
+    imports: [DataModule, AnalysisModule, NotificationsModule, PostsModule],
     providers: [Logger, AlertWorkflowService],
     exports: [AlertWorkflowService],
 })

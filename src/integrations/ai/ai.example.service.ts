@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AIIntegrationService } from './ai.service';
+import { AiIntegrationService } from './ai.service';
 import { AiProvider } from './ai.interface';
 import { AiConfig } from './ai.config';
 
@@ -7,7 +7,7 @@ import { AiConfig } from './ai.config';
 export class AIExampleService {
     private readonly logger = new Logger(AIExampleService.name);
 
-    constructor(private readonly aiService: AIIntegrationService, private readonly aiConfig: AiConfig) { }
+    constructor(private readonly aiService: AiIntegrationService, private readonly aiConfig: AiConfig) { }
 
     async analyzeSentiment(text: string, provider: AiProvider = 'openai', model: string = 'gpt-4o-mini'): Promise<string> {
         try {

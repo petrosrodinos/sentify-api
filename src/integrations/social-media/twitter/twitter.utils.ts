@@ -122,23 +122,16 @@ export class TwitterUtils {
                             retweet_count: tweetLegacy?.retweet_count || 0,
                             reply_count: tweetLegacy?.reply_count || 0,
                             like_count: tweetLegacy?.favorite_count || 0,
-                            bookmark_count: tweetLegacy?.bookmark_count || 0,
                             view_count: views?.count || '0',
                             user: {
                                 screen_name: user?.screen_name || 'N/A',
                                 name: user?.name || 'N/A',
                                 profile_image_url: user?.profile_image_url_https || '',
                             },
-                            hashtags:
-                                tweetLegacy?.entities?.hashtags?.map((tag: any) => tag.text) ||
-                                [],
                             urls:
                                 tweetLegacy?.entities?.urls?.map((url: any) => url.expanded_url) ||
                                 [],
-                            user_mentions:
-                                tweetLegacy?.entities?.user_mentions?.map(
-                                    (mention: any) => mention.screen_name,
-                                ) || [],
+
                         };
 
                         // Process card data if available
@@ -151,13 +144,6 @@ export class TwitterUtils {
                                     cardData[bv.key] = bv.value.image_value.url;
                                 }
                             });
-
-                            formattedTweet.card = {
-                                title: cardData.title,
-                                description: cardData.description,
-                                domain: cardData.domain,
-                                imageUrl: cardData.photo_image_full_size_original || cardData.thumbnail_image_original || cardData.summary_photo_image_original,
-                            };
                         }
 
                         formattedTweets.push(formattedTweet);

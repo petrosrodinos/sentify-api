@@ -3,6 +3,7 @@ import { MediaSubscription } from '@prisma/client';
 import { TrackedItem } from '@prisma/client';
 import { NotificationChannel } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
+import { groupBy } from 'lodash';
 
 @Injectable()
 export class DataService {
@@ -10,42 +11,46 @@ export class DataService {
         private readonly prisma: PrismaService,
     ) { }
 
-    async getUsersData(): Promise<{
-        mediaSubscriptions: MediaSubscription[];
-        trackedItems: TrackedItem[];
-        notificationChannels: NotificationChannel[];
-    }> {
+    async getMediaSubscriptions(): Promise<Record<string, MediaSubscription[]>> {
         try {
-            const promises: [Promise<MediaSubscription[]>, Promise<TrackedItem[]>, Promise<NotificationChannel[]>] = [
-                this.prisma.mediaSubscription.findMany({
-                    where: {
-                        enabled: true,
-                    },
-                    distinct: ['account_identifier', 'platform_type'],
-                }),
-                this.prisma.trackedItem.findMany({
-                    where: {
-                        enabled: true,
-                    },
-                    distinct: ['item_type', 'item_identifier'],
-                }),
-                this.prisma.notificationChannel.findMany({
-                    where: {
-                        enabled: true,
-                    },
-                    distinct: ['channel'],
-                }),
-            ]
+            const subscriptions = await this.prisma.mediaSubscription.findMany({
+                where: {
+                    enabled: true,
+                },
+                distinct: ['account_identifier', 'platform_type'],
+            });
 
-            const [mediaSubscriptions, trackedItems, notificationChannels] = await Promise.all(promises);
-
-            return {
-                mediaSubscriptions,
-                trackedItems,
-                notificationChannels,
-            }
+            return groupBy(subscriptions, 'platform_type');
         } catch (error) {
-            throw new Error(error);
+            return {};
         }
     }
+
+    async getTrackedItems(user_uuid: string): Promise<TrackedItem[]> {
+        try {
+            return this.prisma.trackedItem.findMany({
+                where: {
+                    user_uuid,
+                    enabled: true,
+                },
+            });
+        } catch (error) {
+            return [];
+        }
+    }
+
+    async getNotificationChannels(user_uuid: string): Promise<NotificationChannel[]> {
+        try {
+            return this.prisma.notificationChannel.findMany({
+                where: {
+                    user_uuid,
+                    enabled: true,
+                },
+            });
+        } catch (error) {
+            return [];
+        }
+    }
+
+
 }
