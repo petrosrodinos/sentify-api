@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TwitterIntegrationService } from '@/integrations/social-media/twitter/twitter.service';
-import { MediaSubscription, PlatformType } from '@prisma/client';
+import { MediaSubscription } from '@prisma/client';
 import { FormattedTweet } from '@/integrations/social-media/twitter/twitter.interfaces';
 import { TestPosts } from './posts.data';
 
@@ -42,8 +42,12 @@ export class PostsService {
 
             const formattedPosts = posts.map((post) => {
                 return {
+                    id: post.id,
                     full_text: post.full_text,
-                    user: post.user
+                    user: post.user,
+                    reply_count: post.reply_count,
+                    like_count: post.like_count,
+                    view_count: post.view_count,
                 }
 
             })

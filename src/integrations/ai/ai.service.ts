@@ -1,11 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { generateText, streamText } from 'ai';
+import { generateObject, generateText, streamText } from 'ai';
 import {
-    AIGenerateTextOptions,
+    AIGenerateObjectResponse,
+    AIGenerateOptions,
     AIGenerateTextResponse,
+    AiModels,
+    AiProviders,
     AIStreamTextOptions,
 } from './ai.interface';
 import { AiConfig } from './ai.config';
+import { PostAnalysisSchema } from './ai.schemas';
+import { z } from 'zod';
 
 @Injectable()
 export class AiIntegrationService {
@@ -14,7 +19,7 @@ export class AiIntegrationService {
 
     private readonly logger = new Logger(AiIntegrationService.name);
 
-    async generateText(options: AIGenerateTextOptions): Promise<AIGenerateTextResponse> {
+    async generateText(options: AIGenerateOptions): Promise<AIGenerateTextResponse> {
         try {
 
             // this.aiConfig.validateProviderAndModel(options.provider, options.model);
@@ -33,7 +38,35 @@ export class AiIntegrationService {
             });
 
             return {
-                text,
+                response: text,
+                usage: usage ? {
+                    promptTokens: usage.promptTokens,
+                    completionTokens: usage.completionTokens,
+                    totalTokens: usage.totalTokens,
+                } : undefined,
+            };
+        } catch (error) {
+            this.logger.error(`Error generating text: ${error.message}`, error.stack);
+            throw new Error(`Failed to generate text: ${error.message}`);
+        }
+    }
+
+
+    async generateTextWithSchema(options: AIGenerateOptions): Promise<AIGenerateObjectResponse> {
+        try {
+
+            const modelAdapter = this.aiConfig.getModelAdapter(options.provider, options.model);
+
+            const { object, usage } = await generateObject({
+                model: modelAdapter,
+                output: 'array',
+                schema: options?.schema || z.any(),
+                prompt: options.prompt,
+                system: options?.system || 'You are a helpful assistant.',
+            });
+
+            return {
+                response: object,
                 usage: usage ? {
                     promptTokens: usage.promptTokens,
                     completionTokens: usage.completionTokens,
@@ -83,15 +116,22 @@ export class AiIntegrationService {
         }
     }
 
-    async analyze(posts: string) {
+    async analyze(prompt: string) {
+
+        const { postAnalysis } = this.aiConfig.getSystemPrompt();
+
         try {
-            const analysis = await this.generateText({
-                provider: 'openai',
-                model: 'gpt-4o-mini',
-                system: 'You are a social media sentiment and news analyst expert specialized in crypto and stock market. You are given a list of posts and you need to analyze them and provide a summary',
-                prompt: posts,
+
+            const analysis = await this.generateTextWithSchema({
+                provider: AiProviders.openai,
+                model: AiModels.openai.gpt4oMini,
+                system: postAnalysis,
+                prompt: prompt,
+                schema: PostAnalysisSchema,
             });
+
             return analysis;
+
         } catch (error) {
             this.logger.error(`Error analyzing posts: ${error.message}`, error.stack);
             throw new Error(`Failed to analyze posts: ${error.message}`);

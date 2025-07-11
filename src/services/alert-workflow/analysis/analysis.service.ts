@@ -1,4 +1,4 @@
-import { AIGenerateTextResponse } from '@/integrations/ai/ai.interface';
+import { AIGenerateObjectResponse } from '@/integrations/ai/ai.interface';
 import { AiIntegrationService } from '@/integrations/ai/ai.service';
 import { FormattedTweet } from '@/integrations/social-media/twitter/twitter.interfaces';
 import { Injectable } from '@nestjs/common';
@@ -13,7 +13,7 @@ export class AnalysisService {
     async analyze(posts: {
         twitter: FormattedTweet[];
     }): Promise<{
-        twitter: AIGenerateTextResponse;
+        twitter: AIGenerateObjectResponse;
     }> {
         try {
             const twitterAnalysis = this.analyzeTwitterPosts(posts.twitter);
@@ -27,18 +27,18 @@ export class AnalysisService {
         } catch (error) {
             return {
                 twitter: {
-                    text: '',
+                    response: '',
                 },
             };
         }
     }
 
-    async analyzeTwitterPosts(posts: FormattedTweet[]): Promise<AIGenerateTextResponse> {
+    async analyzeTwitterPosts(posts: FormattedTweet[]): Promise<AIGenerateObjectResponse> {
         try {
             return await this.aiService.analyze(JSON.stringify(posts));
         } catch (error) {
             return {
-                text: '',
+                response: [],
             };
         }
     }

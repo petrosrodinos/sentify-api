@@ -1,8 +1,12 @@
-export interface AIGenerateTextOptions {
+import { z } from 'zod';
+
+export interface AIGenerateOptions {
     provider: AiProvider;
-    model: AiModel;
+    model?: AiModel;
     system?: string;
     prompt: string;
+    schema?: z.ZodSchema;
+    output?: 'json' | 'no-schema';
     temperature?: number;
     maxTokens?: number;
     topP?: number;
@@ -11,7 +15,7 @@ export interface AIGenerateTextOptions {
 }
 
 export interface AIGenerateTextResponse {
-    text: string;
+    response: string;
     usage?: {
         promptTokens: number;
         completionTokens: number;
@@ -19,7 +23,18 @@ export interface AIGenerateTextResponse {
     };
 }
 
-export interface AIStreamTextOptions extends AIGenerateTextOptions {
+export interface AIGenerateObjectResponse {
+    response: z.infer<z.ZodSchema>;
+    usage?: {
+        promptTokens: number;
+        completionTokens: number;
+        totalTokens: number;
+    };
+}
+
+
+
+export interface AIStreamTextOptions extends AIGenerateOptions {
     onToken?: (token: string) => void;
     onComplete?: (fullText: string) => void;
 }
