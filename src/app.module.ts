@@ -19,6 +19,7 @@ import { TelegramIntegrationModule } from './integrations/notfications/telegram/
 import { ConfigModule } from './core/config/config.module';
 import { MailModule } from './modules/internal/mail/mail.module';
 import { SmsModule } from './modules/internal/sms/sms.module';
+import { AiModule } from './modules/internal/ai/ai.module';
 
 
 @Module({
@@ -40,7 +41,8 @@ import { SmsModule } from './modules/internal/sms/sms.module';
     TelegramModule,
     TelegramIntegrationModule,
     MailModule,
-    SmsModule
+    SmsModule,
+    AiModule
   ],
   controllers: [AppController],
   providers: [AppService],
