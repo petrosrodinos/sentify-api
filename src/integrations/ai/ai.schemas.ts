@@ -10,6 +10,7 @@ export const PostAnalysisSchema = z.object({
     post_ids: z.array(z.string()).describe('The relevant post ids from the input, not empty'),
     platform_type: z.string().describe('twitter/reddit/etc'),
     account_identifier: z.string().describe('The user_id from the input'),
+    account_name: z.string().describe('The user.name from the input'),
 });
 
 export type PostAnalysis = z.infer<typeof PostAnalysisSchema>;
