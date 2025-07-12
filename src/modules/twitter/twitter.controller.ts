@@ -12,7 +12,7 @@ import { JwtGuard } from '@/shared/guards/jwt.guard';
 export class TwitterController {
   constructor(private readonly twitterService: TwitterService) { }
 
-  @Get(':username')
+  @Get('user/:username')
   @ApiOperation({ summary: 'Get Twitter user by username' })
   @ApiParam({
     name: 'username',
@@ -44,7 +44,7 @@ export class TwitterController {
     return this.twitterService.searchUser(username);
   }
 
-  @Get(':user_id/followings')
+  @Get('followings/:user_id')
   @ApiOperation({ summary: 'Get users that a Twitter user is following' })
   @ApiParam({
     name: 'user_id',
@@ -60,7 +60,7 @@ export class TwitterController {
     return this.twitterService.getUserFollowings(user_id);
   }
 
-  @Get(':user_id/tweets')
+  @Get('tweets/:user_id')
   @ApiOperation({ summary: 'Get tweets from a Twitter user' })
   @ApiParam({
     name: 'user_id',
