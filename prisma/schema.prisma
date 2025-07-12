@@ -124,6 +124,7 @@ model Alert {
   account_name String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  user_alerts UserAlert[]
 
   @@index([platform_type])
   @@index([account_identifier])
@@ -137,6 +138,7 @@ model UserAlert {
   alert_uuid String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  alert Alert @relation(fields: [alert_uuid], references: [uuid], onDelete: Cascade)
 
   @@index([user_uuid])
   @@index([alert_uuid])

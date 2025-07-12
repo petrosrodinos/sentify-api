@@ -1,1 +1,3 @@
-export class CreateUserAlertDto {}
+export class CreateUserAlertDto {
+    alert_uuid: string
+}
