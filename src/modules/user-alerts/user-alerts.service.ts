@@ -26,14 +26,15 @@ export class UserAlertsService {
           account_identifier: query.account_identifier,
           sentiment: query.sentiment,
           severity: query.severity,
-          popularity: query.popularity,
+          popularity: query.popularity ? Number(query.popularity) : undefined,
+          tickers: query.tickers ? { hasSome: query.tickers.split(',') } : undefined,
         },
       },
       include: {
         alert: true,
       },
-      skip: query?.page && query?.limit ? (query?.page - 1) * query?.limit : 0,
-      take: query?.limit ?? 10,
+      skip: query?.page && query?.limit ? Number(query?.page) - 1 * Number(query?.limit) : 0,
+      take: query?.limit ? Number(query?.limit) : 10,
     });
   }
 

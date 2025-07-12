@@ -6,9 +6,10 @@ export const UserAlertsQuerySchema = z.object({
     account_identifier: z.string().optional(),
     sentiment: z.string().optional(),
     severity: z.string().optional(),
-    popularity: z.number().optional(),
-    page: z.number().optional(),
-    limit: z.number().optional(),
+    popularity: z.string().optional(),
+    page: z.string().optional(),
+    limit: z.string().optional(),
+    tickers: z.string().optional(),
 });
 
 export type UserAlertsQueryType = z.infer<typeof UserAlertsQuerySchema>;
