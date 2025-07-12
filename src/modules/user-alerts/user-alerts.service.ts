@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserAlertDto } from './dto/create-user-alert.dto';
-import { UpdateUserAlertDto } from './dto/update-user-alert.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { UserAlertsQueryType } from './dto/user-alerts-query.schema';
 

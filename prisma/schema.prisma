@@ -136,6 +136,7 @@ model UserAlert {
   uuid String @unique @default(uuid())
   user_uuid String
   alert_uuid String
+  notification_channels NotificationChannelType[]
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   alert Alert @relation(fields: [alert_uuid], references: [uuid], onDelete: Cascade)
