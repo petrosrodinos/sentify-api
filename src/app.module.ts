@@ -21,6 +21,8 @@ import { MailModule } from './modules/internal/mail/mail.module';
 import { SmsModule } from './modules/internal/sms/sms.module';
 import { AiModule } from './modules/internal/ai/ai.module';
 import { AlertWorkflowModule } from './modules/internal/alert-workflow/alert-workflow.module';
+import { AlertModule } from './modules/internal/alert/alert.module';
+import { UserAlertsModule } from './modules/user-alerts/user-alerts.module';
 
 
 @Module({
@@ -44,7 +46,9 @@ import { AlertWorkflowModule } from './modules/internal/alert-workflow/alert-wor
     MailModule,
     SmsModule,
     AiModule,
-    AlertWorkflowModule
+    AlertWorkflowModule,
+    AlertModule,
+    UserAlertsModule
   ],
   controllers: [AppController],
   providers: [AppService],

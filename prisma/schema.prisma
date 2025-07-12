@@ -109,6 +109,40 @@ model NotificationChannel {
   @@map("notification_channels")
 }
 
+model Alert {
+  id Int @id @default(autoincrement())
+  uuid String @unique @default(uuid())
+  title String
+  description String
+  tickers String[]
+  sentiment String
+  severity String
+  popularity Int
+  post_ids String[]
+  platform_type PlatformType
+  account_identifier String
+  account_name String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([platform_type])
+  @@index([account_identifier])
+  @@map("alerts")
+}
+
+model UserAlert {
+  id Int @id @default(autoincrement())
+  uuid String @unique @default(uuid())
+  user_uuid String
+  alert_uuid String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([user_uuid])
+  @@index([alert_uuid])
+  @@map("user_alerts")
+}
+
 model TrackedItem {
   id                Int          @id @default(autoincrement())
   uuid              String       @unique @default(uuid())
