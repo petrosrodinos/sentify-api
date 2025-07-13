@@ -4,7 +4,7 @@ import { NotificationChannelType } from "@prisma/client";
 export class CreateUserAlertDto {
     @IsString()
     @IsNotEmpty()
-    alert_uuid: string
+    alert_id: number
 
     @IsArray()
     @IsNotEmpty()

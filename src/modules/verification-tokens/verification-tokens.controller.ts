@@ -16,6 +16,8 @@ export class VerificationTokensController {
   constructor(private readonly verificationTokensService: VerificationTokensService) { }
 
   @Post()
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Create a new verification token',
     description: 'Creates a new verification token for user authentication. The token is generated using OTP service and can be used for email verification, password reset, or OAuth flows.'
@@ -29,8 +31,8 @@ export class VerificationTokensController {
     description: 'Verification token created successfully',
     type: VerificationToken
   })
-  create(@Body() createVerificationTokenDto: CreateVerificationTokenDto) {
-    return this.verificationTokensService.create(createVerificationTokenDto);
+  create(@CurrentUser('uuid') uuid: string, @Body() createVerificationTokenDto: CreateVerificationTokenDto) {
+    return this.verificationTokensService.create(uuid, createVerificationTokenDto);
   }
 
   @Get()

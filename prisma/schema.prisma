@@ -23,6 +23,7 @@ model User {
   media_subscriptions MediaSubscription[]
   notification_channels NotificationChannel[]
   tracked_items TrackedItem[]
+  user_alerts UserAlert[]
 
   @@index([email])
   @@index([phone])
@@ -59,7 +60,6 @@ model VerificationToken {
   state         String?
   type          AuthProviderType
   client_identifier String?
-  identity_uuid String?
   expires_at    DateTime?
   created_at    DateTime     @default(now())
   updated_at    DateTime     @updatedAt
@@ -135,14 +135,14 @@ model UserAlert {
   id Int @id @default(autoincrement())
   uuid String @unique @default(uuid())
   user_uuid String
-  alert_uuid String
+  alert_id Int
   notification_channels NotificationChannelType[]
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  alert Alert @relation(fields: [alert_uuid], references: [uuid], onDelete: Cascade)
+  alert Alert @relation(fields: [alert_id], references: [id], onDelete: Cascade)
+  user User @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
 
   @@index([user_uuid])
-  @@index([alert_uuid])
   @@map("user_alerts")
 }
 

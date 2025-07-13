@@ -10,8 +10,9 @@ export class UserAlertsService {
   create(uuid: string, createUserAlertDto: CreateUserAlertDto) {
     return this.prisma.userAlert.create({
       data: {
-        ...createUserAlertDto,
         user_uuid: uuid,
+        alert_id: createUserAlertDto.alert_id,
+        notification_channels: createUserAlertDto.notification_channels,
       },
     });
   }

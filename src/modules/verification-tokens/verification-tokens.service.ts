@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { CreateVerificationTokenDto } from './dto/create-verification-token.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { OtpService } from '@/shared/utils/otp/otp.service';
@@ -19,21 +19,27 @@ export class VerificationTokensService {
     private readonly mailService: MailIntegrationService,
   ) { }
 
-  async create(createVerificationTokenDto: CreateVerificationTokenDto) {
+  async create(uuid: string, createVerificationTokenDto: CreateVerificationTokenDto) {
     try {
-      const { state, type, identity_uuid, client_identifier } = createVerificationTokenDto;
+      const { state, type, client_identifier } = createVerificationTokenDto;
+
+      if ((type === NotificationChannelType.sms || type === NotificationChannelType.phone) && !client_identifier) {
+        throw new BadRequestException('Client identifier is required for SMS verification');
+      } else if (type === NotificationChannelType.email && !client_identifier) {
+        throw new BadRequestException('Client identifier is required for Email verification');
+      }
 
       const otp = this.otpService.generateOtp({
         length: 6,
       });
 
+
       const verification_token = await this.prisma.verificationToken.create({
         data: {
-          user_uuid: createVerificationTokenDto.user_uuid,
+          user_uuid: uuid,
           token: otp,
           state,
           type,
-          identity_uuid,
           client_identifier,
         }
       });
@@ -50,10 +56,17 @@ export class VerificationTokensService {
         await this.mailService.sendEmail({
           to: client_identifier,
           subject: 'Verification Code',
-          text: `Your verification code is ${otp}`,
+          text: `Your verification code for Sentyfi is: ${otp}`,
           from: EmailFromAddressTypes.verification,
         });
       }
+
+      // if (type === NotificationChannelType.sms || type === NotificationChannelType.phone || type === NotificationChannelType.email) {
+      //   return {
+      //     success: true,
+      //     message: 'Verification token created successfully',
+      //   }
+      // }
 
       return verification_token;
 
@@ -63,31 +76,7 @@ export class VerificationTokensService {
     }
   }
 
-  async findAll(query: VerificationTokenQueryType) {
 
-    try {
-      const { user_uuid, type, state, identity_uuid } = query;
-
-      const verification_tokens = await this.prisma.verificationToken.findMany({
-        where: {
-          user_uuid,
-          type,
-          state,
-          identity_uuid,
-        },
-      });
-
-      if (!verification_tokens) {
-        throw new NotFoundException('Verification tokens not found');
-      }
-
-      return verification_tokens;
-
-    } catch (error) {
-      this.logger.error(error);
-      throw new InternalServerErrorException(error.message);
-    }
-  }
 
   async verifyToken(token: string, meta?: any) {
     try {
@@ -127,6 +116,32 @@ export class VerificationTokensService {
     }
   }
 
+
+  async findAll(query: VerificationTokenQueryType) {
+
+    try {
+      const { user_uuid, type, state, identity_uuid } = query;
+
+      const verification_tokens = await this.prisma.verificationToken.findMany({
+        where: {
+          user_uuid,
+          type,
+          state,
+          identity_uuid,
+        },
+      });
+
+      if (!verification_tokens) {
+        throw new NotFoundException('Verification tokens not found');
+      }
+
+      return verification_tokens;
+
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
+  }
 
   removeAll(uuid: string) {
     return this.prisma.verificationToken.deleteMany({
