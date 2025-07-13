@@ -6,6 +6,7 @@ import { TwitterTweet } from './entities/twitter-tweet.entity';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { RolesGuard } from '@/shared/guards/roles.guard';
 import { Roles } from '@/shared/decorators/roles.decorator';
+import { Roles as RolesTypes } from '@/shared/types/roles.types';
 
 
 @ApiTags('Twitter')
@@ -64,7 +65,7 @@ export class TwitterController {
 
   @Get('tweets/:user_id')
   @UseGuards(RolesGuard)
-  @Roles('admin')
+  @Roles(RolesTypes.ADMIN)
   @ApiOperation({ summary: 'Get tweets from a Twitter user' })
   @ApiParam({
     name: 'user_id',

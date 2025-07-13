@@ -5,10 +5,11 @@ import { UpdateSmDto } from './dto/update-sm.dto';
 import { Roles } from '@/shared/decorators/roles.decorator';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { RolesGuard } from '@/shared/guards/roles.guard';
+import { Roles as RolesTypes } from '@/shared/types/roles.types';
 
 @Controller('sms')
 @UseGuards(JwtGuard, RolesGuard)
-@Roles('admin')
+@Roles(RolesTypes.ADMIN)
 export class SmsController {
   constructor(private readonly smsService: SmsService) { }
 

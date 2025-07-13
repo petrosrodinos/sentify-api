@@ -4,10 +4,11 @@ import { CreateAlertDto } from './dto/create-alert.dto';
 import { Roles } from '@/shared/decorators/roles.decorator';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { RolesGuard } from '@/shared/guards/roles.guard';
+import { Roles as RolesTypes } from '@/shared/types/roles.types';
 
 @Controller('alerts')
 @UseGuards(JwtGuard, RolesGuard)
-@Roles('admin')
+@Roles(RolesTypes.ADMIN)
 export class AlertController {
   constructor(private readonly alertService: AlertService) { }
 

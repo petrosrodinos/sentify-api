@@ -5,10 +5,11 @@ import { UpdateRedisCacheDto } from './dto/update-redis-cache.dto';
 import { Roles } from '@/shared/decorators/roles.decorator';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { RolesGuard } from '@/shared/guards/roles.guard';
+import { Roles as RolesTypes } from '@/shared/types/roles.types';
 
 @Controller('redis-cache')
 @UseGuards(JwtGuard, RolesGuard)
-@Roles('admin')
+@Roles(RolesTypes.ADMIN)
 export class RedisCacheController {
   constructor(private readonly redisCacheService: RedisCacheService) { }
 

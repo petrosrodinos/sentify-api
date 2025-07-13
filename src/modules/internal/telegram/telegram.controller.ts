@@ -4,10 +4,11 @@ import { Roles } from '@/shared/decorators/roles.decorator';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { RolesGuard } from '@/shared/guards/roles.guard';
 import { CreateTelegramMessage } from '@/integrations/notfications/telegram/telegram.interface';
+import { Roles as RolesTypes } from '@/shared/types/roles.types';
 
 @Controller('telegram')
 @UseGuards(JwtGuard, RolesGuard)
-@Roles('admin')
+@Roles(RolesTypes.ADMIN)
 export class TelegramController {
   constructor(private readonly telegramService: TelegramIntegrationService) { }
 

@@ -6,10 +6,11 @@ import { Roles } from 'src/shared/decorators/roles.decorator';
 import { UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/shared/guards/jwt.guard';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
+import { Roles as RolesTypes } from '@/shared/types/roles.types';
 
 @Controller('mail')
 @UseGuards(JwtGuard, RolesGuard)
-@Roles('admin')
+@Roles(RolesTypes.ADMIN)
 export class MailController {
   constructor(private readonly mailService: MailService) { }
 

@@ -6,7 +6,6 @@ import { UsersModule } from './modules/users/users.module';
 import { TwitterIntegrationModule } from './integrations/social-media/twitter/twitter.module';
 import { MediaSubscriptionsModule } from './modules/media-subscriptions/media-subscriptions.module';
 import { TwitterModule } from './modules/twitter/twitter.module';
-import { SharedModule } from './shared/shared.module';
 import { NotificationChannelsModule } from './modules/notification-channels/notification-channels.module';
 import { RedisModule } from './core/databases/redis/redis.module';
 import { RedisCacheModule } from './modules/internal/redis-cache/redis-cache.module';
@@ -33,7 +32,6 @@ import { UserAlertsModule } from './modules/user-alerts/user-alerts.module';
     TwitterIntegrationModule,
     TwitterModule,
     MediaSubscriptionsModule,
-    SharedModule,
     NotificationChannelsModule,
     RedisModule,
     RedisCacheModule,

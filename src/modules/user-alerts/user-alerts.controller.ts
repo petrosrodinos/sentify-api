@@ -7,6 +7,7 @@ import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { UserAlertsQuerySchema, UserAlertsQueryType } from './dto/user-alerts-query.schema';
 import { RolesGuard } from '@/shared/guards/roles.guard';
 import { Roles } from '@/shared/decorators/roles.decorator';
+import { Roles as RolesTypes } from '@/shared/types/roles.types';
 
 @Controller('user-alerts')
 @UseGuards(JwtGuard)
@@ -15,7 +16,7 @@ export class UserAlertsController {
 
   @Post()
   @UseGuards(RolesGuard)
-  @Roles('admin')
+  @Roles(RolesTypes.ADMIN)
   create(@CurrentUser('uuid') uuid: string, @Body() createUserAlertDto: CreateUserAlertDto) {
     return this.userAlertsService.create(uuid, createUserAlertDto);
   }
