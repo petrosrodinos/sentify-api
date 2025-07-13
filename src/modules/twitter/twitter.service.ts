@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TwitterIntegrationService } from '@/integrations/social-media/twitter/twitter.service';
 import { TestTwitterUser, TestTwitterUsers } from './twitter.contants';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TwitterService {
-  constructor(private readonly twitterIntegrationService: TwitterIntegrationService) { }
+  constructor(private readonly twitterIntegrationService: TwitterIntegrationService, private readonly configService: ConfigService) { }
 
   getUserByUsername(username: string) {
 
@@ -14,7 +15,9 @@ export class TwitterService {
         throw new BadRequestException('Username is required');
       }
 
-      return TestTwitterUser;
+      if (this.configService.get('NODE_ENV') === 'local') {
+        return TestTwitterUser;
+      }
 
       return this.twitterIntegrationService.getUserByUsername(username);
 
@@ -48,7 +51,9 @@ export class TwitterService {
         throw new BadRequestException('User ID is required');
       }
 
-      return TestTwitterUsers;
+      if (this.configService.get('NODE_ENV') === 'local') {
+        return TestTwitterUsers;
+      }
 
       const followers = await this.twitterIntegrationService.getUserFollowings(user_id);
 

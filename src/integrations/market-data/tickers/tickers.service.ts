@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PolygonAdapter } from './polygon/polygon.adapter';
-import { PolygonTickersResponse, TickerDetails } from './tickers.interface';
-import { GetStockTickerDetailsType, GetStockTickersType } from '@/modules/tickers/dto/ticker.schema';
+import type { TickerDetails } from './tickers.interface';
+import type { GetStockTickersType } from '@/modules/tickers/dto/ticker.schema';
+import { PolygonUtils } from './polygon/polygon.utils';
 
 @Injectable()
 export class TickersIntegrationService {
@@ -9,16 +10,13 @@ export class TickersIntegrationService {
     constructor(private readonly polygonAdapter: PolygonAdapter) { }
 
 
-    async getTickerDetails(params: GetStockTickerDetailsType): Promise<TickerDetails> {
-        return this.polygonAdapter.getTickerDetails(params);
+    async getTickers(params: GetStockTickersType): Promise<TickerDetails[]> {
+
+        const tickers = await this.polygonAdapter.getTickers(params);
+
+        return tickers.results.map(ticker => PolygonUtils.formatTicker(ticker)) as TickerDetails[];
     }
 
-    async getTickers(params: GetStockTickersType): Promise<PolygonTickersResponse> {
-        return this.polygonAdapter.getTickers(params);
-    }
 
-    async getTickersWithMeta(params: GetStockTickersType): Promise<TickerDetails[]> {
-        return this.polygonAdapter.getTickersWithMeta(params);
-    }
 
 }

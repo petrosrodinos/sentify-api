@@ -190,7 +190,7 @@ export class TwitterUtils {
     }
 
     formatUserByUsername(rawResponse: any): TwitterUser | null {
-        if (!rawResponse?.result.data.user.result) {
+        if (!rawResponse?.result?.data?.user?.result) {
             return null;
         }
 

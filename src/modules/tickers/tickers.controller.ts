@@ -7,17 +7,6 @@ import { GetStockTickersSchema, GetStockTickersType } from './dto/ticker.schema'
 export class TickersController {
   constructor(private readonly tickersService: TickersService) { }
 
-  @Get('tickers/meta')
-  getTickersWithMeta(@Query(new ZodValidationPipe(GetStockTickersSchema)) query: GetStockTickersType) {
-    return this.tickersService.getTickersWithMeta(query);
-  }
-
-  @Get('tickers/:ticker')
-  getTickerDetails(@Param('ticker') ticker: string) {
-    return this.tickersService.getTickerDetails({ ticker });
-  }
-
-
   @Get('tickers')
   getTickers(@Query(new ZodValidationPipe(GetStockTickersSchema)) query: GetStockTickersType) {
     return this.tickersService.getTickers(query);

@@ -4,6 +4,8 @@ import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { TwitterUser } from './entities/twitter-user.entity';
 import { TwitterTweet } from './entities/twitter-tweet.entity';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
+import { RolesGuard } from '@/shared/guards/roles.guard';
+import { Roles } from '@/shared/decorators/roles.decorator';
 
 
 @ApiTags('Twitter')
@@ -61,6 +63,8 @@ export class TwitterController {
   }
 
   @Get('tweets/:user_id')
+  @UseGuards(RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Get tweets from a Twitter user' })
   @ApiParam({
     name: 'user_id',

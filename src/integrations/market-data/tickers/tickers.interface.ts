@@ -1,8 +1,8 @@
 export interface TickerDetails {
     ticker: string;
     name: string;
-    icon_url: string;
-    market_cap: number;
+    active?: boolean;
+    type?: string;
     market: string;
 }
 
