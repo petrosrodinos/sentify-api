@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserAlertDto } from './dto/create-user-alert.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { UserAlertsQueryType } from './dto/user-alerts-query.schema';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserAlertsService {
@@ -16,27 +17,47 @@ export class UserAlertsService {
       },
     });
   }
+  async findAll(uuid: string, query: UserAlertsQueryType) {
+    const page = Number(query?.page) || 1;
+    const limit = Number(query?.limit) || 10;
+    const skip = (page - 1) * limit;
 
-  findAll(uuid: string, query: UserAlertsQueryType) {
-    return this.prisma.userAlert.findMany({
-      where: {
-        user_uuid: uuid,
-        alert: {
-          platform_type: query.platform_type,
-          account_identifier: query.account_identifier,
-          sentiment: query.sentiment,
-          severity: query.severity,
-          popularity: query.popularity ? Number(query.popularity) : undefined,
-          tickers: query.tickers ? { array_contains: query.tickers.split(',') } : undefined,
+    const whereClause: Prisma.UserAlertWhereInput = {
+      user_uuid: uuid,
+      alert: {
+        platform_type: query.platform_type,
+        account_identifier: query.account_identifier,
+        sentiment: query.sentiment,
+        severity: query.severity,
+        popularity: query.popularity ? Number(query.popularity) : undefined,
+        tickers: query.tickers ? { array_contains: query.tickers.split(',') } : undefined,
+      },
+    }
+
+    const [alerts, total] = await Promise.all([
+      this.prisma.userAlert.findMany({
+        where: whereClause,
+        include: {
+          alert: true,
         },
-      },
-      include: {
-        alert: true,
-      },
-      skip: query?.page && query?.limit ? Number(query?.page) - 1 * Number(query?.limit) : 0,
-      take: query?.limit ? Number(query?.limit) : 10,
-      orderBy: query?.order_by ? { created_at: query.order_by } : undefined,
-    });
+        skip,
+        take: limit,
+        orderBy: query?.order_by ? { created_at: query.order_by } : undefined,
+      }),
+      this.prisma.userAlert.count({
+        where: whereClause,
+      })
+    ]);
+
+    return {
+      data: alerts,
+      pagination: {
+        total,
+        page,
+        limit,
+        hasMore: skip + alerts.length < total
+      }
+    };
   }
 
 
