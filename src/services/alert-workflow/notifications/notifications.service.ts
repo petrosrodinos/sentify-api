@@ -2,11 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AIGenerateObjectResponse } from '@/integrations/ai/ai.interface';
 import { DataService } from '../data/data.service';
-import { NotificationChannel, NotificationChannelType } from '@prisma/client';
+import { Alert, NotificationChannel, NotificationChannelType, PlatformType } from '@prisma/client';
 import { MailIntegrationService } from '@/integrations/notfications/mail/mail.service';
 import { SmsIntegrationService } from '@/integrations/notfications/sms/sms.service';
 import { TelegramIntegrationService } from '@/integrations/notfications/telegram/telegram.service';
 import { EmailFromAddressTypes } from '@/integrations/notfications/mail/mail.interfaces';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class NotificationsService {
@@ -28,18 +29,50 @@ export class NotificationsService {
 
             const analysisItems = analysis?.twitter?.response || [];
 
-            for (const analysisItem of analysisItems) {
+            const batch_id = uuidv4();
+
+            await this.prisma.alert.createMany({
+                data: analysisItems.map(alert => ({
+                    batch_id: batch_id,
+                    title: alert.title,
+                    description: alert.description,
+                    tickers: alert.tickers,
+                    platform_type: alert.platform_type as PlatformType,
+                    account_identifier: alert.account_identifier,
+                    account_name: alert.account_name,
+                    sentiment: alert.sentiment,
+                    severity: alert.severity,
+                    popularity: alert.popularity,
+                    post_ids: alert.post_ids,
+                })),
+            });
+
+            const createdAlerts = await this.prisma.alert.findMany({
+                where: {
+                    batch_id: batch_id,
+                },
+            });
+
+            const userAlertsToCreate = [];
+            const notificationPromises = [];
+
+            for (let i = 0; i < analysisItems.length; i++) {
+                const analysisItem = analysisItems[i];
+                const alert = createdAlerts[i];
                 const { platform_type, account_identifier, tickers, title, description } = analysisItem;
 
-                const usersToNotify = this.findUsersToNotify(
+                const { usersToNotify, userAlerts } = this.findUsersToAlert(
                     platform_type,
                     account_identifier,
                     tickers.map(t => t.ticker),
-                    users
+                    users,
+                    alert.id
                 );
 
-                await Promise.all(
-                    usersToNotify.map(user =>
+                userAlertsToCreate.push(...userAlerts);
+
+                notificationPromises.push(
+                    ...usersToNotify.map(user =>
                         this.sendNotification(
                             user.notification_channels,
                             title,
@@ -49,6 +82,15 @@ export class NotificationsService {
                     )
                 );
             }
+
+            await Promise.all(notificationPromises);
+
+            if (userAlertsToCreate.length > 0) {
+                await this.prisma.userAlert.createMany({
+                    data: userAlertsToCreate,
+                });
+            }
+
 
             return {
                 success: true,
@@ -60,16 +102,21 @@ export class NotificationsService {
         }
     }
 
-    private findUsersToNotify(
+
+    private findUsersToAlert(
         platform_type: string,
         account_identifier: string,
         tickers: string[],
-        users: any[]
+        users: any[],
+        alert_id: number
     ) {
         const usersToNotify = [];
+        const userAlerts = [];
+
+        const tickerSet = new Set(tickers.map(ticker => ticker.toLowerCase()));
 
         for (const user of users) {
-            const { tracked_items, media_subscriptions } = user;
+            const { tracked_items, media_subscriptions, notification_channels } = user;
 
             const hasMatchingMediaSubscription = media_subscriptions.some(
                 subscription =>
@@ -79,17 +126,23 @@ export class NotificationsService {
 
             const hasMatchingTrackedItems = tracked_items.some(
                 trackedItem =>
-                    tickers.some(ticker =>
-                        trackedItem.item_identifier.toLowerCase() === ticker.toLowerCase()
-                    )
+                    tickerSet.has(trackedItem.item_identifier.toLowerCase())
             );
 
             if (hasMatchingMediaSubscription && hasMatchingTrackedItems) {
                 usersToNotify.push(user);
+
+                const notificationChannelTypes = notification_channels.map(channel => channel.channel);
+
+                userAlerts.push({
+                    user_uuid: user.uuid,
+                    alert_id: alert_id,
+                    notification_channels: notificationChannelTypes,
+                });
             }
         }
 
-        return usersToNotify;
+        return { usersToNotify, userAlerts };
     }
 
     async sendNotification(notificationChannels: NotificationChannel[], title: string, description: string, platform_type: string) {

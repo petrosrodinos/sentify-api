@@ -131,6 +131,7 @@ model NotificationChannel {
 model Alert {
   id Int @id @default(autoincrement())
   uuid String @unique @default(uuid())
+  batch_id String
   title String
   description String
   tickers Json

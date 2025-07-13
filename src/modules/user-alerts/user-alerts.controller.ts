@@ -5,6 +5,8 @@ import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { UserAlertsQuerySchema, UserAlertsQueryType } from './dto/user-alerts-query.schema';
+import { RolesGuard } from '@/shared/guards/roles.guard';
+import { Roles } from '@/shared/decorators/roles.decorator';
 
 @Controller('user-alerts')
 @UseGuards(JwtGuard)
@@ -12,6 +14,8 @@ export class UserAlertsController {
   constructor(private readonly userAlertsService: UserAlertsService) { }
 
   @Post()
+  @UseGuards(RolesGuard)
+  @Roles('admin')
   create(@CurrentUser('uuid') uuid: string, @Body() createUserAlertDto: CreateUserAlertDto) {
     return this.userAlertsService.create(uuid, createUserAlertDto);
   }

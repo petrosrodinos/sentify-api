@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAlertDto } from './dto/create-alert.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AlertService {
@@ -13,6 +14,7 @@ export class AlertService {
         data: {
           ...createAlertDto,
           tickers: createAlertDto.tickers as any,
+          batch_id: uuidv4(),
         },
       });
     } catch (error) {

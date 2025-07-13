@@ -2,6 +2,7 @@ import { IsArray, IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { NotificationChannelType } from "@prisma/client";
 
 export class CreateUserAlertDto {
+
     @IsString()
     @IsNotEmpty()
     alert_id: number

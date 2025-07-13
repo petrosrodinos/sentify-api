@@ -35,6 +35,7 @@ export class UserAlertsService {
       },
       skip: query?.page && query?.limit ? Number(query?.page) - 1 * Number(query?.limit) : 0,
       take: query?.limit ? Number(query?.limit) : 10,
+      orderBy: query?.order_by ? { created_at: query.order_by } : undefined,
     });
   }
 

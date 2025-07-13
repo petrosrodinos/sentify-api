@@ -10,6 +10,7 @@ export const UserAlertsQuerySchema = z.object({
     page: z.string().optional(),
     limit: z.string().optional(),
     tickers: z.string().optional(),
+    order_by: z.enum(['asc', 'desc']).optional(),
 });
 
 export type UserAlertsQueryType = z.infer<typeof UserAlertsQuerySchema>;

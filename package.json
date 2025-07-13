@@ -67,6 +67,7 @@
     "swagger-ui-express": "^5.0.1",
     "twilio": "^5.7.2",
     "twitter-api-v2": "^1.23.2",
+    "uuid": "^11.1.0",
     "zod": "^3.25.67"
   },
   "devDependencies": {
