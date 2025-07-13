@@ -95,7 +95,7 @@ export class TrackedItemsService {
           user_uuid: query.user_uuid,
           item_type: query.item_type,
           item_identifier: query.item_identifier,
-          enabled: query.enabled,
+          enabled: query?.enabled !== undefined ? query.enabled === 'true' : undefined,
         },
       });
 
