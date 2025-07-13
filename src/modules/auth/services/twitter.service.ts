@@ -28,12 +28,10 @@ export class TwitterAuthService {
             await this.prisma.verificationToken.create({
                 data: {
                     user_uuid: null,
-                    identity_uuid: null,
                     expires_at: null,
                     token: code_verifier,
                     state: state,
                     type: AuthProviderType.twitter,
-
                 },
             });
 

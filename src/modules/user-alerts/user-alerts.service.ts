@@ -27,7 +27,7 @@ export class UserAlertsService {
           sentiment: query.sentiment,
           severity: query.severity,
           popularity: query.popularity ? Number(query.popularity) : undefined,
-          tickers: query.tickers ? { hasSome: query.tickers.split(',') } : undefined,
+          tickers: query.tickers ? { array_contains: query.tickers.split(',') } : undefined,
         },
       },
       include: {

@@ -34,7 +34,7 @@ export class NotificationsService {
                 const usersToNotify = this.findUsersToNotify(
                     platform_type,
                     account_identifier,
-                    tickers,
+                    tickers.map(t => t.ticker),
                     users
                 );
 

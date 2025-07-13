@@ -10,7 +10,10 @@ export class AlertService {
   create(createAlertDto: CreateAlertDto) {
     try {
       return this.prisma.alert.create({
-        data: createAlertDto,
+        data: {
+          ...createAlertDto,
+          tickers: createAlertDto.tickers as any,
+        },
       });
     } catch (error) {
       throw new BadRequestException(error.message);

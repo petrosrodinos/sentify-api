@@ -3,7 +3,10 @@ import { z } from 'zod';
 export const PostAnalysisSchema = z.object({
     title: z.string().describe('A short title ideal for a notification'),
     description: z.string().describe('A longer body text to provide more details about the post context'),
-    tickers: z.array(z.string()).describe('stock/crypto/commodity/key words/etc tickers that are relevant to the post,not empty,not with $'),
+    tickers: z.array(z.object({
+        ticker: z.string().describe('stock/crypto/commodity/key words/etc tickers that are relevant to the post,not empty,not with $'),
+        item_type: z.enum(['stock', 'crypto', 'commodity', 'keyword']).describe('stock/crypto/commodity/keyword/etc'),
+    })).describe('stock/crypto/commodity/key words/etc tickers that are relevant to the post,not empty,not with $'),
     sentiment: z.string().describe('positive/negative/neutral'),
     severity: z.string().describe('low/medium/high'),
     popularity: z.number().describe('The popularity of the posts, 0-100, 100 is the most popular,based on the reply_count,like_count,view_count'),

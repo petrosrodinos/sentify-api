@@ -89,6 +89,25 @@ model MediaSubscription {
   @@map("media_subscriptions")
 }
 
+model TrackedItem {
+  id                Int          @id @default(autoincrement())
+  uuid              String       @unique @default(uuid())
+  user_uuid         String
+  item_type         TrackedItemType
+  item_identifier   String
+  enabled           Boolean      @default(true)
+  meta              Json?
+  created_at        DateTime     @default(now())
+  updated_at        DateTime     @updatedAt
+  user              User         @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+
+  @@unique([user_uuid, item_type, item_identifier], name: "unique_user_tracked_item")
+  @@index([user_uuid])
+  @@index([item_type])
+  @@index([item_identifier])
+  @@map("tracked_items")
+}
+
 
 model NotificationChannel {
   id Int @id @default(autoincrement())
@@ -114,7 +133,7 @@ model Alert {
   uuid String @unique @default(uuid())
   title String
   description String
-  tickers String[]
+  tickers Json
   sentiment String
   severity String
   popularity Int
@@ -146,24 +165,7 @@ model UserAlert {
   @@map("user_alerts")
 }
 
-model TrackedItem {
-  id                Int          @id @default(autoincrement())
-  uuid              String       @unique @default(uuid())
-  user_uuid         String
-  item_type         TrackedItemType
-  item_identifier   String
-  enabled           Boolean      @default(true)
-  meta              Json?
-  created_at        DateTime     @default(now())
-  updated_at        DateTime     @updatedAt
-  user              User         @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
 
-  @@unique([user_uuid, item_type, item_identifier], name: "unique_user_tracked_item")
-  @@index([user_uuid])
-  @@index([item_type])
-  @@index([item_identifier])
-  @@map("tracked_items")
-}
 
 enum AuthProviderType {
   email
@@ -203,5 +205,6 @@ enum NotificationChannelType {
 enum TrackedItemType {
   stock
   crypto
+  commodity
   keyword
 }

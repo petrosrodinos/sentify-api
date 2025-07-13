@@ -127,7 +127,6 @@ export class VerificationTokensService {
           user_uuid,
           type,
           state,
-          identity_uuid,
         },
       });
 
