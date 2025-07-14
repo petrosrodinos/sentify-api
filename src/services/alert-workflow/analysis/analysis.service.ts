@@ -16,7 +16,7 @@ export class AnalysisService {
         twitter: AIGenerateObjectResponse;
     }> {
         try {
-            const twitterAnalysis = this.analyzeTwitterPosts(posts.twitter);
+            const twitterAnalysis = this.analyzeTwitterPostsInBatches(posts.twitter);
 
             const [twitterAnalysisData] = await Promise.all([twitterAnalysis]);
 
@@ -31,6 +31,40 @@ export class AnalysisService {
                 },
             };
         }
+    }
+
+    private async analyzeTwitterPostsInBatches(posts: FormattedTweet[]): Promise<AIGenerateObjectResponse> {
+        try {
+            const batchSize = 10;
+            const batches = this.chunkArray(posts, batchSize);
+
+            const batchPromises = batches.map(batch =>
+                this.aiService.analyze(JSON.stringify(batch))
+            );
+
+            const batchResults = await Promise.all(batchPromises);
+
+            const combinedResponse = batchResults.reduce((acc, batchResult) => {
+                if (batchResult.response && Array.isArray(batchResult.response)) {
+                    acc.response = acc.response ? [...acc.response, ...batchResult.response] : batchResult.response;
+                }
+                return acc;
+            }, { response: [] } as AIGenerateObjectResponse);
+
+            return combinedResponse;
+        } catch (error) {
+            return {
+                response: [],
+            };
+        }
+    }
+
+    private chunkArray<T>(array: T[], size: number): T[][] {
+        const chunks: T[][] = [];
+        for (let i = 0; i < array.length; i += size) {
+            chunks.push(array.slice(i, i + size));
+        }
+        return chunks;
     }
 
     async analyzeTwitterPosts(posts: FormattedTweet[]): Promise<AIGenerateObjectResponse> {
