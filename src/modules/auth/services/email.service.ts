@@ -67,7 +67,9 @@ export class EmailAuthService {
                 },
             });
 
-            return { access_token: token, user: new_user };
+            const expires_in = this.jwtService.getExpirationTime(token);
+
+            return { access_token: token, expires_in: expires_in, user: new_user };
         } catch (error) {
             throw new BadRequestException('Failed to register user.');
         }
@@ -116,7 +118,9 @@ export class EmailAuthService {
             });
 
 
-            return { access_token: token, user: user };
+            const expires_in = this.jwtService.getExpirationTime(token);
+
+            return { access_token: token, expires_in: expires_in, user: user };
         } catch (error) {
             throw new BadRequestException('Failed to login user', error.message);
         }

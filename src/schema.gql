@@ -48,10 +48,6 @@ type MediaSubscription {
   uuid: ID!
 }
 
-type Mutation {
-  createUser(email: String, phone: String): User!
-}
-
 type NotificationChannel {
   channel: NotificationChannelType!
   client_identifier: String

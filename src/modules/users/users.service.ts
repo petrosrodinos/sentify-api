@@ -9,17 +9,6 @@ export class UsersService {
 
   constructor(private readonly prisma: PrismaService) { }
 
-  create(createUserDto: CreateUserDto) {
-
-    try {
-      return this.prisma.user.create({
-        data: createUserDto,
-      });
-    } catch (error) {
-      throw new Error(error);
-    }
-
-  }
 
   findAll() {
     return `This action returns all users`;
@@ -35,7 +24,6 @@ export class UsersService {
         },
         include: {
           identities: true,
-          verification_tokens: true,
           media_subscriptions: true,
           notification_channels: true,
           tracked_items: true,

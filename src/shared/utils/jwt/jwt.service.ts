@@ -33,4 +33,10 @@ export class CreateJwtService {
             throw new UnauthorizedException('Invalid token');
         }
     }
+
+    getExpirationTime(token: string): number {
+        const decoded = this.jwt.decode(token);
+        return decoded.exp;
+
+    }
 }

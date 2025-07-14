@@ -17,11 +17,5 @@ export class UsersResolver {
         return this.usersService.findOne(uuid);
     }
 
-    @Mutation(() => User)
-    async createUser(
-        @Args('email', { nullable: true }) email: string,
-        @Args('phone', { nullable: true }) phone: string,
-    ): Promise<User> {
-        return this.usersService.create({ email, phone });
-    }
+
 }
