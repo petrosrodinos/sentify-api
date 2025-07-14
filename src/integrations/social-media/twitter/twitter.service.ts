@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TwitterAdapter } from './twitter.adapter';
 import { UserV2 } from 'twitter-api-v2';
 import { FormattedTweet, TwitterUser } from './twitter.interfaces';
+import { TwitterQueryType } from '@/modules/twitter/dto/twitter-query.schema';
 
 @Injectable()
 export class TwitterIntegrationService {
@@ -48,9 +49,9 @@ export class TwitterIntegrationService {
         }
     }
 
-    async getUserTweets(user_id: string, max_results: number = 100): Promise<FormattedTweet[]> {
+    async getUserTweets(user_id: string, query: TwitterQueryType): Promise<FormattedTweet[]> {
         try {
-            const response = await this.twitterAdapter.getUserTweets(user_id, max_results);
+            const response = await this.twitterAdapter.getUserTweets(user_id, query);
 
             return response;
         } catch (error) {

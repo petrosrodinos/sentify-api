@@ -5,6 +5,7 @@ import { TwitterApi, UserV2 } from 'twitter-api-v2';
 import { RAPID_API_TWITTER_ENDPOINTS, TwitterConfig } from './twitter.config';
 import { TwitterUtils } from './twitter.utils';
 import { FormattedTweet, TwitterUser } from './twitter.interfaces';
+import { TwitterQueryType } from '@/modules/twitter/dto/twitter-query.schema';
 
 
 @Injectable()
@@ -58,8 +59,6 @@ export class TwitterAdapter {
                     map(response => response.data)
                 )
             );
-
-            // console.log(JSON.stringify(response.result.data.user.result, null, 2));
 
             return this.twitterUtils.formatUserByUsername(response);
 
@@ -129,15 +128,16 @@ export class TwitterAdapter {
         }
     }
 
-    async getUserTweets(user_id: string, max_results: number = 100): Promise<FormattedTweet[]> {
+    async getUserTweets(user_id: string, query: TwitterQueryType): Promise<FormattedTweet[]> {
         try {
             const response = await firstValueFrom(
                 this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_TWEETS}`, {
                     headers: this.twitterConfig.getHeaders(),
                     params: {
                         user: user_id,
-                        count: max_results,
+                        count: query.count || 2,
                         exclude: 'replies,retweets',
+
                     }
                 }).pipe(
                     map(response => {
@@ -153,7 +153,7 @@ export class TwitterAdapter {
                 )
             );
 
-            return this.twitterUtils.formatUserTweets(response);
+            return this.twitterUtils.formatUserTweets(response, query);
 
 
         } catch (error) {

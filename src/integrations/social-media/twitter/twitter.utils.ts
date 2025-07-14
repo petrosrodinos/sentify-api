@@ -2,6 +2,7 @@
 import { PlatformType } from '@prisma/client';
 import { FormattedTweet, TwitterUser } from './twitter.interfaces';
 import { Injectable } from '@nestjs/common';
+import { TwitterQueryType } from '@/modules/twitter/dto/twitter-query.schema';
 
 @Injectable()
 export class TwitterUtils {
@@ -65,7 +66,7 @@ export class TwitterUtils {
         return users;
     }
 
-    formatUserTweets(data: any): FormattedTweet[] {
+    formatUserTweets(data: any, query: TwitterQueryType): FormattedTweet[] {
         const formattedTweets: FormattedTweet[] = [];
 
         if (
@@ -129,7 +130,7 @@ export class TwitterUtils {
                             user: {
                                 screen_name: user?.screen_name || 'N/A',
                                 name: user?.name || 'N/A',
-                                profile_image_url: user?.profile_image_url_https || '',
+                                // profile_image_url: user?.profile_image_url_https || '',
                                 user_id: data.user_id,
                             }
                         };
@@ -150,6 +151,20 @@ export class TwitterUtils {
                     }
                 }
             }
+        }
+
+        if (query.count_from_latest) {
+            const sortedTweets = formattedTweets.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+            return sortedTweets.slice(0, +query.count_from_latest);
+        }
+
+        if (query.sort === 'true') {
+            formattedTweets.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        }
+
+        if (query.latest_only === 'true') {
+            const sortedTweets = formattedTweets.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+            return [sortedTweets[0]];
         }
 
         return formattedTweets;

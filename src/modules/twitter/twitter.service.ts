@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { TwitterIntegrationService } from '@/integrations/social-media/twitter/twitter.service';
 import { TestTwitterUser, TestTwitterUsers } from './twitter.contants';
 import { ConfigService } from '@nestjs/config';
+import { TwitterQueryType } from './dto/twitter-query.schema';
 
 @Injectable()
 export class TwitterService {
@@ -64,7 +65,7 @@ export class TwitterService {
     }
   }
 
-  async getUserTweets(user_id: string) {
+  async getUserTweets(user_id: string, query: TwitterQueryType) {
 
     try {
 
@@ -72,7 +73,7 @@ export class TwitterService {
         throw new BadRequestException('User ID is required');
       }
 
-      const tweets = await this.twitterIntegrationService.getUserTweets(user_id);
+      const tweets = await this.twitterIntegrationService.getUserTweets(user_id, query);
 
       return tweets;
 

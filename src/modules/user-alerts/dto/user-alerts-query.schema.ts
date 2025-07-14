@@ -9,7 +9,7 @@ export const UserAlertsQuerySchema = z.object({
     popularity: z.string().optional(),
     page: z.string().optional(),
     limit: z.string().optional(),
-    tickers: z.string().optional(),
+    tickers: z.array(z.string()).optional(),
     order_by: z.enum(['asc', 'desc']).optional(),
 });
 

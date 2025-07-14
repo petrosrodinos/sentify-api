@@ -34,7 +34,7 @@ export class PostsService {
             const twitterPostsPromises: Promise<FormattedTweet[]>[] = [];
 
             for (const media_subscription of media_subscriptions) {
-                const twitterUserPosts = this.twitterIntegrationService.getUserTweets(media_subscription.account_identifier, 1);
+                const twitterUserPosts = this.twitterIntegrationService.getUserTweets(media_subscription.account_identifier, { latest_only: 'true' });
                 twitterPostsPromises.push(twitterUserPosts);
             }
 

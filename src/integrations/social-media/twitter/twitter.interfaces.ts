@@ -19,7 +19,7 @@ export interface FormattedTweet {
     user: {
         screen_name: string;
         name: string;
-        profile_image_url: string;
+        profile_image_url?: string;
         user_id?: string;
     };
     urls?: string[];
