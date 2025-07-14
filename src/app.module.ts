@@ -22,10 +22,12 @@ import { AiModule } from './modules/internal/ai/ai.module';
 import { AlertWorkflowModule } from './modules/internal/alert-workflow/alert-workflow.module';
 import { AlertModule } from './modules/internal/alert/alert.module';
 import { UserAlertsModule } from './modules/user-alerts/user-alerts.module';
-
+import { ScheduleModule } from '@nestjs/schedule';
+import { AlertWorkflowWorkerModule } from './jobs/workers/alert-workflow/alert-workflow.worker.module';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule,
     AuthModule,
     UsersModule,
@@ -46,7 +48,8 @@ import { UserAlertsModule } from './modules/user-alerts/user-alerts.module';
     AiModule,
     AlertWorkflowModule,
     AlertModule,
-    UserAlertsModule
+    UserAlertsModule,
+    AlertWorkflowWorkerModule
   ],
   controllers: [AppController],
   providers: [AppService],
