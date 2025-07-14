@@ -102,7 +102,7 @@ export class MediaSubscriptionsService {
           user_uuid: query.user_uuid,
           platform_type: query.platform_type,
           account_identifier: query.account_identifier,
-          enabled: query.enabled,
+          enabled: query.enabled ? query.enabled === 'true' : undefined,
         },
       });
 

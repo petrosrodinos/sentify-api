@@ -8,7 +8,7 @@ export class AlertWorkflowWorker {
 
     constructor(private readonly alertWorkflowService: AlertWorkflowService) { }
 
-    @Cron(CronExpression.EVERY_5_MINUTES, { name: 'alert-workflow-worker' })
+    @Cron(CronExpression.EVERY_30_MINUTES, { name: 'alert-workflow-worker' })
     handleCron() {
         this.logger.debug('Running alert workflow worker');
         this.alertWorkflowService.run();

@@ -15,6 +15,7 @@ export const PostAnalysisSchema = z.object({
     platform_type: z.enum(Object.values(PlatformType) as [string, ...string[]]).describe('twitter/reddit/etc'),
     account_identifier: z.string().describe('The user_id from the input'),
     account_name: z.string().describe('The user.name from the input'),
+    screen_name: z.string().describe('The user.screen_name from the input'),
 });
 
 export type PostAnalysis = z.infer<typeof PostAnalysisSchema>;
