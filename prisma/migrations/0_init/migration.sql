@@ -5,13 +5,13 @@ CREATE TYPE "AuthProviderType" AS ENUM ('email', 'phone', 'sms', 'google', 'face
 CREATE TYPE "AuthRole" AS ENUM ('admin', 'user', 'support', 'super_admin');
 
 -- CreateEnum
-CREATE TYPE "PlatformType" AS ENUM ('twitter', 'youtube', 'reddit');
+CREATE TYPE "PlatformType" AS ENUM ('twitter', 'youtube', 'reddit', 'news');
 
 -- CreateEnum
 CREATE TYPE "NotificationChannelType" AS ENUM ('email', 'phone', 'sms', 'push', 'web', 'telegram', 'whatsapp', 'slack', 'discord');
 
 -- CreateEnum
-CREATE TYPE "TrackedItemType" AS ENUM ('stock', 'crypto', 'keyword');
+CREATE TYPE "TrackedItemType" AS ENUM ('stock', 'crypto', 'commodity', 'keyword');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -53,7 +53,6 @@ CREATE TABLE "verification_tokens" (
     "state" TEXT,
     "type" "AuthProviderType" NOT NULL,
     "client_identifier" TEXT,
-    "identity_uuid" TEXT,
     "expires_at" TIMESTAMP(3),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -77,6 +76,21 @@ CREATE TABLE "media_subscriptions" (
 );
 
 -- CreateTable
+CREATE TABLE "tracked_items" (
+    "id" SERIAL NOT NULL,
+    "uuid" TEXT NOT NULL,
+    "user_uuid" TEXT NOT NULL,
+    "item_type" "TrackedItemType" NOT NULL,
+    "item_identifier" TEXT NOT NULL,
+    "enabled" BOOLEAN NOT NULL DEFAULT true,
+    "meta" JSONB,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "tracked_items_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "notification_channels" (
     "id" SERIAL NOT NULL,
     "uuid" TEXT NOT NULL,
@@ -96,9 +110,10 @@ CREATE TABLE "notification_channels" (
 CREATE TABLE "alerts" (
     "id" SERIAL NOT NULL,
     "uuid" TEXT NOT NULL,
+    "batch_id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "tickers" TEXT[],
+    "tickers" JSONB NOT NULL,
     "sentiment" TEXT NOT NULL,
     "severity" TEXT NOT NULL,
     "popularity" INTEGER NOT NULL,
@@ -123,21 +138,6 @@ CREATE TABLE "user_alerts" (
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "user_alerts_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "tracked_items" (
-    "id" SERIAL NOT NULL,
-    "uuid" TEXT NOT NULL,
-    "user_uuid" TEXT NOT NULL,
-    "item_type" "TrackedItemType" NOT NULL,
-    "item_identifier" TEXT NOT NULL,
-    "enabled" BOOLEAN NOT NULL DEFAULT true,
-    "meta" JSONB,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "tracked_items_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -195,6 +195,21 @@ CREATE INDEX "media_subscriptions_account_identifier_idx" ON "media_subscription
 CREATE UNIQUE INDEX "media_subscriptions_user_uuid_platform_type_account_identif_key" ON "media_subscriptions"("user_uuid", "platform_type", "account_identifier");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "tracked_items_uuid_key" ON "tracked_items"("uuid");
+
+-- CreateIndex
+CREATE INDEX "tracked_items_user_uuid_idx" ON "tracked_items"("user_uuid");
+
+-- CreateIndex
+CREATE INDEX "tracked_items_item_type_idx" ON "tracked_items"("item_type");
+
+-- CreateIndex
+CREATE INDEX "tracked_items_item_identifier_idx" ON "tracked_items"("item_identifier");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "tracked_items_user_uuid_item_type_item_identifier_key" ON "tracked_items"("user_uuid", "item_type", "item_identifier");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "notification_channels_uuid_key" ON "notification_channels"("uuid");
 
 -- CreateIndex
@@ -221,21 +236,6 @@ CREATE UNIQUE INDEX "user_alerts_uuid_key" ON "user_alerts"("uuid");
 -- CreateIndex
 CREATE INDEX "user_alerts_user_uuid_idx" ON "user_alerts"("user_uuid");
 
--- CreateIndex
-CREATE UNIQUE INDEX "tracked_items_uuid_key" ON "tracked_items"("uuid");
-
--- CreateIndex
-CREATE INDEX "tracked_items_user_uuid_idx" ON "tracked_items"("user_uuid");
-
--- CreateIndex
-CREATE INDEX "tracked_items_item_type_idx" ON "tracked_items"("item_type");
-
--- CreateIndex
-CREATE INDEX "tracked_items_item_identifier_idx" ON "tracked_items"("item_identifier");
-
--- CreateIndex
-CREATE UNIQUE INDEX "tracked_items_user_uuid_item_type_item_identifier_key" ON "tracked_items"("user_uuid", "item_type", "item_identifier");
-
 -- AddForeignKey
 ALTER TABLE "identities" ADD CONSTRAINT "identities_user_uuid_fkey" FOREIGN KEY ("user_uuid") REFERENCES "users"("uuid") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -246,6 +246,9 @@ ALTER TABLE "verification_tokens" ADD CONSTRAINT "verification_tokens_user_uuid_
 ALTER TABLE "media_subscriptions" ADD CONSTRAINT "media_subscriptions_user_uuid_fkey" FOREIGN KEY ("user_uuid") REFERENCES "users"("uuid") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "tracked_items" ADD CONSTRAINT "tracked_items_user_uuid_fkey" FOREIGN KEY ("user_uuid") REFERENCES "users"("uuid") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "notification_channels" ADD CONSTRAINT "notification_channels_user_uuid_fkey" FOREIGN KEY ("user_uuid") REFERENCES "users"("uuid") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -254,5 +257,3 @@ ALTER TABLE "user_alerts" ADD CONSTRAINT "user_alerts_alert_id_fkey" FOREIGN KEY
 -- AddForeignKey
 ALTER TABLE "user_alerts" ADD CONSTRAINT "user_alerts_user_uuid_fkey" FOREIGN KEY ("user_uuid") REFERENCES "users"("uuid") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- AddForeignKey
-ALTER TABLE "tracked_items" ADD CONSTRAINT "tracked_items_user_uuid_fkey" FOREIGN KEY ("user_uuid") REFERENCES "users"("uuid") ON DELETE CASCADE ON UPDATE CASCADE;
