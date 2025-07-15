@@ -12,6 +12,13 @@ export class PostsService {
         twitter: FormattedTweet[];
     }> {
         try {
+
+            if (Object.keys(media_subscriptions).length === 0) {
+                return {
+                    twitter: [],
+                };
+            }
+
             const twitterPosts = await this.getTwitterPosts(media_subscriptions.twitter);
 
             return {

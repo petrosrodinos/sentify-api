@@ -29,6 +29,13 @@ export class NotificationsService {
 
             const analysisItems = analysis?.twitter?.response || [];
 
+            if (analysisItems.length === 0) {
+                this.logger.debug(`No analysis items to send notifications`);
+                return {
+                    success: true,
+                };
+            }
+
             const batch_id = uuidv4();
 
             await this.prisma.alert.createMany({
@@ -91,6 +98,7 @@ export class NotificationsService {
                 });
             }
 
+            this.logger.debug(`Sent ${analysisItems.length} notifications`);
 
             return {
                 success: true,

@@ -16,6 +16,15 @@ export class AnalysisService {
         twitter: AIGenerateObjectResponse;
     }> {
         try {
+
+            if (Object.keys(posts).length === 0) {
+                return {
+                    twitter: {
+                        response: null,
+                    },
+                };
+            }
+
             const twitterAnalysis = this.analyzeTwitterPostsInBatches(posts.twitter);
 
             const [twitterAnalysisData] = await Promise.all([twitterAnalysis]);
