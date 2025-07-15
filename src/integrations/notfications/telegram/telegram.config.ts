@@ -25,11 +25,11 @@ export class TelegramConfig {
                 polling: true,
                 polling_options: {
                     timeout: 10,
-                    limit: 10
+                    limit: 100
                 }
             });
 
-            this.logger.log('Telegram bot initialized and polling started');
+            this.logger.debug('Telegram bot initialized and polling started');
         } catch (error) {
             this.logger.error('Error initializing Telegram bot', error.message);
         }

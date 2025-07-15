@@ -22,7 +22,7 @@ export class TwillioConfig {
 
         this.twillioClient = require('twilio')(accountSid, authToken);
 
-        this.logger.log('Twillio initialized');
+        this.logger.debug('Twillio initialized');
 
     }
 

@@ -13,8 +13,9 @@ export class TelegramAdapter {
         private telegramConfig: TelegramConfig,
         private verificationTokensService: VerificationTokensService
     ) {
+        this.telegramClient = this.telegramConfig.getTelegramClient();
+
         if (this.telegramClient) {
-            this.telegramClient = this.telegramConfig.getTelegramClient();
             this.setupErrorHandling();
             this.setupBotCommands();
         }

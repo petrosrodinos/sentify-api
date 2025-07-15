@@ -142,6 +142,10 @@ export class NotificationsService {
 
                 const notificationChannelTypes = notification_channels.map(channel => channel.channel);
 
+                if (notificationChannelTypes.length === 0) {
+                    continue;
+                }
+
                 userAlerts.push({
                     user_uuid: user.uuid,
                     alert_id: alert_id,

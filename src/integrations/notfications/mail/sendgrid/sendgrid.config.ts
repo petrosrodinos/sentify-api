@@ -23,7 +23,7 @@ export class SendgridConfig {
 
         this.sendgridClient = await sgMail.setApiKey(apiKey);
 
-        this.logger.log('SendGrid initialized');
+        this.logger.debug('SendGrid initialized');
 
     }
 
