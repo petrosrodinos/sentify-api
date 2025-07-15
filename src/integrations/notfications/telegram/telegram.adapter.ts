@@ -13,9 +13,12 @@ export class TelegramAdapter {
         private telegramConfig: TelegramConfig,
         private verificationTokensService: VerificationTokensService
     ) {
-        this.telegramClient = this.telegramConfig.getTelegramClient();
-        this.setupErrorHandling();
-        this.setupBotCommands();
+        if (this.telegramClient) {
+            this.telegramClient = this.telegramConfig.getTelegramClient();
+            this.setupErrorHandling();
+            this.setupBotCommands();
+        }
+
     }
 
 
@@ -24,39 +27,42 @@ export class TelegramAdapter {
             await this.telegramClient.sendMessage(create_telegram_message.chat_id, create_telegram_message.message, { parse_mode: create_telegram_message?.parse_mode || 'Markdown' });
         } catch (error) {
             this.logger.error(error);
-            throw error;
         }
     }
 
 
     private setupBotCommands() {
-        this.telegramClient.onText(/\/start (.+)/, async (msg: TelegramMessageInfo, match) => {
-            const chatId = msg.chat.id;
-            const token = match[1];
+        try {
+            this.telegramClient.onText(/\/start (.+)/, async (msg: TelegramMessageInfo, match) => {
+                const chatId = msg.chat.id;
+                const token = match[1];
 
-            try {
+                try {
 
-                await this.verificationTokensService.verifyToken(token, {
-                    client_identifier: chatId.toString(),
-                    username: msg.from?.username,
-                    first_name: msg.from?.first_name,
-                    last_name: msg.from?.last_name
-                });
+                    await this.verificationTokensService.verifyToken(token, {
+                        client_identifier: chatId.toString(),
+                        username: msg.from?.username,
+                        first_name: msg.from?.first_name,
+                        last_name: msg.from?.last_name
+                    });
 
-                await this.telegramClient.sendMessage(chatId, 'Your account has been successfully connected!');
+                    await this.telegramClient.sendMessage(chatId, 'Your account has been successfully connected!');
 
-            } catch (error) {
-                this.logger.error('Error connecting account:', error);
-                await this.telegramClient.sendMessage(chatId, 'Could not connect your account. Make sure you are using the correct token.');
-            }
-        });
+                } catch (error) {
+                    this.logger.error('Error connecting account:', error.message);
+                    await this.telegramClient.sendMessage(chatId, 'Could not connect your account. Make sure you are using the correct token.');
+                }
+            });
 
-        this.telegramClient.on('message', async (msg) => {
-            const chatId = msg.chat.id;
-            if (!msg.text?.startsWith('/')) {
-                await this.telegramClient.sendMessage(chatId, 'Please use /start <your-token> to connect your account.');
-            }
-        });
+            this.telegramClient.on('message', async (msg) => {
+                const chatId = msg.chat.id;
+                if (!msg.text?.startsWith('/')) {
+                    await this.telegramClient.sendMessage(chatId, 'Please use /start <your-token> to connect your account.');
+                }
+            });
+        } catch (error) {
+            this.logger.error('Error setting up bot commands:', error.message);
+        }
     }
 
     async stopBot() {
@@ -67,13 +73,17 @@ export class TelegramAdapter {
     }
 
     private setupErrorHandling() {
-        this.telegramClient.on('error', (error) => {
-            this.logger.error('Telegram bot error:', error);
-        });
+        try {
+            this.telegramClient.on('error', (error) => {
+                this.logger.error('Telegram bot error:', error.message);
+            });
 
-        this.telegramClient.on('polling_error', (error) => {
-            this.logger.error('Telegram polling error:', error);
-        });
+            this.telegramClient.on('polling_error', (error) => {
+                this.logger.error('Telegram polling error:', error.message);
+            });
+        } catch (error) {
+            this.logger.error('Error setting up error handling:', error.message);
+        }
     }
 
 

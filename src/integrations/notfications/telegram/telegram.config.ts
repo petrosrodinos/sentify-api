@@ -14,21 +14,25 @@ export class TelegramConfig {
     }
 
     private async initTelegram() {
-        const token = this.configService.get('TELEGRAM_BOT_TOKEN');
-        if (!token) {
-            this.logger.error('TELEGRAM_BOT_TOKEN is not configured');
-            return;
-        }
-
-        this.telegramClient = new TelegramBot(token, {
-            polling: true,
-            polling_options: {
-                timeout: 10,
-                limit: 100
+        try {
+            const token = this.configService.get('TELEGRAM_BOT_TOKEN');
+            if (!token) {
+                this.logger.error('TELEGRAM_BOT_TOKEN is not configured');
+                return;
             }
-        });
 
-        this.logger.log('Telegram bot initialized and polling started');
+            this.telegramClient = new TelegramBot(token, {
+                polling: true,
+                polling_options: {
+                    timeout: 10,
+                    limit: 10
+                }
+            });
+
+            this.logger.log('Telegram bot initialized and polling started');
+        } catch (error) {
+            this.logger.error('Error initializing Telegram bot', error.message);
+        }
     }
 
     getTelegramClient(): any {
