@@ -36,7 +36,7 @@ export class PostsService {
 
         try {
 
-            return TestPosts as FormattedTweet[];
+            // return TestPosts as FormattedTweet[];
 
             const twitterPostsPromises: Promise<FormattedTweet[]>[] = [];
 

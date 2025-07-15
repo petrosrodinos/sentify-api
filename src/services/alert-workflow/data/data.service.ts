@@ -18,6 +18,10 @@ export class DataService {
                 distinct: ['account_identifier', 'platform_type'],
             });
 
+            if (!subscriptions?.length) {
+                return {};
+            }
+
             return groupBy(subscriptions, 'platform_type');
         } catch (error) {
             return {};
@@ -49,6 +53,10 @@ export class DataService {
                     },
                 },
             });
+
+            if (!users?.length) {
+                return [];
+            }
 
             return users;
 

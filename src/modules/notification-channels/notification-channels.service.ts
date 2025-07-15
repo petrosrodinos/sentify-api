@@ -86,7 +86,7 @@ export class NotificationChannelsService {
       });
 
       if (!notificationChannels?.length) {
-        throw new NotFoundException('Notification channels not found');
+        return [];
       }
 
       return notificationChannels;

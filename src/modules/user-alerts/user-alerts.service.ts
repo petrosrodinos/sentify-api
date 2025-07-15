@@ -49,6 +49,18 @@ export class UserAlertsService {
       })
     ]);
 
+    if (!alerts?.length) {
+      return {
+        data: [],
+        pagination: {
+          total: 0,
+          page,
+          limit,
+          hasMore: false
+        }
+      }
+    }
+
     return {
       data: alerts,
       pagination: {

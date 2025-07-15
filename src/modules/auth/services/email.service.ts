@@ -87,9 +87,13 @@ export class EmailAuthService {
                 },
             });
 
+            if (!identity) {
+                throw new UnauthorizedException('Invalid credentials');
+            }
+
             const password_match = await bcrypt.compare(dto.password, identity.password);
 
-            if (!identity || !password_match) {
+            if (!password_match) {
                 throw new UnauthorizedException('Invalid credentials');
             }
 

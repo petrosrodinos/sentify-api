@@ -100,7 +100,7 @@ export class TrackedItemsService {
       });
 
       if (!tracked_items?.length) {
-        throw new NotFoundException('Tracked items not found');
+        return [];
       }
 
       return tracked_items;

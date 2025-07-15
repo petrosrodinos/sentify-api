@@ -9,15 +9,20 @@ import { NotificationChannelQuerySchema, NotificationChannelQueryType } from './
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { NotificationChannel } from './entities/notification-channel.entity';
 import { NotificationChannelType } from '@prisma/client';
+import { RolesGuard } from '@/shared/guards/roles.guard';
+import { AuthRole } from '@prisma/client';
+import { Roles } from '@/shared/decorators/roles.decorator';
 
 @ApiTags('Notification Channels')
 @ApiBearerAuth()
 @Controller('notification-channels')
+@UseGuards(JwtGuard)
 export class NotificationChannelsController {
   constructor(private readonly notificationChannelsService: NotificationChannelsService) { }
 
   @Post()
-  @UseGuards(JwtGuard)
+  @UseGuards(RolesGuard)
+  @Roles(AuthRole.admin)
   @ApiOperation({ summary: 'Create a new notification channel' })
   @ApiResponse({
     status: 201,
@@ -29,7 +34,6 @@ export class NotificationChannelsController {
   }
 
   @Get()
-  @UseGuards(JwtGuard)
   @ApiOperation({ summary: 'Get all notification channels with optional filters' })
   @ApiQuery({ name: 'user_uuid', required: false, description: 'Filter by user UUID' })
   @ApiQuery({ name: 'channel', required: false, description: 'Filter by channel type', enum: NotificationChannelType })
@@ -59,7 +63,6 @@ export class NotificationChannelsController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtGuard)
   @ApiOperation({ summary: 'Update a notification channel' })
   @ApiParam({ name: 'id', description: 'Notification channel ID', type: 'number' })
   @ApiResponse({
@@ -72,7 +75,6 @@ export class NotificationChannelsController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtGuard)
   @ApiOperation({ summary: 'Delete a notification channel' })
   @ApiParam({ name: 'id', description: 'Notification channel ID', type: 'number' })
   @ApiResponse({
@@ -85,7 +87,6 @@ export class NotificationChannelsController {
   }
 
   @Delete()
-  @UseGuards(JwtGuard)
   @ApiOperation({ summary: 'Delete all notification channels' })
   @ApiResponse({
     status: 200,

@@ -107,7 +107,7 @@ export class MediaSubscriptionsService {
       });
 
       if (!mediaSubscriptions?.length) {
-        throw new NotFoundException('Media subscriptions not found');
+        return [];
       }
 
       return mediaSubscriptions;
