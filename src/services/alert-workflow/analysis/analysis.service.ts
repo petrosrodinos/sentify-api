@@ -2,6 +2,7 @@ import { AIGenerateObjectResponse } from '@/integrations/ai/ai.interface';
 import { AiIntegrationService } from '@/integrations/ai/ai.service';
 import { FormattedTweet } from '@/integrations/social-media/twitter/twitter.interfaces';
 import { Injectable } from '@nestjs/common';
+import { TestAnalysis } from './analysis.data';
 
 @Injectable()
 export class AnalysisService {
@@ -21,6 +22,14 @@ export class AnalysisService {
                 return {
                     twitter: {
                         response: null,
+                    },
+                };
+            }
+
+            if (process.env.NODE_ENV === 'local') {
+                return {
+                    twitter: {
+                        response: TestAnalysis,
                     },
                 };
             }

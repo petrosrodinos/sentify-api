@@ -15,7 +15,7 @@ export interface FormattedTweet {
     retweet_count?: number;
     reply_count?: number;
     like_count?: number;
-    view_count?: string;
+    view_count?: number;
     user: {
         screen_name: string;
         name: string;

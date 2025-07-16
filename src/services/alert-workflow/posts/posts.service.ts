@@ -32,11 +32,17 @@ export class PostsService {
         }
     }
 
-    async getTwitterPosts(media_subscriptions: MediaSubscription[]) {
+    async getTwitterPosts(media_subscriptions: MediaSubscription[]): Promise<FormattedTweet[]> {
 
         try {
 
-            // return TestPosts as FormattedTweet[];
+            if (media_subscriptions.length === 0) {
+                return [];
+            }
+
+            if (process.env.NODE_ENV === 'local') {
+                return TestPosts;
+            }
 
             const twitterPostsPromises: Promise<FormattedTweet[]>[] = [];
 
@@ -59,6 +65,10 @@ export class PostsService {
                 }
 
             })
+
+            if (formattedPosts.length === 0) {
+                return [];
+            }
 
             return formattedPosts;
         } catch (error) {

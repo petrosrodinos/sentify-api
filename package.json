@@ -16,7 +16,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:local": "npx dotenv -e .env.local -- nest start",
+    "start:local": "npx dotenv -e .env.local -- nest start  --watch",
     "start:dev": "npx dotenv -e .env.development -- nest start --watch",
     "start:prod": "npx dotenv -e .env.production -- node dist/main",
     "start:debug": "nest start --debug --watch",

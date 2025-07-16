@@ -29,7 +29,7 @@ export class TelegramConfig {
                 }
             });
 
-            this.logger.debug('Telegram bot initialized and polling started');
+            this.logger.debug('Telegram bot initialized');
         } catch (error) {
             this.logger.error('Error initializing Telegram bot', error.message);
         }

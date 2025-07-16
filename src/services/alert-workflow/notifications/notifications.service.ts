@@ -47,6 +47,7 @@ export class NotificationsService {
                     platform_type: alert.platform_type as PlatformType,
                     account_identifier: alert.account_identifier,
                     account_name: alert.account_name,
+                    screen_name: alert.screen_name,
                     sentiment: alert.sentiment,
                     severity: alert.severity,
                     popularity: alert.popularity,
@@ -136,6 +137,7 @@ export class NotificationsService {
                 trackedItem =>
                     tickerSet.has(trackedItem.item_identifier.toLowerCase())
             );
+
 
             if (hasMatchingMediaSubscription && hasMatchingTrackedItems) {
                 usersToNotify.push(user);

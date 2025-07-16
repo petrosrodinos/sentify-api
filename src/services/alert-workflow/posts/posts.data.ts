@@ -1,5 +1,6 @@
-export const TestPosts = [
+import { FormattedTweet } from "@/integrations/social-media/twitter/twitter.interfaces";
 
+export const TestPosts: FormattedTweet[] = [
     {
         "id": "1234567890",
         "platform_type": "twitter",

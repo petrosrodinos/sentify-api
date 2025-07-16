@@ -142,6 +142,7 @@ model Alert {
   platform_type PlatformType
   account_identifier String
   account_name String
+  screen_name String @default("")
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   user_alerts UserAlert[]
