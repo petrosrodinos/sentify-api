@@ -76,7 +76,7 @@ export class VerificationTokensService {
       return verification_token;
 
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
       throw new InternalServerErrorException(error.message);
     }
   }
@@ -116,7 +116,7 @@ export class VerificationTokensService {
 
 
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
       throw new InternalServerErrorException(error.message);
     }
   }
@@ -142,7 +142,7 @@ export class VerificationTokensService {
       return verification_tokens;
 
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
       throw new InternalServerErrorException(error.message);
     }
   }

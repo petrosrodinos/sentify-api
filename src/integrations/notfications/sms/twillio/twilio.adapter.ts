@@ -25,7 +25,7 @@ export class TwillioAdapter {
             }
             return await this.twillioClient.messages.create(msg);
         } catch (error) {
-            this.logger.error(error);
+            this.logger.error(error.message);
             throw new Error(error);
         }
     }
