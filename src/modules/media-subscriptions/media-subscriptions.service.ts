@@ -97,13 +97,13 @@ export class MediaSubscriptionsService {
     }
   }
 
-  async findAll(query: MediaSubscriptionQueryType) {
+  async findAll(uuid: string, query: MediaSubscriptionQueryType) {
 
     try {
 
       const mediaSubscriptions = await this.prisma.mediaSubscription.findMany({
         where: {
-          user_uuid: query.user_uuid,
+          user_uuid: uuid,
           platform_type: query.platform_type,
           account_identifier: query.account_identifier,
           enabled: query.enabled ? query.enabled === 'true' : undefined,

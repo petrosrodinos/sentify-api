@@ -58,7 +58,6 @@ export class TrackedItemsController {
 
   @Get()
   @ApiOperation({ summary: 'Get all tracked items with optional filters' })
-  @ApiQuery({ name: 'user_uuid', required: false, description: 'Filter by user UUID' })
   @ApiQuery({ name: 'item_type', required: false, description: 'Filter by item type', enum: TrackedItemType })
   @ApiQuery({ name: 'item_identifier', required: false, description: 'Filter by item identifier' })
   @ApiQuery({ name: 'enabled', required: false, description: 'Filter by enabled status' })
@@ -67,8 +66,8 @@ export class TrackedItemsController {
     description: 'Tracked items retrieved successfully',
     type: [TrackedItem]
   })
-  findAll(@Query(new ZodValidationPipe(TrackedItemQuerySchema)) query: TrackedItemQueryType) {
-    return this.tracked_items_service.findAll(query);
+  findAll(@CurrentUser('uuid') uuid: string, @Query(new ZodValidationPipe(TrackedItemQuerySchema)) query: TrackedItemQueryType) {
+    return this.tracked_items_service.findAll(uuid, query);
   }
 
   @Get(':id')

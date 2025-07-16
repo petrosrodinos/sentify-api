@@ -61,7 +61,6 @@ export class MediaSubscriptionsController {
 
   @Get()
   @ApiOperation({ summary: 'Get all media subscriptions with optional filters' })
-  @ApiQuery({ name: 'user_uuid', required: false, description: 'Filter by user UUID' })
   @ApiQuery({ name: 'platform_type', required: false, description: 'Filter by platform type', enum: PlatformType })
   @ApiQuery({ name: 'account_identifier', required: false, description: 'Filter by account identifier' })
   @ApiQuery({ name: 'enabled', required: false, description: 'Filter by enabled status' })
@@ -70,8 +69,8 @@ export class MediaSubscriptionsController {
     description: 'Media subscriptions retrieved successfully',
     type: [MediaSubscription]
   })
-  findAll(@Query(new ZodValidationPipe(MediaSubscriptionQuerySchema)) query: MediaSubscriptionQueryType) {
-    return this.mediaSubscriptionsService.findAll(query);
+  findAll(@CurrentUser('uuid') uuid: string, @Query(new ZodValidationPipe(MediaSubscriptionQuerySchema)) query: MediaSubscriptionQueryType) {
+    return this.mediaSubscriptionsService.findAll(uuid, query);
   }
 
   @Get(':id')

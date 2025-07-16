@@ -88,11 +88,11 @@ export class TrackedItemsService {
     }
   }
 
-  async findAll(query: TrackedItemQueryType) {
+  async findAll(uuid: string, query: TrackedItemQueryType) {
     try {
       const tracked_items = await this.prisma.trackedItem.findMany({
         where: {
-          user_uuid: query.user_uuid,
+          user_uuid: uuid,
           item_type: query.item_type,
           item_identifier: query.item_identifier,
           enabled: query?.enabled !== undefined ? query.enabled === 'true' : undefined,
