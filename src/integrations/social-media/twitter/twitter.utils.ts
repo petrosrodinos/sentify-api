@@ -170,40 +170,6 @@ export class TwitterUtils {
         return formattedTweets;
     }
 
-    formatFollowings(rawResponse: any): TwitterUser[] {
-        const formattedFollowings: TwitterUser[] = [];
-
-        let usersArray: any[] = [];
-
-        // Common paths for user arrays in Twitter API responses
-        if (rawResponse && rawResponse.users) {
-            usersArray = rawResponse.users;
-        } else if (rawResponse && rawResponse.result && rawResponse.result.users) {
-            usersArray = rawResponse.result.users;
-        } else {
-            // If no users array is found, return empty
-            return formattedFollowings;
-        }
-
-        for (const user of usersArray) {
-            // Accessing 'legacy' for more detailed user info, common in v2 API responses
-            const userLegacy = user.legacy || user; // Fallback to user itself if 'legacy' not found
-
-            const formattedUser: TwitterUser = {
-                id: user.id_str || user.id?.toString() || '', // Use id_str, fallback to id converted to string
-                name: userLegacy.name || 'N/A',
-                screen_name: userLegacy.screen_name || 'N/A',
-                profile_image_url: userLegacy.profile_image_url_https || userLegacy.profile_image_url || '',
-                description: userLegacy.description || '',
-                url: userLegacy.url || undefined, // url is optional, set to undefined if not present
-            };
-            formattedFollowings.push(formattedUser);
-        }
-
-
-        return formattedFollowings;
-    }
-
     formatUserByUsername(rawResponse: any): TwitterUser | null {
         if (!rawResponse?.result?.data?.user?.result) {
             return null;
@@ -224,6 +190,25 @@ export class TwitterUtils {
             description: user?.legacy?.description || '',
             url: legacy.url || undefined,
         };
+    }
+
+    formatTwitterUsers(jsonData: any): TwitterUser[] {
+        const twitterUsers: TwitterUser[] = [];
+
+        if (jsonData && jsonData.result && Array.isArray(jsonData.result.users)) {
+            for (const rawUser of jsonData.result.users) {
+                twitterUsers.push({
+                    id: rawUser.id_str,
+                    name: rawUser.name,
+                    screen_name: rawUser.screen_name,
+                    profile_image_url: rawUser.profile_image_url,
+                    description: rawUser.location || '',
+                    url: undefined
+                });
+            }
+        }
+
+        return twitterUsers;
     }
 
 }

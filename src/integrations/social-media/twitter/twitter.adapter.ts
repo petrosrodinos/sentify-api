@@ -2,9 +2,9 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { catchError, firstValueFrom, map } from 'rxjs';
 import { TwitterApi, UserV2 } from 'twitter-api-v2';
-import { RAPID_API_TWITTER_ENDPOINTS, TwitterConfig } from './twitter.config';
+import { TwitterConfig } from './twitter.config';
 import { TwitterUtils } from './twitter.utils';
-import { FormattedTweet, TwitterUser } from './twitter.interfaces';
+import { FormattedTweet, RapidApiTwitterEndpoints, TwitterUser } from './twitter.interfaces';
 import { TwitterQueryType } from '@/modules/twitter/dto/twitter-query.schema';
 
 
@@ -12,6 +12,7 @@ import { TwitterQueryType } from '@/modules/twitter/dto/twitter-query.schema';
 export class TwitterAdapter {
     private readonly logger = new Logger(TwitterAdapter.name);
     private twitterClient: TwitterApi;
+    private rapidApiTwitterEndpoint: RapidApiTwitterEndpoints;
 
     constructor(
         private httpService: HttpService,
@@ -19,6 +20,7 @@ export class TwitterAdapter {
         private twitterUtils: TwitterUtils
     ) {
         this.twitterClient = this.twitterConfig.getTwitterClient();
+        this.rapidApiTwitterEndpoint = this.twitterConfig.getRapidApiTwitterEndpoints();
     }
 
     async createAuthenticationUrl(redirect_url: string): Promise<{ url: string, code_verifier: string, state: string }> {
@@ -52,7 +54,7 @@ export class TwitterAdapter {
     async getUserByUsername(username: string): Promise<TwitterUser | null> {
         try {
             const response = await firstValueFrom(
-                this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_BY_USERNAME}`, {
+                this.httpService.get(`${this.rapidApiTwitterEndpoint.USER_BY_USERNAME}`, {
                     headers: this.twitterConfig.getHeaders(),
                     params: { username }
                 }).pipe(
@@ -72,7 +74,7 @@ export class TwitterAdapter {
     async searchUser(username: string): Promise<any> {
         try {
             const response = await firstValueFrom(
-                this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_SEARCH}`, {
+                this.httpService.get(`${this.rapidApiTwitterEndpoint.USER_SEARCH}`, {
                     headers: this.twitterConfig.getHeaders(),
                     params: {
                         value: username
@@ -87,7 +89,7 @@ export class TwitterAdapter {
             );
 
 
-            return this.twitterUtils.formatUserFollowings(response);
+            return this.twitterUtils.formatTwitterUsers(response);
 
 
         } catch (error) {
@@ -99,7 +101,7 @@ export class TwitterAdapter {
     async getUserFollowings(user_id: string, max_results: number = 1): Promise<TwitterUser[]> {
         try {
             const response = await firstValueFrom(
-                this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_FOLLOWINGS}`, {
+                this.httpService.get(`${this.rapidApiTwitterEndpoint.USER_FOLLOWINGS}`, {
                     headers: this.twitterConfig.getHeaders(),
                     params: {
                         user: user_id,
@@ -131,7 +133,7 @@ export class TwitterAdapter {
     async getUserTweets(user_id: string, query: TwitterQueryType): Promise<FormattedTweet[]> {
         try {
             const response = await firstValueFrom(
-                this.httpService.get(`${RAPID_API_TWITTER_ENDPOINTS.USER_TWEETS}`, {
+                this.httpService.get(`${this.rapidApiTwitterEndpoint.USER_TWEETS}`, {
                     headers: this.twitterConfig.getHeaders(),
                     params: {
                         user: user_id,

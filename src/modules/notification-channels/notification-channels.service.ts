@@ -72,13 +72,13 @@ export class NotificationChannelsService {
     }
   }
 
-  async findAll(query: NotificationChannelQueryType) {
+  async findAll(uuid: string, query: NotificationChannelQueryType) {
 
     try {
 
       const notificationChannels = await this.prisma.notificationChannel.findMany({
         where: {
-          user_uuid: query.user_uuid,
+          user_uuid: uuid,
           channel: query.channel,
           client_identifier: query.client_identifier,
           verified: query.verified,

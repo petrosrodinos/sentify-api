@@ -67,7 +67,7 @@ export class MediaSubscriptionsService {
 
     try {
 
-      const mediaSubscription = await this.prisma.mediaSubscription.upsert({
+      await this.prisma.mediaSubscription.upsert({
         where: {
           unique_user_subscription: {
             user_uuid: uuid,
@@ -86,6 +86,10 @@ export class MediaSubscriptionsService {
           meta: upsertMediaSubscriptionDto.meta,
         },
       });
+
+      return {
+        success: true,
+      };
 
     } catch (error) {
       this.logger.error(error);

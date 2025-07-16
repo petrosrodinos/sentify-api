@@ -7,6 +7,7 @@ import { NotificationChannelType } from '@prisma/client';
 import { MailIntegrationService } from '@/integrations/notfications/mail/mail.service';
 import { EmailFromAddressTypes } from '@/integrations/notfications/mail/mail.interfaces';
 import { SmsIntegrationService } from '@/integrations/notfications/sms/sms.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class VerificationTokensService {
@@ -17,17 +18,21 @@ export class VerificationTokensService {
     private readonly otpService: OtpService,
     private readonly smsService: SmsIntegrationService,
     private readonly mailService: MailIntegrationService,
+    private readonly configService: ConfigService,
   ) { }
 
   async create(uuid: string, createVerificationTokenDto: CreateVerificationTokenDto) {
     try {
       const { state, type, client_identifier } = createVerificationTokenDto;
 
+
       if ((type === NotificationChannelType.sms || type === NotificationChannelType.phone) && !client_identifier) {
         throw new BadRequestException('Client identifier is required for SMS verification');
       } else if (type === NotificationChannelType.email && !client_identifier) {
         throw new BadRequestException('Client identifier is required for Email verification');
       }
+
+      const environment = this.configService.get('NODE_ENV');
 
       const otp = this.otpService.generateOtp({
         length: 6,
@@ -61,12 +66,12 @@ export class VerificationTokensService {
         });
       }
 
-      // if (type === NotificationChannelType.sms || type === NotificationChannelType.phone || type === NotificationChannelType.email) {
-      //   return {
-      //     success: true,
-      //     message: 'Verification token created successfully',
-      //   }
-      // }
+      if (environment !== 'local' && (type === NotificationChannelType.sms || type === NotificationChannelType.phone || type === NotificationChannelType.email)) {
+        return {
+          success: true,
+          message: 'Verification token created successfully',
+        }
+      }
 
       return verification_token;
 

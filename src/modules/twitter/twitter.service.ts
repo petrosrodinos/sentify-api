@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TwitterIntegrationService } from '@/integrations/social-media/twitter/twitter.service';
-import { TestTwitterUser, TestTwitterUsers } from './twitter.contants';
+import { TestTwitterUser, TestTwitterUsers, TestTwitterUsersSearch } from './twitter.contants';
 import { ConfigService } from '@nestjs/config';
 import { TwitterQueryType } from './dto/twitter-query.schema';
 
@@ -36,6 +36,9 @@ export class TwitterService {
         throw new BadRequestException('Username is required');
       }
 
+      if (this.configService.get('NODE_ENV') === 'local') {
+        return TestTwitterUsersSearch;
+      }
 
       return this.twitterIntegrationService.searchUser(username);
 

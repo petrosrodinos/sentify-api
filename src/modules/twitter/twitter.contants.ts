@@ -94,3 +94,69 @@ export const TestTwitterUsers = [
         description: ""
     }
 ];
+
+export const TestTwitterUsersSearch = [
+    {
+        "id": "54531504",
+        "name": "Rodinos Panagiotis",
+        "screen_name": "rodinos",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/2649374539/9563335d9b8fe6e558c99b14f2889998_normal.png",
+        "description": ""
+    },
+    {
+        "id": "508278708",
+        "name": "Christian Rodino",
+        "screen_name": "Rodinosaur_",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1866459188563464192/hcXcW4vP_normal.jpg",
+        "description": ""
+    },
+    {
+        "id": "413506850",
+        "name": "Κώστας Ροδινός",
+        "screen_name": "KRodinos",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/2751497033/10ac888e9fedc289b6f8c553b26f1d47_normal.jpeg",
+        "description": "Athens-Greece"
+    },
+    {
+        "id": "1401170336012455939",
+        "name": "rodinos",
+        "screen_name": "S0YE0NSGF",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1813330504554344448/9capWHbg_normal.jpg",
+        "description": "19"
+    },
+    {
+        "id": "3056261740",
+        "name": "Panos G. Rodinos",
+        "screen_name": "panrodinos",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/569890332779634688/F_M6I1s8_normal.jpeg",
+        "description": "Μια βουνοκορφή "
+    },
+    {
+        "id": "1275143261536034818",
+        "name": "ródinos",
+        "screen_name": "TA3HK00K",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1409834726819569664/Nv_LOvlG_normal.jpg",
+        "description": "she/her "
+    },
+    {
+        "id": "1909959240610988032",
+        "name": "Raphael Rodinos",
+        "screen_name": "_rodirodi_",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1909959403920601088/Q2qTb4f-_normal.png",
+        "description": ""
+    },
+    {
+        "id": "1830561747146596352",
+        "name": "EVANGELOS RODINOS",
+        "screen_name": "ERodinos",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1830562286672531457/7mijOq0E_normal.png",
+        "description": ""
+    },
+    {
+        "id": "1771457600489414656",
+        "name": "Rodinos panayi",
+        "screen_name": "Rodinos1965",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1771457806895304705/6TnAnyVv_normal.jpg",
+        "description": ""
+    }
+];

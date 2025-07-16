@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { AIGenerateObjectResponse } from '@/integrations/ai/ai.interface';
 import { DataService } from '../data/data.service';
-import { Alert, NotificationChannel, NotificationChannelType, PlatformType } from '@prisma/client';
+import { NotificationChannel, NotificationChannelType, PlatformType } from '@prisma/client';
 import { MailIntegrationService } from '@/integrations/notfications/mail/mail.service';
 import { SmsIntegrationService } from '@/integrations/notfications/sms/sms.service';
 import { TelegramIntegrationService } from '@/integrations/notfications/telegram/telegram.service';
@@ -99,7 +99,7 @@ export class NotificationsService {
                 });
             }
 
-            this.logger.debug(`Sent ${analysisItems.length} notifications`);
+            this.logger.debug(`Analyzed ${analysisItems.length} alerts and sent ${notificationPromises.length} notifications`);
 
             return {
                 success: true,
@@ -140,6 +140,7 @@ export class NotificationsService {
 
 
             if (hasMatchingMediaSubscription && hasMatchingTrackedItems) {
+
                 usersToNotify.push(user);
 
                 const notificationChannelTypes = notification_channels.map(channel => channel.channel);

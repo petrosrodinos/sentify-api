@@ -35,7 +35,6 @@ export class NotificationChannelsController {
 
   @Get()
   @ApiOperation({ summary: 'Get all notification channels with optional filters' })
-  @ApiQuery({ name: 'user_uuid', required: false, description: 'Filter by user UUID' })
   @ApiQuery({ name: 'channel', required: false, description: 'Filter by channel type', enum: NotificationChannelType })
   @ApiQuery({ name: 'identity_id', required: false, description: 'Filter by identity ID' })
   @ApiQuery({ name: 'client_identifier', required: false, description: 'Filter by client identifier' })
@@ -46,8 +45,8 @@ export class NotificationChannelsController {
     description: 'Notification channels retrieved successfully',
     type: [NotificationChannel]
   })
-  findAll(@Query(new ZodValidationPipe(NotificationChannelQuerySchema)) query: NotificationChannelQueryType) {
-    return this.notificationChannelsService.findAll(query);
+  findAll(@CurrentUser('uuid') uuid: string, @Query(new ZodValidationPipe(NotificationChannelQuerySchema)) query: NotificationChannelQueryType) {
+    return this.notificationChannelsService.findAll(uuid, query);
   }
 
   @Get(':id')

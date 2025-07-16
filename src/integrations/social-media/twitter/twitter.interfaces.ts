@@ -23,3 +23,10 @@ export interface FormattedTweet {
     };
     urls?: string[];
 }
+
+export interface RapidApiTwitterEndpoints {
+    USER_BY_USERNAME: string;
+    USER_FOLLOWINGS: string;
+    USER_TWEETS: string;
+    USER_SEARCH: string;
+}
