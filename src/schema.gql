@@ -83,7 +83,7 @@ enum PlatformType {
 }
 
 type Query {
-  user(uuid: String!): User
+  user: User
 }
 
 type User {

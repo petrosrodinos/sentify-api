@@ -11,7 +11,13 @@ import { join } from 'path';
             sortSchema: true,
             playground: process.env.NODE_ENV !== 'production',
             debug: process.env.NODE_ENV !== 'production',
-            context: ({ req, res }) => ({ req, res }),
+            context: ({ req, res }) => {
+                return {
+                    req,
+                    res,
+                    user: req?.user,
+                };
+            },
             formatError: (error) => ({
                 message: error.message,
                 code: error.extensions?.code,
