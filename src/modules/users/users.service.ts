@@ -6,6 +6,7 @@ import { MediaSubscription, TrackedItem, UserAlert } from '@prisma/client';
 import { GraphQLResolveInfo } from 'graphql';
 import { UserCounts } from '@/shared/models/graphql/user-counts.model';
 import * as graphqlFields from 'graphql-fields';
+import { MediaSubscriptionQueryType } from '../media-subscriptions/dto/media-subscriptions-query.schema';
 
 @Injectable()
 export class UsersService {
@@ -88,8 +89,10 @@ export class UsersService {
     return this.prisma.trackedItem.findMany({ where });
   }
 
-  async getMediaSubscriptions(uuid: string): Promise<MediaSubscription[]> {
-    return this.prisma.mediaSubscription.findMany({ where: { user_uuid: uuid } });
+  async getMediaSubscriptions(uuid: string, query: MediaSubscriptionQueryType): Promise<MediaSubscription[]> {
+    const where: any = { user_uuid: uuid };
+    if (query.enabled !== undefined) where.enabled = query.enabled === 'true';
+    return this.prisma.mediaSubscription.findMany({ where });
   }
 
 

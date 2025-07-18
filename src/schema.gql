@@ -142,6 +142,7 @@ enum TrackedItemType {
 }
 
 type User {
+  alerts(limit: Int, order_by: String): [UserAlert!]
   counts: UserCounts!
   created_at: DateTime!
   email: String

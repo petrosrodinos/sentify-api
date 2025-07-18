@@ -13,6 +13,7 @@ import { GraphQLResolveInfo } from 'graphql';
 import { PlatformType } from '@prisma/client';
 import { Int } from '@nestjs/graphql';
 import { UserAlertsService } from '../user-alerts/user-alerts.service';
+import { UserAlert } from '@/shared/models/graphql/user-alert.model';
 
 
 @Resolver(() => User)
@@ -49,7 +50,20 @@ export class UsersResolver {
         @Parent() user: User,
         @Args('enabled', { type: () => Boolean, nullable: true }) enabled?: boolean,
     ): Promise<MediaSubscription[]> {
-        return this.usersService.getMediaSubscriptions(user.uuid);
+        return this.usersService.getMediaSubscriptions(user.uuid, { enabled: enabled?.toString() });
+    }
+
+    @ResolveField(() => [UserAlert], { nullable: true })
+    async alerts(
+        @Parent() user: User,
+        @Args('limit', { type: () => Int, nullable: true }) limit?: number,
+        @Args('order_by', { type: () => String, nullable: true }) order_by?: 'asc' | 'desc',
+    ): Promise<any[]> {
+        const result = await this.userAlertsService.findAll(user.uuid, {
+            limit: limit?.toString(),
+            order_by,
+        });
+        return result.data;
     }
 
     @ResolveField(() => PaginatedUserAlerts, { nullable: true })

@@ -3,6 +3,7 @@ import { Identity } from './identity.model';
 import { MediaSubscription } from './media-subscription.model';
 import { NotificationChannel } from './notification-channel.model';
 import { TrackedItem } from './tracked-items.model';
+import { UserAlert } from './user-alert.model';
 
 @ObjectType()
 export class User {
@@ -35,4 +36,7 @@ export class User {
 
     @Field(() => [TrackedItem], { nullable: true })
     tracked_items?: TrackedItem[];
+
+    @Field(() => [UserAlert], { nullable: true })
+    alerts?: UserAlert[];
 }
