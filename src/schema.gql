@@ -2,6 +2,25 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Alert {
+  account_identifier: String!
+  account_name: String!
+  batch_id: String!
+  created_at: DateTime!
+  description: String!
+  id: Int!
+  platform_type: String!
+  popularity: Int!
+  post_ids: [String!]!
+  screen_name: String!
+  sentiment: String!
+  severity: String!
+  tickers: [String!]!
+  title: String!
+  updated_at: DateTime!
+  uuid: ID!
+}
+
 enum AuthProviderType {
   email
   facebook
@@ -35,12 +54,15 @@ type Identity {
   verified: Boolean!
 }
 
+"""JSON custom scalar type"""
+scalar JSON
+
 type MediaSubscription {
   account_identifier: String!
   created_at: DateTime!
   enabled: Boolean!
   id: Int!
-  meta: String
+  meta: JSON
   platform_type: PlatformType!
   updated_at: DateTime!
   user: User
@@ -59,6 +81,7 @@ type NotificationChannel {
   updated_at: DateTime!
   user: User
   user_uuid: String!
+  uuid: String!
   verified: Boolean!
   web_push_config: String
 }
@@ -86,17 +109,57 @@ type Query {
   user: User
 }
 
+type TrackedItem {
+  created_at: DateTime!
+  enabled: Boolean!
+  id: Int!
+  item_identifier: String!
+  item_type: TrackedItemType!
+  meta: JSON
+  updated_at: DateTime!
+  user_uuid: String!
+  uuid: String!
+}
+
+enum TrackedItemType {
+  commodity
+  crypto
+  keyword
+  stock
+}
+
 type User {
+  counts: UserCounts!
   created_at: DateTime!
   email: String
   id: Int!
   identities: [Identity!]
   media_subscriptions: [MediaSubscription!]
-  notification_channels: [NotificationChannel!]
+  notification_channels(enabled: Boolean): [NotificationChannel!]
   phone: String
+  tracked_items(enabled: Boolean): [TrackedItem!]
   updated_at: DateTime!
+  user_alerts: [UserAlert!]
   uuid: ID!
-  verification_tokens: [VerificationToken!]
+}
+
+type UserAlert {
+  alert: Alert!
+  alert_id: Int!
+  created_at: DateTime!
+  id: Int!
+  notification_channels: [NotificationChannelType!]
+  updated_at: DateTime!
+  user: User!
+  user_uuid: ID!
+  uuid: ID!
+}
+
+type UserCounts {
+  media_subscriptions_count: Int!
+  notification_channels_count: Int!
+  tracked_items_count: Int!
+  user_alerts_count: Int!
 }
 
 type VerificationToken {

@@ -13,6 +13,9 @@ export class NotificationChannel {
     id: number;
 
     @Field()
+    uuid: string;
+
+    @Field()
     user_uuid: string;
 
     @Field(() => NotificationChannelType)

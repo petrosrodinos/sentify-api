@@ -18,3 +18,7 @@ npm run start:docker:prod
 
 npm run start:dev
 npm run start:prod
+
+# GRaphQl Playground
+
+http://localhost:3000/graphql

@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int, ID, registerEnumType } from '@nestjs/graphql';
 import { PlatformType } from '@prisma/client';
 import { User } from './user.model';
+import { JSONScalar } from './json.scalar';
 
 registerEnumType(PlatformType, {
     name: 'PlatformType',
@@ -26,8 +27,8 @@ export class MediaSubscription {
     @Field()
     enabled: boolean;
 
-    @Field(() => String, { nullable: true })
-    meta?: string; // JSON stored as string in GraphQL
+    @Field(() => JSONScalar, { nullable: true })
+    meta?: any;
 
     @Field()
     created_at: Date;

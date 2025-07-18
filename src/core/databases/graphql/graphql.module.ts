@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule as NestGraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
+import { JSONScalar } from '@/shared/models/graphql/json.scalar';
 
 @Module({
     imports: [
@@ -25,6 +26,7 @@ import { join } from 'path';
             }),
         })
     ],
+    providers: [JSONScalar],
     exports: [NestGraphQLModule],
 })
 export class GraphQLModule { }

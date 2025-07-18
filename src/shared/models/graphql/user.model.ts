@@ -1,9 +1,8 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
-import { VerificationToken } from './verification-token.model';
 import { Identity } from './identity.model';
 import { MediaSubscription } from './media-subscription.model';
 import { NotificationChannel } from './notification-channel.model';
-
+import { TrackedItem } from './tracked-items.model';
 
 @ObjectType()
 export class User {
@@ -28,12 +27,12 @@ export class User {
     @Field(() => [Identity], { nullable: true })
     identities?: Identity[];
 
-    @Field(() => [VerificationToken], { nullable: true })
-    verification_tokens?: VerificationToken[];
-
     @Field(() => [MediaSubscription], { nullable: true })
     media_subscriptions?: MediaSubscription[];
 
     @Field(() => [NotificationChannel], { nullable: true })
     notification_channels?: NotificationChannel[];
+
+    @Field(() => [TrackedItem], { nullable: true })
+    tracked_items?: TrackedItem[];
 }
