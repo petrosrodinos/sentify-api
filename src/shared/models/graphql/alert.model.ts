@@ -1,4 +1,5 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { JSONScalar } from './json.scalar';
 
 @ObjectType()
 export class Alert {
@@ -20,8 +21,8 @@ export class Alert {
     @Field(() => String)
     description: string;
 
-    @Field(() => [String])
-    tickers: string[];
+    @Field(() => [JSONScalar], { nullable: true })
+    tickers: any[];
 
     @Field(() => String)
     sentiment: string;

@@ -38,4 +38,7 @@ export class MediaSubscription {
 
     @Field(() => User, { nullable: true })
     user?: User;
+
+    @Field({ nullable: true })
+    screen_name?: string;
 }

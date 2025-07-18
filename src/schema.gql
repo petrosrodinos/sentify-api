@@ -15,7 +15,7 @@ type Alert {
   screen_name: String!
   sentiment: String!
   severity: String!
-  tickers: [String!]!
+  tickers: [JSON!]
   title: String!
   updated_at: DateTime!
   uuid: ID!
@@ -64,6 +64,7 @@ type MediaSubscription {
   id: Int!
   meta: JSON
   platform_type: PlatformType!
+  screen_name: String
   updated_at: DateTime!
   user: User
   user_uuid: String!
@@ -96,6 +97,18 @@ enum NotificationChannelType {
   telegram
   web
   whatsapp
+}
+
+type PaginatedUserAlerts {
+  data: [UserAlert!]!
+  pagination: PaginationInfo!
+}
+
+type PaginationInfo {
+  hasMore: Boolean!
+  limit: Int!
+  page: Int!
+  total: Int!
 }
 
 enum PlatformType {
@@ -134,12 +147,12 @@ type User {
   email: String
   id: Int!
   identities: [Identity!]
-  media_subscriptions: [MediaSubscription!]
+  media_subscriptions(enabled: Boolean): [MediaSubscription!]
   notification_channels(enabled: Boolean): [NotificationChannel!]
   phone: String
   tracked_items(enabled: Boolean): [TrackedItem!]
   updated_at: DateTime!
-  user_alerts: [UserAlert!]
+  user_alerts(account_identifier: String, limit: Int, order_by: String, page: Int, platform_type: PlatformType, popularity: String, sentiment: String, severity: String, tickers: [String!]): PaginatedUserAlerts
   uuid: ID!
 }
 

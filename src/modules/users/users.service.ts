@@ -92,14 +92,6 @@ export class UsersService {
     return this.prisma.mediaSubscription.findMany({ where: { user_uuid: uuid } });
   }
 
-  async getUserAlerts(uuid: string): Promise<UserAlert[]> {
-    return this.prisma.userAlert.findMany({
-      where: { user_uuid: uuid },
-      include: {
-        alert: true,
-      },
-    });
-  }
 
   async getUserCounts(uuid: string, info: GraphQLResolveInfo): Promise<Partial<UserCounts>> {
 
