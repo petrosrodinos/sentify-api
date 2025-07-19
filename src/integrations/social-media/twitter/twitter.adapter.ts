@@ -174,8 +174,6 @@ export class TwitterAdapter {
 
             const tweet = await this.twitterClient.v2.tweet(tweetData);
 
-            this.logger.debug(`Tweet posted successfully: ${tweet.data.id}`);
-
             return {
                 id: tweet.data.id,
                 text: tweet.data.text

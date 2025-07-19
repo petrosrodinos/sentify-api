@@ -7,7 +7,10 @@ import { MailIntegrationService } from '@/integrations/notfications/mail/mail.se
 import { SmsIntegrationService } from '@/integrations/notfications/sms/sms.service';
 import { TelegramIntegrationService } from '@/integrations/notfications/telegram/telegram.service';
 import { EmailFromAddressTypes } from '@/integrations/notfications/mail/mail.interfaces';
+import { TwitterIntegrationService } from '@/integrations/social-media/twitter/twitter.service';
+import { PostAnalysis } from '@/integrations/ai/ai.schemas';
 import { v4 as uuidv4 } from 'uuid';
+import { NotificationsUtils } from './notifications.utils';
 
 @Injectable()
 export class NotificationsService {
@@ -17,7 +20,9 @@ export class NotificationsService {
         private readonly dataService: DataService,
         private readonly mailService: MailIntegrationService,
         private readonly smsService: SmsIntegrationService,
-        private readonly telegramService: TelegramIntegrationService
+        private readonly telegramService: TelegramIntegrationService,
+        private readonly twitterService: TwitterIntegrationService,
+        private readonly notificationsUtils: NotificationsUtils
     ) { }
 
     async sendNotifications(analysis: {
@@ -100,6 +105,8 @@ export class NotificationsService {
             }
 
             this.logger.debug(`Analyzed ${analysisItems.length} alerts and sent ${notificationPromises.length} notifications`);
+
+            await this.postTweetsForAnalysis(analysisItems);
 
             return {
                 success: true,
@@ -190,6 +197,27 @@ export class NotificationsService {
 
         } catch (error) {
             this.logger.error(error);
+            throw new Error(error);
+        }
+    }
+
+    async postTweetsForAnalysis(analysisItems: PostAnalysis[]) {
+        try {
+            const tweetPromises = analysisItems.map(async (analysisItem) => {
+                const tweetText = this.notificationsUtils.formatTweetText(analysisItem);
+
+                return this.twitterService.postTweet({
+                    text: tweetText
+                });
+            });
+
+            const results = await Promise.all(tweetPromises);
+
+            this.logger.debug(`Posted ${results.length} tweets`);
+
+            return results;
+        } catch (error) {
+            this.logger.error('Error posting tweets for analysis:', error.message);
             throw new Error(error);
         }
     }
