@@ -4,7 +4,7 @@ import { catchError, firstValueFrom, map } from 'rxjs';
 import { TwitterApi, UserV2 } from 'twitter-api-v2';
 import { TwitterConfig } from './twitter.config';
 import { TwitterUtils } from './twitter.utils';
-import { FormattedTweet, RapidApiTwitterEndpoints, TwitterUser } from './twitter.interfaces';
+import { FormattedTweet, PostTweet, RapidApiTwitterEndpoints, TwitterUser, UploadMedia } from './twitter.interfaces';
 import { TwitterQueryType } from '@/modules/twitter/dto/twitter-query.schema';
 
 
@@ -163,6 +163,44 @@ export class TwitterAdapter {
             throw new Error(error);
         }
     }
+
+    async postTweet(data: PostTweet): Promise<{ id: string, text: string }> {
+        try {
+            const tweetData: any = { text: data.text };
+
+            if (data.media_ids && data.media_ids.length > 0) {
+                tweetData.media = { media_ids: data.media_ids };
+            }
+
+            const tweet = await this.twitterClient.v2.tweet(tweetData);
+
+            this.logger.debug(`Tweet posted successfully: ${tweet.data.id}`);
+
+            return {
+                id: tweet.data.id,
+                text: tweet.data.text
+            };
+
+        } catch (error) {
+            this.logger.error(`Failed to post tweet`, error);
+            throw new Error(error);
+        }
+    }
+
+    async uploadMedia(data: UploadMedia): Promise<string> {
+        try {
+            const mediaId = await this.twitterClient.v1.uploadMedia(data.file, { mimeType: data.mime_type });
+
+            this.logger.debug(`Media uploaded successfully: ${mediaId}`);
+
+            return mediaId;
+
+        } catch (error) {
+            this.logger.error(`Failed to upload media`, error);
+            throw new Error(error);
+        }
+    }
+
 
 
 }

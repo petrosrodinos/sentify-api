@@ -30,3 +30,13 @@ export interface RapidApiTwitterEndpoints {
     USER_TWEETS: string;
     USER_SEARCH: string;
 }
+
+export interface PostTweet {
+    text: string;
+    media_ids?: string[];
+}
+
+export interface UploadMedia {
+    file: Buffer;
+    mime_type: string;
+}

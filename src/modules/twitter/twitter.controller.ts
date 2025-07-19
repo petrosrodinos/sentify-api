@@ -8,7 +8,6 @@ import { RolesGuard } from '@/shared/guards/roles.guard';
 import { Roles } from '@/shared/decorators/roles.decorator';
 import { Roles as RolesTypes } from '@/shared/types/roles.types';
 import { TwitterQuerySchema, TwitterQueryType } from './dto/twitter-query.schema';
-import { TrackedItemQuerySchema } from '../tracked_items/dto/tracked-items-query.schema';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 
 

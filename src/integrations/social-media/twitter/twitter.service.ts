@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TwitterAdapter } from './twitter.adapter';
 import { UserV2 } from 'twitter-api-v2';
-import { FormattedTweet, TwitterUser } from './twitter.interfaces';
+import { FormattedTweet, PostTweet, TwitterUser, UploadMedia } from './twitter.interfaces';
 import { TwitterQueryType } from '@/modules/twitter/dto/twitter-query.schema';
 
 @Injectable()
@@ -58,6 +58,28 @@ export class TwitterIntegrationService {
             throw new Error(error);
         }
     }
+
+    async postTweet(data: PostTweet): Promise<{ id: string, text: string }> {
+        try {
+            const response = await this.twitterAdapter.postTweet(data);
+
+            return response;
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    async uploadMedia(data: UploadMedia): Promise<string> {
+        try {
+            const mediaId = await this.twitterAdapter.uploadMedia(data);
+
+            return mediaId;
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+
 
 
 }
