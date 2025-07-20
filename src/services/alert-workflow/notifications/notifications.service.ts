@@ -203,19 +203,19 @@ export class NotificationsService {
 
     async postTweetsForAnalysis(analysisItems: PostAnalysis[]) {
         try {
-            const tweetPromises = analysisItems.map(async (analysisItem) => {
+            analysisItems.map(async (analysisItem) => {
                 const tweetText = this.notificationsUtils.formatTweetText(analysisItem);
 
-                return this.twitterService.postTweet({
+                await this.twitterService.postTweet({
                     text: tweetText
                 });
             });
 
-            const results = await Promise.all(tweetPromises);
 
-            this.logger.debug(`Posted ${results.length} tweets`);
+            this.logger.debug(`Posted ${analysisItems.length} tweets`);
 
-            return results;
+            return Promise.resolve();
+
         } catch (error) {
             this.logger.error('Error posting tweets for analysis:', error.message);
             throw new Error(error);

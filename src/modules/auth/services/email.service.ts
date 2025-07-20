@@ -145,7 +145,7 @@ export class EmailAuthService {
             });
 
             if (identity) {
-                return { message: 'You are already in the waitlist' };
+                return { message: 'You are already in the waitlist', code: 'WAITLIST_ALREADY_EXISTS' };
             }
 
 
@@ -164,7 +164,7 @@ export class EmailAuthService {
                 },
             });
 
-            return { message: 'User waitlisted successfully' };
+            return { message: 'You have been successfully added to the waitlist', code: 'WAITLIST_SUCCESS' };
 
         } catch (error) {
             throw new BadRequestException('Failed to waitlist user', error.message);
