@@ -19,10 +19,6 @@ export class UsersService {
       return this.prisma.user.findMany({
         include: {
           identities: true,
-          media_subscriptions: true,
-          notification_channels: true,
-          tracked_items: true,
-          user_alerts: true,
         },
       });
     } catch (error) {
@@ -60,7 +56,7 @@ export class UsersService {
 
 
 
-  update(id: string, updateUserDto: UpdateUserDto) {
+  update(uuid: string, id: string, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
 

@@ -18,6 +18,7 @@ model User {
   created_at          DateTime            @default(now())
   updated_at          DateTime            @updatedAt
   role                AuthRole            @default(user)
+  ref_code                 String?             @default("")
   identities          Identity[]
   verification_tokens VerificationToken[]
   media_subscriptions MediaSubscription[]

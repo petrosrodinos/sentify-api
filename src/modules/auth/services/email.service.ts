@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { CreateJwtService } from '@/shared/utils/jwt/jwt.service';
 import { AuthProviderType } from '@prisma/client';
 import { AuthRoles } from '../interfaces/auth.interface';
+import { WaitlistDto } from '../dto/waitlist.dto';
 
 @Injectable()
 export class EmailAuthService {
@@ -129,6 +130,45 @@ export class EmailAuthService {
             throw new BadRequestException('Failed to login user', error.message);
         }
 
+    }
+
+    async waitlist(dto: WaitlistDto) {
+
+        try {
+            const identity = await this.prisma.identity.findUnique({
+                where: {
+                    unique_identity: {
+                        provider: AuthProviderType.email,
+                        provider_id: dto.email,
+                    },
+                },
+            });
+
+            if (identity) {
+                return { message: 'You are already in the waitlist' };
+            }
+
+
+            await this.prisma.user.create({
+                data: {
+                    email: dto.email,
+                    role: AuthRoles.user,
+                    ref_code: 'waitlist',
+                    identities: {
+                        create: {
+                            provider: AuthProviderType.email,
+                            provider_id: dto.email,
+                            verified: false,
+                        },
+                    },
+                },
+            });
+
+            return { message: 'User waitlisted successfully' };
+
+        } catch (error) {
+            throw new BadRequestException('Failed to waitlist user', error.message);
+        }
     }
 
 }

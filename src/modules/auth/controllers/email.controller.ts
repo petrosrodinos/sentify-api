@@ -4,6 +4,7 @@ import { RegisterEmailDto } from '../dto/register-email.dto';
 import { LoginEmailDto } from '../dto/login-email.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { AuthResponse } from '../entities/auth-response.entity';
+import { WaitlistDto } from '../dto/waitlist.dto';
 
 @ApiTags('Email Authentication')
 @Controller('auth/email')
@@ -34,8 +35,19 @@ export class EmailAuthController {
         description: 'User logged in successfully',
         type: AuthResponse
     })
-
     async loginWithEmail(@Body() dto: LoginEmailDto) {
         return this.authService.loginWithEmail(dto);
+    }
+
+    @Post('/waitlist')
+    @ApiOperation({ summary: 'Waitlist a user with ref code' })
+    @ApiBody({ type: WaitlistDto })
+    @ApiResponse({
+        status: 200,
+        description: 'User referred successfully',
+        type: AuthResponse
+    })
+    async waitlist(@Body() dto: WaitlistDto) {
+        return this.authService.waitlist(dto);
     }
 }
