@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserAlertDto } from './dto/create-user-alert.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
-import { UserAlertsQueryType } from './dto/user-alerts-query.schema';
 import { Prisma } from '@prisma/client';
+import { AlertsQueryType } from '../alerts/dto/alerts.query-schema';
 
 @Injectable()
 export class UserAlertsService {
@@ -17,7 +17,7 @@ export class UserAlertsService {
       },
     });
   }
-  async findAll(uuid: string, query: UserAlertsQueryType) {
+  async findAll(uuid: string, query: AlertsQueryType) {
     const page = Number(query?.page) || 1;
     const limit = Number(query?.limit) || 10;
     const skip = (page - 1) * limit;

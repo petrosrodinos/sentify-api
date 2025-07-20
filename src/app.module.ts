@@ -25,6 +25,7 @@ import { UserAlertsModule } from './modules/user-alerts/user-alerts.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AlertWorkflowWorkerModule } from './jobs/workers/alert-workflow/alert-workflow.worker.module';
 import { TwitterModule as InternalTwitterModule } from './modules/internal/twitter/twitter.module';
+import { AlertsModule } from './modules/alerts/alerts.module';
 
 @Module({
   imports: [
@@ -51,7 +52,8 @@ import { TwitterModule as InternalTwitterModule } from './modules/internal/twitt
     AlertWorkflowModule,
     AlertModule,
     UserAlertsModule,
-    AlertWorkflowWorkerModule
+    AlertWorkflowWorkerModule,
+    AlertsModule
   ],
   controllers: [AppController],
   providers: [AppService],

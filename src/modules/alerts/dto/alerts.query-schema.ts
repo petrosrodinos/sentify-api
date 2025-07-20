@@ -1,7 +1,7 @@
 import { PlatformType } from "@prisma/client";
 import { z } from "zod";
 
-export const UserAlertsQuerySchema = z.object({
+export const AlertsQuerySchema = z.object({
     platform_type: z.nativeEnum(PlatformType).optional(),
     account_identifier: z.string().optional(),
     sentiment: z.string().optional(),
@@ -13,4 +13,4 @@ export const UserAlertsQuerySchema = z.object({
     order_by: z.enum(['asc', 'desc']).optional(),
 });
 
-export type UserAlertsQueryType = z.infer<typeof UserAlertsQuerySchema>;
+export type AlertsQueryType = z.infer<typeof AlertsQuerySchema>;

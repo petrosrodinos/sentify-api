@@ -4,10 +4,10 @@ import { CreateUserAlertDto } from './dto/create-user-alert.dto';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
-import { UserAlertsQuerySchema, UserAlertsQueryType } from './dto/user-alerts-query.schema';
 import { RolesGuard } from '@/shared/guards/roles.guard';
 import { Roles } from '@/shared/decorators/roles.decorator';
 import { Roles as RolesTypes } from '@/shared/types/roles.types';
+import { AlertsQuerySchema, AlertsQueryType } from '../alerts/dto/alerts.query-schema';
 
 @Controller('user-alerts')
 @UseGuards(JwtGuard)
@@ -22,7 +22,7 @@ export class UserAlertsController {
   }
 
   @Get()
-  findAll(@CurrentUser('uuid') uuid: string, @Query(new ZodValidationPipe(UserAlertsQuerySchema)) query: UserAlertsQueryType) {
+  findAll(@CurrentUser('uuid') uuid: string, @Query(new ZodValidationPipe(AlertsQuerySchema)) query: AlertsQueryType) {
     return this.userAlertsService.findAll(uuid, query);
   }
 

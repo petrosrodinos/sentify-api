@@ -6,7 +6,7 @@ import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { RolesGuard } from '@/shared/guards/roles.guard';
 import { Roles as RolesTypes } from '@/shared/types/roles.types';
 
-@Controller('alerts')
+@Controller('internal/alerts')
 @UseGuards(JwtGuard, RolesGuard)
 @Roles(RolesTypes.ADMIN)
 export class AlertController {
