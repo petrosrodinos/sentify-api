@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { TwitterAdapter } from './twitter.adapter';
 import { UserV2 } from 'twitter-api-v2';
 import { FormattedTweet, PostTweet, TwitterUser, UploadMedia } from './twitter.interfaces';
@@ -7,7 +7,7 @@ import { TwitterQueryType } from '@/modules/twitter/dto/twitter-query.schema';
 @Injectable()
 export class TwitterIntegrationService {
 
-    constructor(private readonly twitterAdapter: TwitterAdapter) { }
+    constructor(private readonly twitterAdapter: TwitterAdapter, private readonly logger: Logger) { }
 
     async createAuthenticationUrl(redirect_url: string) {
         return this.twitterAdapter.createAuthenticationUrl(redirect_url);
@@ -55,7 +55,7 @@ export class TwitterIntegrationService {
 
             return response;
         } catch (error) {
-            throw new Error(error);
+            throw new Error(error.message);
         }
     }
 
@@ -65,7 +65,6 @@ export class TwitterIntegrationService {
 
             return response;
         } catch (error) {
-            throw new Error(error);
         }
     }
 
