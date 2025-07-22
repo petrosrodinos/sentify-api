@@ -53,7 +53,7 @@ export class PostsService {
 
             let posts: FormattedTweet[] = await Promise.all(twitterPostsPromises).then(posts => posts.flat());
 
-            const formattedPosts = posts.map((post) => {
+            const formattedPosts = posts?.map((post) => {
                 return {
                     id: post.id,
                     full_text: post.full_text,
@@ -66,7 +66,7 @@ export class PostsService {
 
             })
 
-            if (formattedPosts.length === 0) {
+            if (!formattedPosts?.length) {
                 return [];
             }
 

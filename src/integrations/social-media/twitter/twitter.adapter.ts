@@ -159,7 +159,7 @@ export class TwitterAdapter {
 
 
         } catch (error) {
-            this.logger.error(`Failed to fetch user tweets`, error);
+            this.logger.error(`Failed to fetch user tweets`, error.message);
             throw new Error(error);
         }
     }
@@ -180,7 +180,7 @@ export class TwitterAdapter {
             };
 
         } catch (error) {
-            this.logger.error(`Failed to post tweet`, error);
+            this.logger.error(`Failed to post tweet`, error.message);
             throw new Error(error);
         }
     }
