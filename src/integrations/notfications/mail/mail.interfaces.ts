@@ -1,14 +1,16 @@
 export interface CreateEmail {
     to: string;
     subject: string;
-    text: string;
-    from?: EmailFromAddressType;
+    text?: string;
+    from?: string;
     html?: any;
     attachments?: any[];
     cc?: string[];
     bcc?: string[];
     replyTo?: string;
     headers?: Record<string, string>;
+    template_id?: string;
+    dynamic_template_data?: Record<string, any>;
 }
 
 export interface EmailFromAddress {
@@ -16,9 +18,4 @@ export interface EmailFromAddress {
     alert: string;
 }
 
-export const EmailFromAddressTypes = {
-    verification: 'verification',
-    alert: 'alert',
-} as const;
 
-export type EmailFromAddressType = (typeof EmailFromAddressTypes)[keyof typeof EmailFromAddressTypes];

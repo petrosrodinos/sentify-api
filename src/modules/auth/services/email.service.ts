@@ -7,12 +7,15 @@ import { CreateJwtService } from '@/shared/utils/jwt/jwt.service';
 import { AuthProviderType } from '@prisma/client';
 import { AuthRoles } from '../interfaces/auth.interface';
 import { WaitlistDto } from '../dto/waitlist.dto';
+import { MailIntegrationService } from '@/integrations/notfications/mail/mail.service';
+import { EmailConfig } from '@/shared/constants/email';
 
 @Injectable()
 export class EmailAuthService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly jwtService: CreateJwtService,
+        private readonly mailService: MailIntegrationService,
     ) { }
 
     async registerWithEmail(dto: RegisterEmailDto) {
@@ -162,6 +165,13 @@ export class EmailAuthService {
                         },
                     },
                 },
+            });
+
+            await this.mailService.sendEmail({
+                to: dto.email,
+                from: EmailConfig.email_addresses.alert,
+                subject: EmailConfig.templates.waitlist.subject,
+                template_id: EmailConfig.templates.waitlist.template_id,
             });
 
             return { message: 'You have been successfully added to the waitlist', code: 'WAITLIST_SUCCESS' };

@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { EmailFromAddress } from '../mail.interfaces';
 const sgMail = require('@sendgrid/mail')
 
 
@@ -29,13 +28,6 @@ export class SendgridConfig {
 
     getSendgridClient(): any {
         return this.sendgridClient;
-    }
-
-    getEmailFromAddresses(): EmailFromAddress {
-        return {
-            verification: this.configService.get('EMAIL_FROM_VERIFICATION'),
-            alert: this.configService.get('EMAIL_FROM_VERIFICATION'),
-        }
     }
 
 

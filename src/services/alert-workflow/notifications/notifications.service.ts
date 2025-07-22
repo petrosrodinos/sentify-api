@@ -6,11 +6,11 @@ import { NotificationChannel, NotificationChannelType, PlatformType } from '@pri
 import { MailIntegrationService } from '@/integrations/notfications/mail/mail.service';
 import { SmsIntegrationService } from '@/integrations/notfications/sms/sms.service';
 import { TelegramIntegrationService } from '@/integrations/notfications/telegram/telegram.service';
-import { EmailFromAddressTypes } from '@/integrations/notfications/mail/mail.interfaces';
 import { TwitterIntegrationService } from '@/integrations/social-media/twitter/twitter.service';
 import { PostAnalysis } from '@/integrations/ai/ai.schemas';
 import { v4 as uuidv4 } from 'uuid';
 import { NotificationsUtils } from './notifications.utils';
+import { EmailConfig } from '@/shared/constants/email';
 
 @Injectable()
 export class NotificationsService {
@@ -175,7 +175,7 @@ export class NotificationsService {
                         to: channel.client_identifier,
                         subject: title,
                         text: description,
-                        from: EmailFromAddressTypes.alert,
+                        from: EmailConfig.email_addresses.alert,
                     });
                 }
                 if (channel.channel === NotificationChannelType.sms) {

@@ -5,9 +5,9 @@ import { OtpService } from '@/shared/utils/otp/otp.service';
 import { VerificationTokenQueryType } from './dto/verification-tokens-query.schema';
 import { NotificationChannelType } from '@prisma/client';
 import { MailIntegrationService } from '@/integrations/notfications/mail/mail.service';
-import { EmailFromAddressTypes } from '@/integrations/notfications/mail/mail.interfaces';
 import { SmsIntegrationService } from '@/integrations/notfications/sms/sms.service';
 import { ConfigService } from '@nestjs/config';
+import { EmailConfig } from '@/shared/constants/email';
 
 @Injectable()
 export class VerificationTokensService {
@@ -62,7 +62,7 @@ export class VerificationTokensService {
           to: client_identifier,
           subject: 'Verification Code',
           text: `Your verification code for Sentyfi is: ${otp}`,
-          from: EmailFromAddressTypes.verification,
+          from: EmailConfig.email_addresses.verification,
         });
       }
 

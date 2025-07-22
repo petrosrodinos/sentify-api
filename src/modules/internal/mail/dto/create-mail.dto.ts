@@ -1,5 +1,4 @@
 import { IsEnum, IsOptional, IsString } from "class-validator";
-import { EmailFromAddressType, EmailFromAddressTypes } from "@/integrations/notfications/mail/mail.interfaces";
 
 export class CreateMailDto {
 
@@ -13,8 +12,7 @@ export class CreateMailDto {
     text: string;
 
     @IsOptional()
-    @IsEnum(EmailFromAddressTypes)
-    from: EmailFromAddressType;
+    from?: string;
 
     @IsOptional()
     html?: any;
@@ -32,7 +30,12 @@ export class CreateMailDto {
     replyTo?: string;
 
 
-
     @IsOptional()
     headers?: Record<string, string>;
+
+    @IsOptional()
+    template_id?: string;
+
+    @IsOptional()
+    dynamic_template_data?: Record<string, any>;
 }
