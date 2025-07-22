@@ -26,7 +26,7 @@ export class AlertsService {
         where: whereClause,
         skip,
         take: limit,
-        orderBy: query?.order_by ? { created_at: query.order_by } : undefined,
+        orderBy: query?.order_by ? { created_at: query.order_by } : { created_at: 'desc' },
       }),
       this.prisma.alert.count({
         where: whereClause,

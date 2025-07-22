@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
-import { NotificationChannelsQuery, TrackedItemsQuery } from './dto/user-query.schema';
-import { MediaSubscription, TrackedItem, UserAlert } from '@prisma/client';
+import { NotificationChannelsQuery, TrackedItemsQuery, UserQuery } from './dto/user-query.schema';
+import { MediaSubscription, TrackedItem } from '@prisma/client';
 import { GraphQLResolveInfo } from 'graphql';
 import { UserCounts } from '@/shared/models/graphql/user-counts.model';
 import * as graphqlFields from 'graphql-fields';
@@ -14,13 +14,30 @@ export class UsersService {
   constructor(private readonly prisma: PrismaService) { }
 
 
-  async findAll(): Promise<any[]> {
+  async findAll(query: UserQuery): Promise<any[]> {
     try {
+
+      const page = Number(query?.page) || 1;
+      const limit = Number(query?.limit) || 10;
+      const skip = (page - 1) * limit;
+
+      const where: any = {
+        email: query.email,
+        ref_code: query.ref_code,
+        id: query.id,
+      };
+
       return this.prisma.user.findMany({
+        where,
         include: {
           identities: true,
+          notification_channels: true,
         },
+        orderBy: query?.order_by ? { created_at: query.order_by } : undefined,
+        skip,
+        take: limit,
       });
+
     } catch (error) {
       throw new NotFoundException(error.message);
     }
