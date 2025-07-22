@@ -209,10 +209,10 @@ export class NotificationsService {
                 await this.twitterService.postTweet({
                     text: tweetText
                 });
+
+                this.logger.debug(`Posted tweet for analysis item: ${analysisItem.title}`);
             });
 
-
-            this.logger.debug(`Posted ${analysisItems.length} tweets`);
 
             return Promise.resolve();
 

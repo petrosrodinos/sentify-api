@@ -5,6 +5,7 @@ export interface TwitterUser {
     profile_image_url: string;
     description: string;
     url?: string;
+    verified?: boolean;
 }
 
 export interface FormattedTweet {

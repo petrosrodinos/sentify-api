@@ -13,6 +13,13 @@ export interface CreateEmail {
     dynamic_template_data?: Record<string, any>;
 }
 
+export interface CreateContact {
+    email: string;
+    first_name?: string;
+    last_name?: string;
+    external_id?: string;
+}
+
 export interface EmailFromAddress {
     verification: string;
     alert: string;

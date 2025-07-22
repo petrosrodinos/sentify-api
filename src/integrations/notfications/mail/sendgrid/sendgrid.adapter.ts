@@ -1,21 +1,22 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { CreateEmail, EmailFromAddress } from "../mail.interfaces";
+import { CreateContact, CreateEmail, EmailFromAddress } from "../mail.interfaces";
 import { SendgridConfig } from "./sendgrid.config";
 import { EmailConfig } from "@/shared/constants/email";
 
 @Injectable()
 export class SendGridAdapter {
-    private sendgridClient: any;
+    private sendgridMailClient: any;
+    private sendgridMarketingClient: any;
     private emailFromAddresses: EmailFromAddress;
     private readonly logger = new Logger(SendGridAdapter.name);
 
     constructor(
         private sendgridConfig: SendgridConfig,
     ) {
-        this.sendgridClient = this.sendgridConfig.getSendgridClient();
+        this.sendgridMailClient = this.sendgridConfig.getSendgridClient();
+        this.sendgridMarketingClient = this.sendgridConfig.getSendgridMarketingClient();
         this.emailFromAddresses = EmailConfig.email_addresses;
     }
-
 
     public async sendEmail(create_email: CreateEmail) {
         try {
@@ -32,12 +33,33 @@ export class SendGridAdapter {
                 template_id: create_email.template_id,
                 dynamic_template_data: create_email.dynamic_template_data,
             }
-            return await this.sendgridClient.send(msg);
+            return await this.sendgridMailClient.send(msg);
         } catch (error) {
             this.logger.error(error);
             throw new Error(error);
         }
     }
 
+    public async createContact(data: CreateContact) {
+        try {
+            const request = {
+                url: '/v3/marketing/contacts',
+                method: 'PUT',
+                body: {
+                    contacts: [{
+                        email: data.email,
+                        first_name: data.first_name,
+                        last_name: data.last_name,
+                        external_id: data.external_id,
+                    }]
+                }
+            };
 
+            const response = await this.sendgridMarketingClient.request(request);
+            return response;
+        } catch (error) {
+            this.logger.error(error);
+            throw new Error(error);
+        }
+    }
 }

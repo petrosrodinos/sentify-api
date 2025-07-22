@@ -2,6 +2,7 @@ import { MailIntegrationService } from '@/integrations/notfications/mail/mail.se
 import { Injectable } from '@nestjs/common';
 import { CreateMailDto } from './dto/create-mail.dto';
 import { UpdateMailDto } from './dto/update-mail.dto';
+import { CreateContact } from '@/integrations/notfications/mail/mail.interfaces';
 
 @Injectable()
 export class MailService {
@@ -14,19 +15,7 @@ export class MailService {
     return this.mailService.sendEmail(createMailDto);
   }
 
-  findAll() {
-    return `This action returns all mail`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} mail`;
-  }
-
-  update(id: number, updateMailDto: UpdateMailDto) {
-    return `This action updates a #${id} mail`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} mail`;
+  createContact(data: CreateContact) {
+    return this.mailService.createContact(data);
   }
 }

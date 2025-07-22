@@ -152,7 +152,7 @@ export class EmailAuthService {
             }
 
 
-            await this.prisma.user.create({
+            const user = await this.prisma.user.create({
                 data: {
                     email: dto.email,
                     role: AuthRoles.user,
@@ -172,6 +172,12 @@ export class EmailAuthService {
                 from: EmailConfig.email_addresses.alert,
                 subject: EmailConfig.templates.waitlist.subject,
                 template_id: EmailConfig.templates.waitlist.template_id,
+            });
+
+            await this.mailService.createContact({
+                email: dto.email,
+                last_name: 'Waitlist',
+                external_id: user.uuid,
             });
 
             return { message: 'You have been successfully added to the waitlist', code: 'WAITLIST_SUCCESS' };

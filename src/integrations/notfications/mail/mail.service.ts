@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { SendGridAdapter } from "./sendgrid/sendgrid.adapter";
-import { CreateEmail } from "./mail.interfaces";
+import { CreateContact, CreateEmail } from "./mail.interfaces";
 
 @Injectable()
 export class MailIntegrationService {
@@ -16,6 +16,15 @@ export class MailIntegrationService {
 
         try {
             return await this.sendgridAdapter.sendEmail(create_email);
+        } catch (error) {
+            this.logger.error(error);
+            throw new Error(error);
+        }
+    }
+
+    public async createContact(data: CreateContact) {
+        try {
+            return await this.sendgridAdapter.createContact(data);
         } catch (error) {
             this.logger.error(error);
             throw new Error(error);

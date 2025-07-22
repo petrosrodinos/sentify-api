@@ -7,6 +7,7 @@ import { UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/shared/guards/jwt.guard';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
 import { Roles as RolesTypes } from '@/shared/types/roles.types';
+import { CreateContact } from '@/integrations/notfications/mail/mail.interfaces';
 
 @Controller('mail')
 @UseGuards(JwtGuard, RolesGuard)
@@ -14,28 +15,15 @@ import { Roles as RolesTypes } from '@/shared/types/roles.types';
 export class MailController {
   constructor(private readonly mailService: MailService) { }
 
-  @Post()
+  @Post('send-email')
   create(@Body() createMailDto: CreateMailDto) {
     return this.mailService.create(createMailDto);
   }
 
-  @Get()
-  findAll() {
-    return this.mailService.findAll();
+  @Post('create-contact')
+  createContact(@Body() data: CreateContact) {
+    return this.mailService.createContact(data);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.mailService.findOne(+id);
-  }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMailDto: UpdateMailDto) {
-    return this.mailService.update(+id, updateMailDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.mailService.remove(+id);
-  }
 }

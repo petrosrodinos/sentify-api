@@ -57,6 +57,7 @@ export class TwitterUtils {
                     profile_image_url: profileImageUrl,
                     description: legacy?.description || '', // Description still seems to be in legacy
                     url: userURL,
+                    verified: legacy?.verified || false,
                 });
             } else {
                 console.warn("Skipping entry due to missing userResult data:", entry);
@@ -203,6 +204,7 @@ export class TwitterUtils {
                     screen_name: rawUser.screen_name,
                     profile_image_url: rawUser.profile_image_url,
                     description: rawUser.location || '',
+                    verified: rawUser.verified || false,
                     url: undefined
                 });
             }

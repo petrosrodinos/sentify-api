@@ -44,6 +44,7 @@
     "@nestjs/schedule": "^6.0.0",
     "@nestjs/swagger": "^11.2.0",
     "@prisma/client": "^6.9.0",
+    "@sendgrid/client": "^8.1.5",
     "@sendgrid/mail": "^8.1.5",
     "@types/node-telegram-bot-api": "^0.64.9",
     "ai": "^4.3.17",

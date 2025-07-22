@@ -14,6 +14,12 @@ import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
+  @Get('me')
+  @UseGuards(JwtGuard)
+  findUser(@CurrentUser('uuid') uuid: string) {
+    return this.usersService.findOne(uuid);
+  }
+
   @Get()
   @UseGuards(RolesGuard)
   @Roles(RolesTypes.ADMIN)
@@ -21,11 +27,6 @@ export class UsersController {
     return this.usersService.findAll(query);
   }
 
-  @Get('me')
-  @UseGuards(JwtGuard)
-  findUser(@CurrentUser('uuid') uuid: string) {
-    return this.usersService.findOne(uuid);
-  }
 
   @Get(':uuid')
   @UseGuards(RolesGuard)
