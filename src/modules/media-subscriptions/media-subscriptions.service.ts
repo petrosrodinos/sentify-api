@@ -183,4 +183,30 @@ export class MediaSubscriptionsService {
     }
   }
 
+
+  async findAllAdmin(query: MediaSubscriptionQueryType) {
+
+    try {
+
+      const mediaSubscriptions = await this.prisma.mediaSubscription.findMany({
+        where: {
+          platform_type: query.platform_type,
+          account_identifier: query.account_identifier,
+          enabled: query.enabled ? query.enabled === 'true' : undefined,
+        },
+        distinct: ['platform_type', 'account_identifier'],
+      });
+
+      if (!mediaSubscriptions?.length) {
+        return [];
+      }
+
+      return mediaSubscriptions;
+
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
 }

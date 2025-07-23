@@ -9,6 +9,11 @@ import { UpdateTrackedItemDto } from './dto/update-tracked-item.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { TrackedItem } from './entities/tracked_item.entity';
 import { TrackedItemType } from '@prisma/client';
+import { RolesGuard } from '@/shared/guards/roles.guard';
+import { Roles as RolesTypes } from '@/shared/types/roles.types';
+import { Roles } from '@/shared/decorators/roles.decorator';
+
+
 
 @ApiTags('Tracked Items')
 @ApiBearerAuth()
@@ -57,7 +62,7 @@ export class TrackedItemsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all tracked items with optional filters' })
+  @ApiOperation({ summary: 'Get users tracked items with optional filters' })
   @ApiQuery({ name: 'item_type', required: false, description: 'Filter by item type', enum: TrackedItemType })
   @ApiQuery({ name: 'item_identifier', required: false, description: 'Filter by item identifier' })
   @ApiQuery({ name: 'enabled', required: false, description: 'Filter by enabled status' })
@@ -68,6 +73,22 @@ export class TrackedItemsController {
   })
   findAll(@CurrentUser('uuid') uuid: string, @Query(new ZodValidationPipe(TrackedItemQuerySchema)) query: TrackedItemQueryType) {
     return this.tracked_items_service.findAll(uuid, query);
+  }
+
+  @Get('admin')
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles(RolesTypes.ADMIN)
+  @ApiOperation({ summary: 'Get all tracked items with optional filters' })
+  @ApiQuery({ name: 'item_type', required: false, description: 'Filter by item type', enum: TrackedItemType })
+  @ApiQuery({ name: 'item_identifier', required: false, description: 'Filter by item identifier' })
+  @ApiQuery({ name: 'enabled', required: false, description: 'Filter by enabled status' })
+  @ApiResponse({
+    status: 200,
+    description: 'Tracked items retrieved successfully',
+    type: [TrackedItem]
+  })
+  findAllAdmin(@Query(new ZodValidationPipe(TrackedItemQuerySchema)) query: TrackedItemQueryType) {
+    return this.tracked_items_service.findAllAdmin(query);
   }
 
   @Get(':id')
@@ -115,4 +136,7 @@ export class TrackedItemsController {
   removeAll(@CurrentUser('uuid') uuid: string) {
     return this.tracked_items_service.removeAll(uuid);
   }
+
+
+
 }

@@ -10,8 +10,8 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery }
 import { NotificationChannel } from './entities/notification-channel.entity';
 import { NotificationChannelType } from '@prisma/client';
 import { RolesGuard } from '@/shared/guards/roles.guard';
-import { AuthRole } from '@prisma/client';
 import { Roles } from '@/shared/decorators/roles.decorator';
+import { Roles as RolesTypes } from '@/shared/types/roles.types';
 
 @ApiTags('Notification Channels')
 @ApiBearerAuth()
@@ -22,7 +22,7 @@ export class NotificationChannelsController {
 
   @Post()
   @UseGuards(RolesGuard)
-  @Roles(AuthRole.admin)
+  @Roles(RolesTypes.ADMIN)
   @ApiOperation({ summary: 'Create a new notification channel' })
   @ApiResponse({
     status: 201,

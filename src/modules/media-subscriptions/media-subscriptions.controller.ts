@@ -11,6 +11,8 @@ import { MediaSubscription } from './entities/media-subscription.entity';
 import { AuthRole, PlatformType } from '@prisma/client';
 import { Roles } from '@/shared/decorators/roles.decorator';
 import { RolesGuard } from '@/shared/guards/roles.guard';
+import { Roles as RolesTypes } from '@/shared/types/roles.types';
+
 
 @ApiTags('Media Subscriptions')
 @ApiBearerAuth()
@@ -21,7 +23,7 @@ export class MediaSubscriptionsController {
 
   @Post('create')
   @UseGuards(RolesGuard)
-  @Roles(AuthRole.admin)
+  @Roles(RolesTypes.ADMIN)
   @ApiOperation({ summary: 'Create a media subscription' })
   @ApiResponse({
     status: 201,
@@ -33,7 +35,7 @@ export class MediaSubscriptionsController {
 
   @Post()
   @UseGuards(RolesGuard)
-  @Roles(AuthRole.admin)
+  @Roles(RolesTypes.ADMIN)
   @ApiOperation({ summary: 'Create multiple media subscriptions' })
   @ApiResponse({
     status: 201,
@@ -60,7 +62,7 @@ export class MediaSubscriptionsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all media subscriptions with optional filters' })
+  @ApiOperation({ summary: 'Get users media subscriptions with optional filters' })
   @ApiQuery({ name: 'platform_type', required: false, description: 'Filter by platform type', enum: PlatformType })
   @ApiQuery({ name: 'account_identifier', required: false, description: 'Filter by account identifier' })
   @ApiQuery({ name: 'enabled', required: false, description: 'Filter by enabled status' })
@@ -71,6 +73,22 @@ export class MediaSubscriptionsController {
   })
   findAll(@CurrentUser('uuid') uuid: string, @Query(new ZodValidationPipe(MediaSubscriptionQuerySchema)) query: MediaSubscriptionQueryType) {
     return this.mediaSubscriptionsService.findAll(uuid, query);
+  }
+
+  @Get('admin')
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles(RolesTypes.ADMIN)
+  @ApiOperation({ summary: 'Get all media subscriptions with optional filters' })
+  @ApiQuery({ name: 'platform_type', required: false, description: 'Filter by platform type', enum: PlatformType })
+  @ApiQuery({ name: 'account_identifier', required: false, description: 'Filter by account identifier' })
+  @ApiQuery({ name: 'enabled', required: false, description: 'Filter by enabled status' })
+  @ApiResponse({
+    status: 200,
+    description: 'Media subscriptions retrieved successfully',
+    type: [MediaSubscription]
+  })
+  findAllAdmin(@Query(new ZodValidationPipe(MediaSubscriptionQuerySchema)) query: MediaSubscriptionQueryType) {
+    return this.mediaSubscriptionsService.findAllAdmin(query);
   }
 
   @Get(':id')
@@ -118,4 +136,7 @@ export class MediaSubscriptionsController {
   removeAll(@CurrentUser('uuid') uuid: string) {
     return this.mediaSubscriptionsService.removeAll(uuid);
   }
+
+
+
 }

@@ -61,7 +61,11 @@ export class AlertsService {
     return `This action returns a #${id} alert`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} alert`;
+  async remove(id: number) {
+    return this.prisma.alert.delete({
+      where: {
+        id
+      }
+    })
   }
 }
